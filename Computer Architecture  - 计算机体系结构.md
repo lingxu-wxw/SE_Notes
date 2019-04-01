@@ -1,4 +1,4 @@
-## 体系结构复习
+## 计算机体系结构
 
 ------
 
@@ -39,7 +39,7 @@
 
   名词：Server racks 服务器机架, A/C systems 空调系统, Power Distribution Units 配电单元, UPS(Uninterruptible Power System) 不间断电源, Energy Storage Cabinets 储能柜, Switch Gears 开关齿轮
 
-  ![1553872982341](../Pictures/Computer_Architecture/1553872982341.png)
+  ![1553872982341](Pictures/Computer_Architecture/1553872982341.png)
 
 * 数据中心的三大支柱：power system, cooling facility, ICT Equipment (Information and Communication Technology，信息和通信技术)
 
@@ -86,11 +86,11 @@
 
 * 计算机架构的发展史
 
-  ![1554005252580](../Pictures/Computer_Architecture/1554005252580.png)
+  ![1554005252580](Pictures/Computer_Architecture/1554005252580.png)
 
 * 四种传统的架构：stack，accumulator（直接操作内存），register-memory（CISC），register-oriented（RISC）
 
-  ![1554004987623](../Pictures/Computer_Architecture/1554004987623.png)
+  ![1554004987623](Pictures/Computer_Architecture/1554004987623.png)
 
 * 复杂指令集 CISC
 
@@ -129,17 +129,17 @@
   * 全拼：Microprocessor without Interlocked Pipeline Stages
   * 指令类型：R类型，I类型，J类型
 
-  ![1554006637756](../Pictures/Computer_Architecture/1554006637756.png)
+  ![1554006637756](Pictures/Computer_Architecture/1554006637756.png)
 
-  ![1554009565424](../Pictures/Computer_Architecture/1554009565424.png)
+  ![1554009565424](Pictures/Computer_Architecture/1554009565424.png)
 
 * 指令集是硬件软件直接的接口
 
   * 高级程序语言 high level language - 汇编程序 low level language 指令集 ISA - 数据通路 register level transfer - 逻辑门电路 - CMOS 晶体管
 
-  ![1554006772160](../Pictures/Computer_Architecture/1554006772160.png)
+  ![1554006772160](Pictures/Computer_Architecture/1554006772160.png)
 
-  ![1554007542882](../Pictures/Computer_Architecture/1554007542882.png)
+  ![1554007542882](Pictures/Computer_Architecture/1554007542882.png)
 
 * User ISA 和 System ISA
 
@@ -148,14 +148,14 @@
     * 这是编译器在将高级语言中指定的算法映射到机器指令时所使用的ISA的子集
     * 指代那些对应用程序可见的指令集：data flow，ALU operations， control flow
 
-    ![1554007424976](../Pictures/Computer_Architecture/1554007424976.png)
+    ![1554007424976](Pictures/Computer_Architecture/1554007424976.png)
 
   * System ISA：管理/共享资源
 
     * 这是为低级O/S子系统用汇编语言精心编写的ISA的子集（eg. scheduler, virtual memory, device drivers）
     * 指代那些助管软件可见的指令集，比如OS，用于管理硬件资源
 
-    ![1554007514074](../Pictures/Computer_Architecture/1554007514074.png)
+    ![1554007514074](Pictures/Computer_Architecture/1554007514074.png)
 
 * 优秀的指令集的特点 Good interface design
 
@@ -173,13 +173,13 @@
 
   * 将指令和数据的存储和信号通路物理层面地分开
 
-  ![1554008207952](../Pictures/Computer_Architecture/1554008207952.png)
+  ![1554008207952](Pictures/Computer_Architecture/1554008207952.png)
 
 * 五级流水线：指令级并行
 
   * 阶段：Instruction fetch -> Instruction decode and Register file Read -> Execute or Address calculation -> Memory access -> Write back
 
-  ![1554008258099](../Pictures/Computer_Architecture/1554008258099.png)
+  ![1554008258099](Pictures/Computer_Architecture/1554008258099.png)
 
 * 理想的流水线
 
@@ -192,7 +192,7 @@
   * 将一些子过程合并：更短的stage间延迟
   * 将一些子过程拆分：子过程的更细粒度
 
-  ![1554009162952](../Pictures/Computer_Architecture/1554009162952.png)
+  ![1554009162952](/Pictures/Computer_Architecture/1554009162952.png)
 
 * 流水线槽 pipeline slots
 
@@ -254,7 +254,7 @@
 
   * 可能的数据冒险类型：RAW, WAR, WAW
 
-    ![1554102383105](../Pictures/Computer_Architecture/1554102383105.png)
+    ![1554102383105](Pictures/Computer_Architecture/1554102383105.png)
 
   * 三种流水线冒险：
 
@@ -264,7 +264,7 @@
 
   * pipeline interlock：检测数据冒险、暂停pipeline的硬件机制称为pipeline interlock
 
-    ![1554107402981](../Pictures/Computer_Architecture/1554107402981.png)
+    ![1554107402981](Pictures/Computer_Architecture/1554107402981.png)
 
 * 动态调度：记分牌算法 Scoreboarding
 
@@ -272,7 +272,7 @@
 
   * FU/Function unit：包括Adders, multipliers, ALUs, register files, load/store units
 
-  * 不同类型的FUs![1554104613004](../Pictures/Computer_Architecture/1554104613004.png)
+  * 不同类型的FUs![1554104613004](Pictures/Computer_Architecture/1554104613004.png)
 
   * Scoreboarding的四个阶段
 
@@ -283,7 +283,7 @@
     * Write result：检查WAR冒险，可能stall
       * 是否有之前的指令读取自己目标寄存器中的值（RO阶段过后就可以了），遍历当前unit的Fi是否在其他unit的Fj，Fk中出现，并且Rj，Rk为Yes
 
-    ![1554104945676](../Pictures/Computer_Architecture/1554104945676.png)
+    ![1554104945676](Pictures/Computer_Architecture/1554104945676.png)
 
   * Scoreboarding的九个field
 
@@ -298,9 +298,9 @@
 
     * 执行时间是指在RO处停留的时间，贴图是中途的执行截图
 
-    ![1554105118965](../Pictures/Computer_Architecture/1554105118965.png)
+    ![1554105118965](Pictures/Computer_Architecture/1554105118965.png)
 
-    ![1554106193184](../Pictures/Computer_Architecture/1554106193184.png)
+    ![1554106193184](Pictures/Computer_Architecture/1554106193184.png)
 
 * 动态调度：Tomasulo‘s Algorithm
 
@@ -310,7 +310,7 @@
     * 公共数据总线 Common Data Bus：Data flow approach:，指令可以在操作数available的瞬间开始执行
     * 寄存器重命名 Register Renaming：指令中的寄存被tag/指向保留站的pointer代替，排除了name dependence
 
-  ![1554106061159](../Pictures/Computer_Architecture/1554106061159.png)
+  ![1554106061159](Pictures/Computer_Architecture/1554106061159.png)
 
   * Tomasulo's Algorithm的三个阶段
 
@@ -330,9 +330,9 @@
     * 执行时间是指在EX处停留的时间
     * 值在算出来存进register result status的同时更新保留站的内容
 
-    ![1554106576255](../Pictures/Computer_Architecture/1554106576255.png)
+    ![1554106576255](Pictures/Computer_Architecture/1554106576255.png)
 
-    ![1554106942583](../Pictures/Computer_Architecture/1554106942583.png)
+    ![1554106942583](Pictures/Computer_Architecture/1554106942583.png)
 
 * Scoreboard 和 Tomasulo的对比
 
