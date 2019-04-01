@@ -1,7 +1,3 @@
----
-typora-root-url: Pictures
----
-
 ## 体系结构复习
 
 ------
@@ -27,7 +23,7 @@ typora-root-url: Pictures
 
 * 晶体管Gate宽度：Gate Length = 2λ，feature size
 
-  ![1553872260560](../Pictures/Computer_Architecture/1553872260560.png)
+  ![1553872260560](Pictures/Computer_Architecture/1553872260560.png)
 
 * 摩尔定律：当价格不变时，集成电路上可容纳的元器件的数目，约每隔18-24个月便会增加一倍，性能也将提升一倍
 
