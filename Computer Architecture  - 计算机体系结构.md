@@ -23,7 +23,7 @@ typora-root-url: Pictures
 
 * 晶体管结构：nMOS晶体管在栅极为低电平时OFF，高电平时ON；pMOS晶体管在栅极低电平时ON，高电平时OFF
 
-  ![1553873703370](../Pictures/Computer_Architecture/1553873703370.png)
+  ![1553873703370](Pictures/Computer_Architecture/1553873703370.png)
 
 * 晶体管Gate宽度：Gate Length = 2λ，feature size
 
