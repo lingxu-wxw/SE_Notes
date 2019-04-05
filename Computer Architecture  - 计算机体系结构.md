@@ -272,7 +272,7 @@
 
   * FU/Function unit：包括Adders, multipliers, ALUs, register files, load/store units
 
-  * 不同类型的FUs![1554104613004](Pictures/Computer_Architecture/1554104613004.png)
+  * **不同类型的FUs**![1554104613004](Pictures/Computer_Architecture/1554104613004.png)
 
   * Scoreboarding的四个阶段
 
@@ -327,7 +327,7 @@
 
   * Tomasulo's Algorithm执行界面
 
-    * 执行时间是指在EX处停留的时间
+    * **执行时间是指在EX处停留的时间**
     * 值在算出来存进register result status的同时更新保留站的内容
 
     ![1554106576255](Pictures/Computer_Architecture/1554106576255.png)
@@ -359,4 +359,188 @@
 
 ###  第四讲 指令级并行化探索 II
 
+* Review 
+  * Hazards (data/name/control)
+  * RAW, WAR, WAW hazards
+  * Different types of functional units
+  * Dynamic scheduling and out-of-order execution
+  * Scoreboarding approach vs. Tomasulo's approach
+*  标量流水线 Scalar Pipelines 的不足
+  * 定义：single pipeline with multiple stages，organized in a linear sequential order
+  * 标量流水线的吞吐量存在上限
+    * 最大吞吐量是1 instr per machine cycle
+    * 更深层次的pipeline的成本效益
+  * 单一管道的低效统一
+    * 需要不同的硬件资源支持
+    * 指令需要长/可变的延迟
+  * 执行僵化rigid导致的效率问题
+    * 一个stall会影响整个流水线
+
+* 优化标量流水线的三种思路
+  * make it parallel - superscalar pipelines 超标量流水线
+    * 每个machine cycle中fetch多条指令，然后并行decode
+  * make it diversified
+    * EX阶段提供多个异构FU，以及合适数量的混合FU
+  * make it dynamic
+    * 尾随的指令可以绕过stall的前置指令
+    * 复杂的multi-entry buffer，用于缓冲指令
+
+* SuperScalar Pipeline
+
+  * 相对于scalar pipeline的性能提升：并行化的pipeline
+  * 两个重要模块
+    * Dispatch Buffer (DB) : 控制并行解码后的指令in order
+    * Completion Buffer：控制执行结束后的指令in order
+
+  ![1554429586752](Pictures/Computer_Architecture/1554429586752.png)
+
+* 评价Pipeline的三个参数
+
+  - Instruction-level parallelism required to fully utilize 利用率
+  - Instruction issued per cycle (IPC) 每一时钟周期执行指令数量
+  - Simple operation latency 简单指令延迟
+
+* 不同Pipeline的性能评价
+
+  - Simple Scalar Pipeline ：利用率 : 1/cycle ; IPC : 1 ; latency : 1
+  - Superscalar machine (n width) ：利用率 : n/cycle ; IPC : n ; latency : 1
+  - Superpipelined machine (degree m) ：利用率 : m/base cycle ; IPC : 1 (cycle time : 1/m) ; latency : m
+  - VLIW machine ：利用率 : n/cycle ; IPC : n instr/cycle (1 VLIW/cycle) ; latency : 1
+
+  ![1554430339007](Pictures/Computer_Architecture/1554430339007.png)
+
+  ![1554430358415](Pictures/Computer_Architecture/1554430358415.png)
+
+  ![1554430370692](Pictures/Computer_Architecture/1554430370692.png)
+
+  ![1554430382468](Pictures/Computer_Architecture/1554430382468.png)
+
+* Branch Prediction 分支预测
+
+  * 17% 的gcc指令是带分支的
+  * 两个方面的预测：Branch target speculation和Branch condition speculation
+  * Static Branch Prediction 静态分支预测
+    * 在编译时就预测分支的行为：预测always taken；根据分支方向预测；根据历史收集数据预测
+  * Dynamic Branch Prediction
+    * 根据分支的不同行为来预测：在程序整个生命周期中，可能会改变预测；硬件支持 branch history tables, branch target buffer等
+
+* Branch History Tables 基于历史数据的预测
+
+  * key-value设计：提取fetch PC中的一部分作为key，index是2bits的00/01/10/11
+
+  * 效果：4K-entry的BHT，2bits一个entry，80-90%的预测正确率
+
+  * 2bits Branch Prediction
+
+    ![1554431083386](Pictures/Computer_Architecture/1554431083386.png)
+
+* Branch Target Buffer
+
+  * 类似TLB的查表性质
+
+  * BTB包括两个部分：Branch instruction address: BIA，Branch target address: BTA
+
+    ![1554431188222](Pictures/Computer_Architecture/1554431188222.png)
+
+* Mis-prediction Recovery 分支预测错误恢复
+
+  * In-order processor：kill掉所有之后的指令
+  * out-of-order processor：可能已经有之后的指令做完了
+  * 相同的问题：Precise Exception
+  * 潜在的安全问题：Meltdown，Spectre，利用乱序执行和分支错误进行攻击
+
+* Hardware-based Speculation
+
+  * 核心思想：Dynamic branch prediction, Dynamic scheduling of basic blocks, OoO execution with precise exception (in-order commit)
+
+    * 乱序fetch，乱序complete，顺序commit（只有oldest且result valid的指令才可以提交）
+
+  * **Reorder Buffer（ROB）**
+
+    * Instruction type：指令类型（分支/访存/ALU）
+    * Destination：写寄存器号/内存地址
+    * Value
+
+    ![1554431816950](Pictures/Computer_Architecture/1554431816950.png)
+
+  * 实际案例（含原始Tomasulo对比）
+
+    * ALU处理不含操作数的指令；Instr Q是指令队列；Reorder Buffer保证顺序commit，head是oldest；FP registers是commit，之前多了一个ROB，src表示即将写入的tag；IS/EX/WR的框实际应该还是有的
+
+  ![1554431843820](Pictures/Computer_Architecture/1554431843820.png)
+
+  ![1554431905056](Pictures/Computer_Architecture/1554431905056.png)
+
+  * 实际执行表格（IS/EX/WR)
+    * tag值全都填充后，下一周期开始执行
+    * 如果没commit之前，register的src又改了，直接覆写（cycle 8）
+    * 这里ADD/SUB周期为3，MUL周期12
+
+  | 指令         | IS          | EX      | WR      | CM             |
+  | ------------ | ----------- | ------- | ------- | -------------- |
+  | l1 ADD.D     | C1          | C2      | C5      | C6             |
+  | l2 MUL.D     | C2          | C5      | C17     | C18            |
+  | l3 ADD.D     | C3          | C18     | C21     | C22            |
+  | l4 SUB.D     | C4          | C5      | C8      | C23            |
+  | l5 SUB.I     | C5          | C6      |         |                |
+  | l6 BNEZ      | C6          |         |         |                |
+  | ~~l1 ADD.D~~ | ~~C7~~      | ~~C8~~  | ~~C11~~ | ~~(分支错误)~~ |
+  | ~~l2 MUL.D~~ | ~~C8~~      | ~~C12~~ |         |                |
+  | ~~l3 ADD.D~~ | ~~(ROB满)~~ |         |         |                |
+
+* VLIW 处理器 Very Long Instruction Word
+
+  * 固定数量的operations被format成一条大指令，通常是3条operations
+  * 目的：高性能，低硬件复杂度
+    * 减少multiple-issue的硬件
+    * 简单的指令调度
+    * 省去结构冒险的检查逻辑
+
+  ![1554433810050](Pictures/Computer_Architecture/1554433810050.png)
+
+  * 调度的复杂性被转移到编译器中
+    * 编译器来组成每条VLIW指令
+    * 检查hazard，隐藏latency
+    * 通过fill slots来优化指令
+  * VLIM对于三种hazard的适应性
+    * 结构冒险：不会有两条operations共用相同的FU或Memory bank
+    * 数据冒险：同一个bundle的指令不存在数据毛线
+    * 控制冒险：预测执行，静态分支预测
+  * Loop Unrolling 循环展开：避免delay，提高CPI
+  * EPIC 显示并行指令计算 Explicitly Parallel Instruction Computing
+    * 提供在编译时设计plan of execution(POE) 的能力
+    * 提供允许编译器"play the statistics"的特性
+    * 提供与硬件交流POE的能力
+
+* Summary
+
+  * Superscalar Pipeline
+    * Limitations of scalar processor
+    * Basic feature of superscalar pipeline
+    * Multi-Issue Processor
+    * Dispatch Buffer and Completion Buffer
+    * Classification of ILP Machines
+    * Rationale理性的 of branch prediction; 2-bit prediction
+  * Speculation
+    * Precise exception
+    * Reorder buffer (ROB)
+    * Tomasulo's Algorithm with ROB
+  * VLIW and EPIC
+    * CISC vs RISC vs VLIM
+    * Loop unrolling
+    * The concept of EPIC
+
+*  
+
+------
+
+### 第五讲 缓存和主存系统
+
 * 
+
+
+
+
+
+
+
