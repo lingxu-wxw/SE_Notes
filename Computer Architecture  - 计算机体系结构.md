@@ -365,16 +365,17 @@
   * Different types of functional units
   * Dynamic scheduling and out-of-order execution
   * Scoreboarding approach vs. Tomasulo's approach
-*  标量流水线 Scalar Pipelines 的不足
-  * 定义：single pipeline with multiple stages，organized in a linear sequential order
-  * 标量流水线的吞吐量存在上限
-    * 最大吞吐量是1 instr per machine cycle
-    * 更深层次的pipeline的成本效益
-  * 单一管道的低效统一
-    * 需要不同的硬件资源支持
-    * 指令需要长/可变的延迟
-  * 执行僵化rigid导致的效率问题
-    * 一个stall会影响整个流水线
+* **标量流水线 Scalar Pipelines 的不足**
+
+    * 定义：single pipeline with multiple stages，organized in a linear sequential order
+    * 标量流水线的吞吐量存在上限
+      * 最大吞吐量是1 instr per machine cycle
+      * 更深层次的pipeline的成本效益
+    * 单一管道的低效统一
+      * 需要不同的硬件资源支持
+      * 指令需要长/可变的延迟
+    * 执行僵化rigid导致的效率问题
+      * 一个stall会影响整个流水线
 
 * 优化标量流水线的三种思路
   * make it parallel - superscalar pipelines 超标量流水线
@@ -400,7 +401,7 @@
   - Instruction issued per cycle (IPC) 每一时钟周期执行指令数量
   - Simple operation latency 简单指令延迟
 
-* 不同Pipeline的性能评价
+* 不同Pipeline的性能评价，Classifying ILP Machines
 
   - Simple Scalar Pipeline ：利用率 : 1/cycle ; IPC : 1 ; latency : 1
   - Superscalar machine (n width) ：利用率 : n/cycle ; IPC : n ; latency : 1
@@ -530,17 +531,181 @@
     * Loop unrolling
     * The concept of EPIC
 
-*  
+* 
 
 ------
 
 ### 第五讲 缓存和主存系统
 
-* 
+* Review
+  * Three limitations of simple pipeline
+  * Superscalar pipeline and multiple issue 
+  * Classification of ILP
+  * Branch prediction and precise exception
+  * Reorder buffer
+  * Tomasulo algorithm with ROB
+  * VLIM and loop unrolling
 
+* Typical PC Organization 典型的PC架构
 
+  ![1554457426999](Pictures/Computer_Architecture/1554457426999.png)
 
+* Memory Hierarchy 存储层次
 
+  ![1554457456075](Pictures/Computer_Architecture/1554457456075.png)
 
+* About Cache
 
+  * Cache Concept：
+    * on-chip : 片上存储器；off-chip：片外存储器，记忆体，片外内存
+
+  ![1554457652721](Pictures/Computer_Architecture/1554457652721.png)
+
+  * Cache Format
+
+    * Cache entry fields：tag，status，data
+    * 32位地址的机器，cache block大小16 B (4 words)
+
+    ![1554457889510](Pictures/Computer_Architecture/1554457889510.png)
+
+  * Cache联结方式：direct mapped 直接映射；fully associative 全相联；set associative 组相联
+
+* About Virtual Memory
+
+  * Page Table：将virtual pages映射到physical pages的 PTE 的序列
+  * 32位地址空间，4K的page大小，4 byte的PTE
+    * 需要2^32 / 2^12 =2^20个PTE
+    * Page table的大小为2^22 (4MB)
+
+  ![1554458324307](Pictures/Computer_Architecture/1554458324307.png)
+
+  ![1554458469403](Pictures/Computer_Architecture/1554458469403.png)
+
+* Cache Optimization
+
+  * 利用局部性：Temporal locality 时间局部性，Spatial locality 空间局部性，Algorithm locality
+  * 3C model：Compulsory miss 冷不命中，Capacity miss 容量不命中，Conflict miss 冲突不命中
+
+* Cache Optimization #1
+
+  * **Miss Caching**
+    * 定义：在L1和L2 cache中的一个全相联cache，包含2-5个cache line的数据，旨在减少conflict miss
+    * 当L1 cache miss时，检查miss cache中有否有，如果有就把cache line加到L1 cache；否则就从L2 cache中获取，在L1 cache和miss cache中都存一份；L1 cache  移除某cache line时，miss cache中不移除
+  * **Victim Caching**
+    * 定义：修改replacement策略；比miss cache更好的地方：更小，更好的性能；即使是一两个single line也可能effective
+    * 当L1 cache miss时，检查victim cache，如果有，就与L1 cache中的被移除cache line交换；否则就从L2 cache中获取
+
+* Cache Optimization #2
+
+  * Prefetching
+    * 当可以利用时间局部性的时候，miss cache和victim cache都会很有用
+    * 提前fetch内存块是有用的：预取指令；预取顺序的data access
+    * 提前fetch的内存块不一定要放在L1 cache，可以另找一个special buffer；没有被CPU用过的预取块也不会evict L1 cache中可能有用的block
+  * Content Management
+    * Partitioning heuristics 启发式分区：决定是否cache，应该cache在哪
+    * Prefetching heuristics 启发式预取：决定是否、什么时候cache预取块
+    * Locality optimizations 局部性优化：重构代码，写cache-friendly的code
+  * Prefetch效果的评判标准
+    * Accuracy 精度：有用的预取数量/预取的总数
+    * Coverage 覆盖率：有用的预取数量/没有预取时原本的总miss数
+    * 结果：It depends. 不同的环境这两个数据差距很大
+  * 不能无限预取的三个理由：时间，evict，带宽
+
+* Cache Optimization #3：Cache Write Policies：
+
+  * write cache hit：write-back和write-through（写回和直写）
+  * write cache miss：write-allocate和no-write allocate
+  * 在write miss时，即所要写的地址不在cache中，一种办法是把要写的内容直接写回main memory（no write allocate policy），另一种办法是把要写的地址所在的块先从main memory调入cache中，然后写cache（write allocate policy）
+  * write buffer和write cache：tag-less FIFO，have tag
+
+* Cache Relationship (Cache的水平层次)
+
+  * inclusive 相容：每个cache item都在另一个地方有一份拷贝
+  * exclusive 互斥：交集为空
+
+* 主存中的物理架构 (Main Memory / DRAM System)
+
+  * DIMM (dual in-line memory module) 双列直插式存储模块
+  * 每个DIMM包括一个/多个独立的rank
+  * 每个rank是一组运行一致的DRAM device
+    * rank是一系列DRAM device按照给定的命令同步操作
+  * 每个DRAM device包括一个/多个独立的bank
+  * 每个bank都由slaved memory arrays组成
+    * 描述了DRAM devices内部的一系列独立的memory array
+  * Channel：MC和DRAM module之间的path
+
+  ![1554460977057](Pictures/Computer_Architecture/1554460977057.png)
+
+  ![1554461001305](Pictures/Computer_Architecture/1554461001305.png)
+
+* Parallelism in DRAM
+
+  * rank是一组可单独寻址的DRAM device，允许DIMM-level级的独立操作
+  * 每组独立运行的memory array (DRAM device中)被称为一个bank
+  * 因为有许多bank，所以可以同时执行不同的request
+  * rank-level和bank-level的并发可以通过pipeline request来提供带宽
+
+* Address Mapping (Translation)
+
+  * 通过channel ID，rank ID，bank ID，row ID，column ID就可以定位到物理地址
+  * 连续的cache line存在同一个row，可以提高row buffer的hit rate
+  * 连续的cache line存在不同的rank，可以提高并行性
+
+  ![1554461316701](Pictures/Computer_Architecture/1554461316701.png)
+
+* 1T1C DRAM Cell
+
+  * T：transistor 晶体管，C：capacitor 电容
+  * A control bus is composed of the row and column strobes, clock, and other signals.
+
+  ![1554461651363](Pictures/Computer_Architecture/1554461651363.png)
+
+  * DRAM Array Access：Row Access Strobe (RAS)，Column Access Strobe (CAS)
+
+* Refresh Mechanism
+
+  * row是bank中refresh时的最小单元
+  * 通常情况下，DRAM cell中数据的保留时间是64ms
+  * Refresh操作可以在rank-level或bank-level进行
+
+  ![1554461894893](Pictures/Computer_Architecture/1554461894893.png)
+
+* Cost of Accessing DRAM
+
+  * Row buffer hit：20 ns
+  * Empty row buffer access：40 ns
+  * Row buffer conflict：60 ns
+
+* 同步和异步的device
+
+  * 同步DRAM (SDRAM)：用时钟取代RAS和CAS，从而获得更高数据传输率
+  * Double Data Rate (DDR) SDRAM：数据在时钟的两端传输
+
+  ![1554462086642](Pictures/Computer_Architecture/1554462086642.png)
+
+* Memory Wall and Memory Bandwidth Wall
+
+  * 由于CPU的主频已经不再无限提高了，我们现在撞上了内存的带宽墙
+  * DRAM的容量没两年翻一番，但latency没怎么提升
+  * Power wall：数据中心25-40%的power是提供给DRAM system
+  * 如果提升row buffer hit rate，那latency和power都可以被优化，这需要智能的data row mapping和智能的request schedule
+
+* MLP (Multi-Layer Perception) ：多层感知器，是一种前向结构的人工神经网络，映射一组输入向量到一组输出向量
+
+* Summary
+
+  * Memory hierarchy, uncore and off-chip
+  * Cache line, block, address
+  * Virtual memory, page table, PTE, TLB
+  * Locality principle, Inclusive and exclusive relationship
+  * Miss caching, victim caching, prefetching
+  * Cache write policies, write buffer/cache
+  * rank, bank, array, channel, MC, parallelism in DRAM
+  * 1T1C DRAM cell, data access, DRAM refresh
+  * DRAM access cost, synchronous/asynchronous design
+  * Memory design challenges, memory wall, MLP
+
+*  
+
+------
 
