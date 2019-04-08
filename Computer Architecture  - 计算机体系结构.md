@@ -17,11 +17,11 @@
 
 * 半导体：N型（自由电子），P型（空穴）
 
-* 晶体管结构：nMOS晶体管在栅极为低电平时OFF，高电平时ON；pMOS晶体管在栅极低电平时ON，高电平时OFF
+* 晶体管结构：**nMOS晶体管在栅极为低电平时OFF，高电平时ON；pMOS晶体管在栅极低电平时ON，高电平时OFF**
 
   ![1553873703370](Pictures/Computer_Architecture/1553873703370.png)
 
-* 晶体管Gate宽度：Gate Length = 2λ，feature size
+* 晶体管Gate宽度：Gate Length = 2λ，**feature size**
 
   ![1553872260560](Pictures/Computer_Architecture/1553872260560.png)
 
@@ -31,9 +31,9 @@
 
 * Scale Up ：纵向扩展，往系统中的单一组件添加更多资源（eg，提升内存）
 
-* HPC Center/supercomputer，高性能计算中心 ：高性能组件，注重吞吐量 throughput
+* HPC Center/supercomputer，高性能计算中心 ：高性能组件，**注重吞吐量 throughput**
 
-* IDC(Internet Data Centers)，互联网数据中心：价格低廉，商用组件，注重服务延迟 latency
+* IDC(Internet Data Centers)，互联网数据中心：价格低廉，商用组件，**注重服务延迟 latency**
 
 * 一个典型的数据中心
 
@@ -49,14 +49,14 @@
 
 * Summary
 
-  * What is Computer_Architecture
+  * What is Computer Architecture
   * History of IC
   * Transistor basics
   * Feature length
   * HPC vs IDC
   * Scale up/out
   * Energy/power issues
-  * The trend of Computer_Architecture research
+  * The trend of Computer Architecture research
 
 * 
 
@@ -88,20 +88,20 @@
 
   ![1554005252580](Pictures/Computer_Architecture/1554005252580.png)
 
-* 四种传统的架构：stack，accumulator（直接操作内存），register-memory（CISC），register-oriented（RISC）
+* **四种传统的架构：stack，accumulator（直接操作内存），register-memory（CISC），register-oriented（RISC）**
 
   ![1554004987623](Pictures/Computer_Architecture/1554004987623.png)
 
 * 复杂指令集 CISC
 
-  * 80年代中期的主导风格
+  * **80**年代中期的主导风格
   * 编译器容易实现，更少的代码
-  * stack-oriented instruction set
+  * **stack-oriented instruction set**
     * 通过栈传递参数，保存程序计数器 IP
     * 显示地push/pop指令
-  * register-memory architecture
+  * **register-memory architecture**
     * 算术指令可以访问内存
-  * condition codes：设置为算术和逻辑指令的副作用 side effect
+  * **condition codes**：设置为算术和逻辑指令的副作用 side effect
 
 * 采用CISC的处理器
 
@@ -118,11 +118,11 @@
   - 更少，更简单的指令
     - 完成相同的task需要更多的指令
     - 可以在small/fast的硬件上执行
-  - register-oriented instruction set
+  - **register-oriented instruction set**
     - 有许多提供给参数，返回值的寄存器（32个）
-  - load-store architecture
+  - **load-store architecture**
     - 只有load/store指令可以访问内存
-  - no condition codes
+  - **no condition codes**
 
 * 采用RISC的处理器：MIPS
 
@@ -143,14 +143,14 @@
 
 * User ISA 和 System ISA
 
-  * User ISA：使应用程序正常工作
+  * **User ISA：使应用程序正常工作**
 
     * 这是编译器在将高级语言中指定的算法映射到机器指令时所使用的ISA的子集
     * 指代那些对应用程序可见的指令集：data flow，ALU operations， control flow
 
     ![1554007424976](Pictures/Computer_Architecture/1554007424976.png)
 
-  * System ISA：管理/共享资源
+  * **System ISA：管理/共享资源**
 
     * 这是为低级O/S子系统用汇编语言精心编写的ISA的子集（eg. scheduler, virtual memory, device drivers）
     * 指代那些助管软件可见的指令集，比如OS，用于管理硬件资源
@@ -181,11 +181,14 @@
 
   ![1554008258099](Pictures/Computer_Architecture/1554008258099.png)
 
-* 理想的流水线
+* **理想的流水线**
 
-  * 一致的子过程划分 - 平衡pipeline状态
-  * 相同的计算 - 统一的指令类型
-  * 独立的计算过程 - 最小化pipeline暂停
+  * 一致的子过程划分 - 平衡pipeline状态 
+    * **Uniform sub-computations - balancing pipeline states**
+  * 相同的计算 - 统一的指令类型 
+    * **Identical computations - unifying instruction types**
+  * 独立的计算过程 - 最小化pipeline暂停 
+    * **Independent computations  - minimizing pipeline stalls**
 
 * 阶段量化 Stage Quantization
 
@@ -194,9 +197,9 @@
 
   ![1554009162952](/Pictures/Computer_Architecture/1554009162952.png)
 
-* 流水线槽 pipeline slots
+* **流水线部件 pipeline slots**
 
-  * 分类：front-end, back-end, retiring, bad speculation
+  * **分类：front-end, back-end, retiring, bad speculation**
   * 前端表示处理器核心的第一部分，后端负责获取后面执行的操作
     * 分支预测：预测下一条执行指令的地址
     * cache lines：获取和解析指令
@@ -240,17 +243,17 @@
 
   * 三种依赖：
 
-    * data dependence：easy for determine for registers, hard for memory location
+    * **data dependence**：easy for determine for registers, hard for memory location
 
       eg.  c = a + b; e = c + d;
 
-    * name dependence
+    * **name dependence**
 
-      anti-dependence : eg. a = b + c; b = c + d;
+      **anti-dependence** : eg. a = b + c; b = c + d;
 
-      output dependence：eg. a = b + c; a = d + e;
+      **output dependence**：eg. a = b + c; a = d + e;
 
-    * control dependence：分支语句
+    * **control dependence**：分支语句
 
   * 可能的数据冒险类型：RAW, WAR, WAW
 
@@ -258,9 +261,9 @@
 
   * 三种流水线冒险：
 
-    * structural hazard 结构冒险
-    * data hazard 数据冒险：通过转发和预测来避免 bypassing or forwarding，但不能规避load/use hazard
-    * control hazard 控制冒险
+    * **structural hazard 结构冒险**
+    * **data hazard 数据冒险**：通过转发和预测来避免 bypassing or forwarding，但不能规避load/use hazard
+    * **control hazard 控制冒险**
 
   * pipeline interlock：检测数据冒险、暂停pipeline的硬件机制称为pipeline interlock
 
@@ -276,12 +279,13 @@
 
   * Scoreboarding的四个阶段
 
-    * Issue：检查结构冒险和WAW冒险，可能stall
+    * Issue：**检查结构冒险和WAW冒险**，可能stall（如果是写同一个寄存器就不行）
       * unit是否有空闲
-    * Read operands：如果没有RAW冒险，读取operands
+    * Read operands：**如果没有RAW冒险**，读取operands（如果现在要用的正在被写就要等等）
     * Execution：遵循记分牌的指示
-    * Write result：检查WAR冒险，可能stall
+    * Write result：**检查WAR冒险**，可能stall（如果现在要写的寄存器正在被读就要等等）
       * 是否有之前的指令读取自己目标寄存器中的值（RO阶段过后就可以了），遍历当前unit的Fi是否在其他unit的Fj，Fk中出现，并且Rj，Rk为Yes
+    * 出现问题的原因就是这是基于寄存器号的，而不是tag的
 
     ![1554104945676](Pictures/Computer_Architecture/1554104945676.png)
 
@@ -296,7 +300,7 @@
 
   * Scoreboarding执行界面
 
-    * 执行时间是指在RO处停留的时间，贴图是中途的执行截图
+    * **执行时间是指在RO处停留的时间**，贴图是中途的执行截图
 
     ![1554105118965](Pictures/Computer_Architecture/1554105118965.png)
 
@@ -355,6 +359,8 @@
   * Scoreboarding
   * Tomasulo's Algorithm
 
+* 
+
 ------
 
 ###  第四讲 指令级并行化探索 II
@@ -368,13 +374,13 @@
 * **标量流水线 Scalar Pipelines 的不足**
 
     * 定义：single pipeline with multiple stages，organized in a linear sequential order
-    * 标量流水线的吞吐量存在上限
+    * **标量流水线的吞吐量存在上限**
       * 最大吞吐量是1 instr per machine cycle
       * 更深层次的pipeline的成本效益
-    * 单一管道的低效统一
+    * **单一管道的低效统一**
       * 需要不同的硬件资源支持
       * 指令需要长/可变的延迟
-    * 执行僵化rigid导致的效率问题
+    * **执行僵化rigid导致的效率问题**
       * 一个stall会影响整个流水线
 
 * 优化标量流水线的三种思路
@@ -401,12 +407,12 @@
   - Instruction issued per cycle (IPC) 每一时钟周期执行指令数量
   - Simple operation latency 简单指令延迟
 
-* 不同Pipeline的性能评价，Classifying ILP Machines
+* **不同Pipeline的性能评价，Classifying ILP Machines**
 
-  - Simple Scalar Pipeline ：利用率 : 1/cycle ; IPC : 1 ; latency : 1
-  - Superscalar machine (n width) ：利用率 : n/cycle ; IPC : n ; latency : 1
-  - Superpipelined machine (degree m) ：利用率 : m/base cycle ; IPC : 1 (cycle time : 1/m) ; latency : m
-  - VLIW machine ：利用率 : n/cycle ; IPC : n instr/cycle (1 VLIW/cycle) ; latency : 1
+  - **Simple Scalar Pipeline ：利用率 : 1/cycle ; IPC : 1 ; latency : 1**
+  - **Superscalar machine (n width) ：利用率 : n/cycle ; IPC : n ; latency : 1**
+  - **Superpipelined machine (degree m) ：利用率 : m/base cycle ; IPC : 1 (cycle time : 1/m) ; latency : m**
+  - **VLIW machine ：利用率 : n/cycle ; IPC : n instr/cycle (1 VLIW/cycle) ; latency : 1**
 
   ![1554430339007](Pictures/Computer_Architecture/1554430339007.png)
 
@@ -556,7 +562,7 @@
 
 * About Cache
 
-  * Cache Concept：
+  * **Cache Concept：**这张图应该会比较重要
     * on-chip : 片上存储器；off-chip：片外存储器，记忆体，片外内存
 
   ![1554457652721](Pictures/Computer_Architecture/1554457652721.png)
@@ -626,11 +632,11 @@
 * 主存中的物理架构 (Main Memory / DRAM System)
 
   * DIMM (dual in-line memory module) 双列直插式存储模块
-  * 每个DIMM包括一个/多个独立的rank
-  * 每个rank是一组运行一致的DRAM device
+  * **每个DIMM包括一个/多个独立的rank**
+  * **每个rank是一组运行一致的DRAM device**
     * rank是一系列DRAM device按照给定的命令同步操作
-  * 每个DRAM device包括一个/多个独立的bank
-  * 每个bank都由slaved memory arrays组成
+  * **每个DRAM device包括一个/多个独立的bank**
+  * **每个bank都由slaved memory arrays组成**
     * 描述了DRAM devices内部的一系列独立的memory array
   * Channel：MC和DRAM module之间的path
 
@@ -647,7 +653,7 @@
 
 * Address Mapping (Translation)
 
-  * 通过channel ID，rank ID，bank ID，row ID，column ID就可以定位到物理地址
+  * **通过channel ID，rank ID，bank ID，row ID，column ID就可以定位到物理地址**
   * 连续的cache line存在同一个row，可以提高row buffer的hit rate
   * 连续的cache line存在不同的rank，可以提高并行性
 
@@ -664,7 +670,7 @@
 
 * Refresh Mechanism
 
-  * row是bank中refresh时的最小单元
+  * **row是bank中refresh时的最小单元**
   * 通常情况下，DRAM cell中数据的保留时间是64ms
   * Refresh操作可以在rank-level或bank-level进行
 
