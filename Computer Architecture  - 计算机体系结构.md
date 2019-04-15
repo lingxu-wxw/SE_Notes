@@ -206,7 +206,7 @@
     * 解析成微指令 uOps
   * 前端绑定metric, 表示处理器前端对后端的slot fraction供应不足
 
-* Summay
+* Summary
 
   * Architecture vs microarchitecture
   * Evolution of instruction sets
@@ -486,7 +486,7 @@
   | 指令         | IS          | EX      | WR      | CM             |
   | ------------ | ----------- | ------- | ------- | -------------- |
   | l1 ADD.D     | C1          | C2      | C5      | C6             |
-  | l2 MUL.D     | C2          | C5      | C17     | C18            |
+  | l2 MUL.D     | C2          | C6      | C17     | C18            |
   | l3 ADD.D     | C3          | C18     | C21     | C22            |
   | l4 SUB.D     | C4          | C5      | C8      | C23            |
   | l5 SUB.I     | C5          | C6      |         |                |

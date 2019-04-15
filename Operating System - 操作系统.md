@@ -125,4 +125,45 @@
 
 ------
 
-### 第二讲
+### 第二讲 OS Structures
+
+* OS Design and Implementation
+
+  * Worse is Better design 设计原则
+  * User goal 和 System goal
+    * 用户会希望操作系统方便使用，容易学，可靠，安全，还快
+    * 系统开发者希望操作系统容易设计/实现，可靠，可扩展，容错，高效
+
+* Kernel 分类：Monolithic, Microkernel, Exokernel, Hybrid
+
+  * Monolithic 宏内核：OS在kernel space运行，在supervisor mode 运行 （Linux BSD)
+  * Microkernel 微内核：low-level address space management, thread management, and inter-process communication (IPC)等技术，（Mach  L4 kernel）
+  * Hybrid kernel 复合内核：Windows ，NT kernel
+
+  ![1554882220939](C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1554882220939.png)
+  * DOS：没有模块的划分，接口和实现没有很好的分离。DOS以后开始有一些Layered Approach，将OS分为若干level来实现
+
+  ![1554882284901](C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1554882284901.png)
+
+  * UNIX：UNIX OS包括System program和kernel部分
+
+   ![1554882436070](C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1554882436070.png)
+
+* Microkernel 系统架构
+
+  * 思想：将尽可能多的功能从kernel态移到user态
+  * 优势：易于扩展；易于将OS移植到其他体系结构；因为kernel代码更少，所以更可靠，更安全
+  * 缺点：kernel和user之间频繁通信的overhead
+
+  ![1554883036112](C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1554883036112.png)
+
+* 
+
+
+
+
+
+
+
+
+
