@@ -368,15 +368,146 @@ Fork：copyuvm
 
 ### 第五讲 Process
 
+* 逻辑地址 - 线性地址 - 物理地址的转换
 
+  ![1556339216237](C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1556339216237.png)
 
+  ![1556339247367](C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1556339247367.png)
 
+* Boot阶段的主要工作：
 
+  * 进入Protected Mode，开启Segment，配置GDT (ljmp指令)
+  * 打开页表 (CR0_PG)，初始化entrypgdir，将kernel映射到高地址和低地址 (0x80100000, 0x100000)
 
+* 一些概念
 
+  * Process：设计进程的出发点：程序比处理器多；程序并不需要持续占用处理器；因此可以在不用的时候释放资源；进程是资源分配的最小单位，拥有一个地址空间和若干线程；包含program counter, stack, data section等数据块
 
+  * Thread：线程的抽象定义：停止活动并在稍后某个 时刻恢复活动所需要的最小状态，通常是一些程序寄存器；线程是程序运行的最小单位
 
+  * Context：xv6中的数据结构，包含edi、esi、ebx、ebp、eip五个field
 
+  * Address spaces：地址空间，原则上和线程是独立的概念；可以在同一个地址空间从一个线程切换到另一个线程；也可以在不同地址空间切换
 
+  * Process State：进程状态，一般有new，running，waiting，ready，terminated；xv6中为UNUSED, EMBRYO胚胎, SLEEPING, RUNNABLE, RUNNING, ZOMBIE
 
+    * ENBRYO可以理解为到RUNNABLE之前的一个过渡。allocproc会在进程表中找到一个标记为UNUSED的位置。当它找到这样一个没有被使用的位置后，allocproc将其状态设置为EMBRYO，使其标记为被使用并给这个进程一个独有的pid。接下来，它尝试为进程的内核线程分配内核栈。如果分配失败了，allocproc会把这个位置的状态恢复为UNUSED并返回0来标记失败。
+
+    ![1556342655313](C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1556342655313.png)
+
+* Process Control Block，PCB
+
+  * 每个process都会有一个PCB，内容包括Process state, Process counter, CPU registers, CPU scheduling information, Memory management information, Accounting information, I/O status information
+  * xv6 中的进程数据结构
+
+  ![1556343005224](C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1556343005224.png)
+
+* Context Switch 上下文切换
+
+  * 调用syscall触发中断 - save当前进程的PCB - reload目标进程的PCB - 继续执行
+  * 上下文切换需要保存的内容应该是存在进程对应的kernel stack中的
+  * 上下文切换换栈的瞬间
+
+  ![1556343241697](C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1556343241697.png)
+
+* Process Scheduling Queue 进程调度队列
+
+  * Job Queue：系统中所有的process
+  * Ready Queue：系统中所有等待执行的process
+  * Device Queue：系统中所有等待IO设备的process
+
+* 两种Scheduler
+  * Long-term scheduler / job scheduler：调度即将进入ready queue的进程，完成时间在秒/分钟级别，决定了multiprogramming的程度
+  * Short-term scheduler / CPU scheduler：调度即将执行的进程，完成时间在微秒级别
+  * scheduler对process的分类：IO-bound process和CPU-bound process
+
+* Process的创建：fork，一次执行两次返回；execute，一次执行没有返回；奇妙的机制
+
+  ![1556344453826](C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1556344453826.png)
+
+*  
+
+------
+
+### 第六讲 IPC 
+
+* Review Questions
+  
+  * TODO
+  
+* Threading Model
+
+  ![1557209601573](C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1557209601573.png)
+
+* Process cooperation的优点：information sharing, computation speed-up, modularity, convenience
+
+* IPC的两种模型：如上图，message passing 和 shared memory
+
+  ![1557209792779](C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1557209792779.png)
+
+* xv6中实现IPC的数据结构：struct pipe
+
+  ![1557209952876](C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1557209952876.png)
+
+* IPC - Message Passing
+
+  * 不依赖共享变量的进程间交流方式，提供send和receive两种接口
+  * physical comminication link：shared memory，hardware bus
+  * logical communication link：logical properties
+
+* Direct Communication
+
+  * 接口：每个进程显示的调用send(P, message), receive(Q, message)
+  * Communication link的实现细节：link是自动构建的；link和pair of process是一对一的；link可能是单向的unidirectional，但通常是双向的bidirectional
+
+* Indirect Communication
+
+  * 进程通过mailbox (port) 定位和接受message；每个maibox都有id，只有相互共享mailbox的进程才可以互相通信
+  * 接口：每个进程通过mailbox中转通信，send(A, message), receive(A, message)
+  * Communication link的实现细节：link仅当进程共享mailbox时才构建；link和pair of process是多对多的；link可以是单向的，也可以是双向的 
+  * <Problem> P1/P2/P3共享mailbox A，P1 send，P2/P3 receive，谁收到？
+    * 解决方法：link至多连接两个process；只允许同时一个process做receive；允许显示指定receiver
+
+* 同步/异步消息
+  * 同步消息 synchronous：block sender直到返回，block receiver直到收到消息
+  * 异步消息 asynchronous：sender和receiver都不做block
+* Buffering的实现有三种模式：Zero capacity (sender一直等待)，bounded capacity (当link被占满后sender等待)，unbounded capacity (无限长，sender不等待)
+
+##### LRPC - Lightweight Remote Procedure Call
+
+* Unix IPC 的方式：
+  * 管道 pipes，信号 signals，Unix-domain sockets (用于同一主机)
+  * 信号量 POSIX semaphores，FIFOS nmaed piped，共享内存 Shared memory segments，POSIX message queues
+  * System V semaphore sets, System V message queues
+* Unix IPC的问题
+  * 比较重量级 heavyweight
+  * 通常会使用polling
+
+* Lightweight RPC Basic concepts
+  * 简单的控制传输：client线程在server domain执行
+  * 简单的数据传输：共享参数栈，增加寄存器
+  * 简单的stub：highly optimized marshalling
+  * 并发性设计：避免共享数据结构
+  * 统计性结果：大多数message都比较短，几百byte的占到90%+
+* IPC之前设计高开销的地方
+  * stub会复制大量数据
+  * message buffer会通过内核复制内容，4次
+  * 访问验证
+  * 消息传输 (队列)
+  * scheduling，程序员看到线程跨域，系统实际上在不同的域中汇合两个线程
+  * context switch，2次
+  * dispatch，找一个接收线程来interpret消息，然后分派另一个线程，或者让另一个线程等待更多消息
+* LRPC Binding：connection setup phase
+  * 为调用接口中的每个procedure在内核中注册过程描述符(PDs)
+  * 对于每个PD，参数栈(A‐stack)都在两个域中预先分配和映射读/写
+  * 内核预先分配linkage record，以便从A‐stack返回
+  * 将A‐stack列表作为绑定对象返回给客户端
+
+* client thread上的调用顺序
+
+  ![1557212448931](C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1557212448931.png)
+
+*  
+
+------
 
