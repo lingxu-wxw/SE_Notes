@@ -511,3 +511,26 @@ Fork：copyuvm
 
 ------
 
+#### 第七讲 Exception
+
+* Review
+
+  * 两种IPC模型：shared memory，message passing
+  * POSIX中的IPC方式：pipe，message passing，signal，shared memory，semaphore，etc.
+
+* 辨析：Exception，Interrupt，System call
+
+  * Exception：一种非法程序操作
+  * Interrupt：由硬件设备产生的信号
+  * System call：用户程序可以请求OS操作
+
+* Intel CPU上的Exception簇
+
+  ![1557213531390](C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1557213531390.png)
+
+* IDT / Trap Vector in xv6
+
+  * IDT是exception table的别称；有256个entry，每个entry都是handler；在处理相对应的interrupt时，需要给出 %cs 和 %eip
+  * 可以通过 `int n` 调用System call
+
+* 

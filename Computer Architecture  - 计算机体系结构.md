@@ -715,3 +715,841 @@
 
 ------
 
+### 第六讲 数据存储和输入输出
+
+* 目前IO性能的一些参数
+  * 主频，Intel Core i5,  4.9 GHz
+  * 内存带宽，5.3 G/s
+  * 磁盘驱动性能：SATA 200 MB/s
+
+* 经典磁盘的内部结构
+
+  * 名词解释：spindle 主轴，motor 电机，Actuator Arm，Actuator 传动装置，Flex cable 排线，Disk platter 磁盘盘片，Read/Write Head 读写磁头
+
+  ![1557724413716](/Pictures/Computer_Architecture/1557724413716.png)
+
+* Disk Parameters
+
+  * Cylinder 磁柱，Platter 盘片，Track 轨道，Sector 扇区
+  * 一些参数：转速72000 RPM, 4096 bytes per sector, 63 sectors per track, 75 nanometers track width, 3 platters, 6 heads, 1 cylinder
+  * ![1557724843903](/Pictures/Computer_Architecture/1557724843903.png)
+
+* 磁盘访问时间
+
+  * 寻道时间：将head移动到目标track
+  * 旋转时间：将head移动到目标sector
+  * 传送时间
+  * 控制延迟和排队延迟
+
+* Drive Interface
+
+  * 定义：bridge between host and the disk
+  * 理想特性：
+    * simple protocol，减少握手，通信开销更低
+    * high autonomy ，host 处理器减少参与，计算开销更低
+    * high data rate up to a point，比media的传输速度要快，否则会成为瓶颈
+    * overlapping commands，支持多连接磁盘驱动的高利用率
+    * command queueing，提高disk的吞吐量
+
+* ATA，Advanced Technology Attachment 高级技术附件
+
+* SATA，Serial ATA，串行高级技术附件
+
+  * SATA 和 PATA 的对比
+    * SATA是一对一的接口，在新系统中占主导地位，电缆长度可以到1米，是向后兼容的
+    * PATA是并行化的接口，是老式PC的典型接口，电缆长度最多18英寸 (0.457米)，支持不同的数据传输模式
+
+  ![1557725906704](/Pictures/Computer_Architecture/1557725906704.png)
+
+  ##### *TODO* 更多区别介绍
+
+  
+
+* SCSI，Small Computer System Interface，小型计算机系统接口
+
+  * 定义：一个更高级的接口，具有ATA中没有的一些功能和特性，在parallel和serial接口都可用
+  * SATA 和 SAS (Serial Attached SCSI) 的比较
+    * SATA比较便宜，存储量大，功耗低，适用于PC和普通的存储
+    * SAS读写数据速率快，可靠性高，电缆长，适用于企业级的服务器系统
+
+  ![1557726519630](/Pictures/Computer_Architecture/1557726519630.png)
+
+* FC，Fibre Channel，光纤信道
+
+  * 定义：光纤信道是一种高速网络技术标准，主要应用于SAN (存储局域网)，是一种高端，功能丰富的串行接口
+  * 其拓扑结构分为三种：点到点 (Point-to-point)，仲裁循环 (Arbitrated Loop)，交换结构 (Switched Fabric)，分为FC-5、4、3、2、1共5层，具有多种适配端口
+
+* JBOD，Just a bunch of disks
+
+  * 定义：没有逻辑关联的一组磁盘驱动器；仅用于分享物理资源，如电源
+
+* Data striping，数据条带化
+
+  * stripe factor/width：磁盘数量
+  * stripe unit：固定大小的数据块
+  * stripe size/depth：stripe unit的大小
+
+  ​	![1557727054717](/Pictures/Computer_Architecture/1557727054717.png)
+
+* Date Mirroring，数据镜像，单纯的复制一份
+
+  * 分为Basic mirroring 和 Chain cluster mirroring，后者是错开来镜像的
+
+* RAID，Redundant Array of Inexpensive Drives，廉价驱动器的冗余阵列
+
+  * RAID 0，只有数据条带化，没有冗余，其实不算真正意义的RAID
+  * RAID 1，只有数据镜像，开销很大，利用率只有50%，但实现很方便
+  * RAID 10，先做镜像，再做条带
+  * RAID 01，先做条带，再做镜像
+
+  ![1557727589200](/Pictures/Computer_Architecture/1557727589200.png)
+
+  ![1557728397479](/Pictures/Computer_Architecture/1557728397479.png)
+
+  * Fault Tolerance 
+    * Data replication 数据复制，开销较大
+    * Error correcting coding (ECC)，错误校验码
+      * Parity Bit，奇偶校验码
+      * XOR-based Redundancy Scheme，核心还是做一个Parity Disk
+  * RAID 2，使用专用汉明码奇偶校验的位级分段(存储行业不使用)
+  * RAID 3，具有专用奇偶校验的字节级条带(存储行业很少使用)
+
+  ![1557729171675](/Pictures/Computer_Architecture/1557729171675.png)
+
+  * RAID 4，具有专用奇偶校验的块级条带(不常用)
+  * RAID 5，具有分布式奇偶校验的块级条带，提供单一驱动器故障保护
+  * RAID 6，具有双分布奇偶校验的块级条带，提供双重故障保护
+    * RAID-6和RAID-5一样对逻辑盘进行条带化然后存储数据和校验位，只是对每一位数据又增加了一位校验位。这样在使用RAID-6时会有两块硬盘用来存储校验位，增强了容错功能，同时必然会减少硬盘的实际使用容量容量。以前的raid级别一般只允许一块硬盘坏掉，而RAID-6可以允许坏掉两块硬盘，因此，RAID-6 要求至少4块硬盘。
+
+* DAS，Direct Access Storage，直接存取存储器
+
+  * 数据存储的管理是分布式的
+  * 服务器通过LAN/WAN发送数据
+  * 通过网络进行额外的服务器访问
+
+  ![1557729502758](/Pictures/Computer_Architecture/1557729502758.png)
+
+  * DAS 的局限性
+    * 在局域网中访问不同机器上的数据会导致性能下降
+    * 通过LAN/WAN发送大量数据会影响其他通信
+    * 如果服务器宕机，DAS对系统的其他部分也不可用了
+
+* NAS，Network Attached Storage 网络附属存储
+
+  * 定义：NAS是一种专门的设备，由存储器、处理器和操作系统组成，专门用作文件服务器
+
+  ![1557729928513](/Pictures/Computer_Architecture/1557729928513.png)
+
+  * NAS的优点
+    * 经济的存储共享方式
+    * 更容易设置和配置
+    * 容易支持RAID
+    * 更高的存储资源利用率
+
+* SAN，Storage Area Network，存储区域网络
+
+  * 定义：大量的标准存储设备；专用、高速、可伸缩的后端网络；将存储与服务器的直接连接解耦
+
+  ![1557730323567](/Pictures/Computer_Architecture/1557730323567.png)
+
+  * SAN 的优点
+
+    * 节省局域网/广域网带宽；更好的数据可用性；维护变得更容易；支持异构设备；易于接受集中管理；更高的硬件利用率和高性能
+    * 将存储和服务器隔离，简化了存储管理，能够统一、集中的管理各种资源。
+    * 使存储更为高效。通常网络中，可能一个服务器可用空间用完了，另一个服务器还有很多可用空间。SAN把所有存储空间有效的汇集在一起，每个服务器都享有访问组织内部的所有存储空间的同等权利。这一方法能降低文件冗余
+    * SAN能屏蔽系统的硬件，可以同时采用不同厂商的存储设备
+
+  * SAN 的不足：跨平台性能没有NAS好，价格偏高，搭建SAN比在服务器后端安装NAS要复杂的多。
+
+  * NAS 和 SAN 比较
+
+    * NAS主要是服务于文件，使用以太网，数据访问是文件层面，开销上比较经济
+
+    * SAN主要针对任务的关键型数据，使用光纤信道，数据访问时data block层面，开销非常高
+
+      
+
+* ##### DAS, NAS, SAN三种存储方式的概念及应用
+
+  * 存储分类
+
+    ![1557730625568](/Pictures/Computer_Architecture/1557730625568.png)
+
+  * DAS 直连存储：
+
+    * 直连式存储与服务器主机之间的连接通常采用SCSI连接，SCSI通道是IO瓶颈;服务器主机SCSI ID资源有限，能够建立的SCSI通道连接有限。
+    * 无论直连式存储还是服务器主机的扩展，从一台服务器扩展为多台服务器组成的群集(Cluster)，或存储阵列容量的扩展，都会造成业务系统的停机。
+
+  * NAS  网络附加存储——是一个网络上的文件系统：
+
+    * 存储设备通过标准的网络拓扑结构(以太网)添加到一群计算机上。应用：文档图片电影共享，云存储。NAS即插即用，支持多平台。
+    * NAS有一关键问题，即备份过程中的带宽消耗，NAS仍使用网络进行备份和恢复。NAS的一个缺点是它将存储事务由并行SCSI连接转移到网络上，也就是说LAN除了必须处理正常的最终用户传输流外，还必须处理包括备份操作的存储磁盘请求。
+    * NAS需要服务器自己搜索它的硬盘
+
+  * SAN 存储区域网络——是一个网络上的磁盘
+
+    * 通过光纤通道交换机连接存储阵列和服务器主机，最后成为一个专用存储网络。SAN提供了一种与现有LAN连接的简易方法，并且通过同一物理通道支持广泛使用的SCSI和IP协议。SAN允许企业独立地增加它们的存储容量。SAN的结构允许任何服务器连接到任何存储阵列，这样不管数据放在哪里，服务器都可以直接存取所需的数据。因为采用了光纤接口，SAN还具有更高的带宽。
+
+  ![1557730870149](/Pictures/Computer_Architecture/1557730870149.png)
+
+  ![1557730879436](/Pictures/Computer_Architecture/1557730879436.png)
+
+  
+
+* SSD的结构
+
+  ![1557730928356](/Pictures/Computer_Architecture/1557730928356.png)
+
+* NAND Flash Cell
+
+  * NAND-flash存储器是flash存储器的一种，其内部采用非线性宏单元模式，为固态大容量内存的实现提供了廉价有效的解决方案。NAND-flash存储器具有容量较大，改写速度快等优点，适用于大量数据的存储，因而在业界得到了越来越广泛的应用，如嵌入式产品中包括数码相机、MP3随身听记忆卡、体积小巧的U盘等。
+  * NAND Flash有三种类型：SLC, MLC, TLC
+
+* Write Amplification
+
+  * 定义：物理上写入存储媒体的实际信息量是要写入的逻辑信息量的倍数
+  * 写入放大（WA）是闪存和固态硬盘之间相关联的一个属性，因为闪存必须先删除才能改写，在执行这些操作的时候，移动（或重写）用户数 据和元数据(metadata)不止一次。这些多次的操作，不但增加了写入数据量，减少了SSD的使用寿命，而且还吃光了闪存的带宽（间接地影响了随机写 入性能）
+
+* SLC 和 MLC，Single-Level Cell单层单元和Multi-Level Cell多层单元
+
+  * SLC 每个cell中存 1 个bit，开销更高，密度更稀疏，power cons比较低，寿命相对短
+  * MLC每个cell中存 2 个bit，开销更低，密度更大，power cons比较到，寿命相对长
+
+* SSD的优点
+
+  * 很低的延迟：容量数量级小于HDD，没有寻道时间
+  * 非常快的读写速度：2700 MB/s，在小文件读写上性能更好
+  * 物理上更健壮：耐冲击，没有会移动的部件 (磁头)
+  * 没有数据碎片的问题
+
+* SSD在现有存储系统中的应用
+
+  * 混合设计 Hybrid design：SSD + 非易失性cache
+  * Flash-only
+
+* Summary
+
+  * Disk concept; platter/track/sector
+  * Design good drive Interfaces
+  * Parallel/Serial ATA; Parallel/Serial SCSI
+  * RAID Organization
+  * DAS, NAS, SAN
+  * Flash memory cell, SLC/MLC
+  * SSD advantages, hybrid storage
+
+------
+
+### 第七讲 性能分析与评测简介
+
+* Evaluation Metrics 评价指标
+  * 典型的指标：Events frequency; Interval durations; Parameter sizes
+* Amdahl's Law
+  * f 是课并行化部分的代码，1-f 是完全串行的
+  * ![1557733645463](/Pictures/Computer_Architecture/1557733645463.png)
+
+* CPI，Clock cycle Per Instruction，指令的平均时钟周期数
+
+* Little’s Law，科特尔法则
+
+  * 定义：科特尔理论是基于等候理论，可以用于一个稳定的、非抢占式的系统中
+  * λ，平均工作到达速率，每单位时间的个数
+  * W，系统中一个item的平均等待时间
+  * L = λW，队列的平均长度
+
+* Example：BW Estimation，BW估计
+
+  * 影响BW的因素：cache miss 和 data prefetch
+
+* Little’s Law 在生产实践中的作用
+
+  * 排队系统被广泛用于计算系统性能的建模
+  * 测量响应时间是很有挑战性的，可能不切实际或非常耗时
+
+  * 即时评估系统反应：间接估计方法；队列长度可以即时测量；利用Little定律估计响应时间
+
+
+  ![1557734329142](/Pictures/Computer_Architecture/1557734329142.png)
+
+* Dynamic Power 动态功率估计
+
+  * C 负载电容，V 电源电压，a 活动因子 (0-1之间的分数)，f 工作频率
+  * 公式：`P = a * CV^2 * Af`
+  
+* Server Speed and Server Power
+
+  * 实验结果表明，**服务器功率与服务器速度的关系几乎是线性的**
+
+* Computer Power 计算机功率估计
+
+  * Pdyn 动态功率，Pidle 空闲功率/静态功率，U 系统利用率，系统活动的指标
+  * 公式：`Ptotal = Pdyn * U + Pidle`
+  * 这种估算方式的优点：
+    *  给出了整个系统平均功率的估算
+    * 使用服务器/CPU利用率作为机器级的活动
+    * 当服务器数量较大时，这种估算方法很棒
+  * 这种估算方式的不足：没办法预测峰值power
+
+* Computer Architect's Toolbox 做架构的时候会考虑的问题
+
+  * 仿真模型有多精确
+  * 运行仿真需要多长时间
+  * 开发仿真模拟器虚拟多长时间
+  * 可以探索设计空间的那一部分：accuracy, evaluation time, development time, coverage
+
+* Functional Simulation 功能仿真
+
+  * 功能仿真是只考虑对ISA的功能特性建模：不考虑时间问题，基本上是一个指令集模拟器
+  * 一个重要的应用是对设计的验证，而不是评估系统的性能指标
+  * 还可以生成指令和地址跟踪，可作为其他仿真工具的输入
+  * 大概就是最后仿真结果对了就行了
+
+* Trace-Driven Simulation 记录驱动的仿真
+
+  * 将程序指令和地址跟踪 记录到详细的为体系结构计时模拟器中 (micro architecture timing simulator) - 可以从某个特定status开始运行
+  * 将功能模拟和时间模拟分离
+  * 不仅仿真结果要对，整个过程都要记录下来
+  * 缺点：
+    * 需要存储跟踪文件 (容量有点大)
+    * 无法精准的模拟沿错误预测路径的影响 (错误预测的指令无效——它们不会出现在通过函数模拟生成的跟踪文件中，尽管它们可能影响缓存和/或预测器内容)
+
+* Execution-Driven Simulation 执行驱动的仿真
+
+  * 目前采用的实际模拟方法
+  * 功能与时间模拟想结合，以增加开发/评估时间为代价，实现比trace-driven更高的精度
+
+  ![1557737652854](/Pictures/Computer_Architecture/1557737652854.png)
+
+* **Simulation Acceleration**
+  
+  * 循环精确模拟 (Cycle-accurate simulation) 是很慢的：在cycle-by-cycle的基础上模拟一个微架构；这个是最基本情况
+  * 采样模拟 (Sampled Simulation)：只有一小部分指令采取很慢的循环精确模拟；要求提供采样裁员的架构启动映像，即寄存器和内存状态；就是只有一小部分采个样
+    * 架构启动映像 architecture starting image (ASI)
+  * 快速转发 (Fast-Forwarding)：通过功能仿真构建体系结构状态；功能模拟和执行驱动模拟之间的切换
+  * 检查点 (checkpoint)：在采样单元之前存储寄存器/内存状态；只需要加载运行期间的数据和模拟器状态；过一段时间做一个总结
+  
+* Workload 负载
+  * 定义：用户在机器上运行的程序和操作系统命令的总称；最好是在真实的应用上的，会修改一下应用程序
+  * 在特定情况下负载也可以使用稍微简单一点的，比如kernel、toy benchmark、synthetic benchmarks
+  * Benchmark Suite 基准组件：将benchmark集合放在一起，来定量度量具有各种application的系统的性能
+  
+* Example：CloudSuite
+  
+  * 数据分析，数据缓存，数据服务，图分析，内存分析，流媒体，网络搜索，Web服务
+  
+* Workload Design 需要考虑的地方
+
+  * 负载特性：了解各种benchmarks的行为，使用各种硬件监视器和模拟器
+  * 主成分分析 (PCA)：依赖成熟的统计数据分析技术，把一些可能相关的变量转换成少量不相关的主成分 possibly correlated variables -> uncorrelated principal component
+  * 聚类分析
+  * **确定一个reduced (较少)但有代表性的workload**
+
+* PCA，Principle Component Analysis，主成分分析
+
+  * 主要应用：Workload Analysis：可视化workload space，分析benchmark之间存在差异的原因
+  * Workload Reduction：建立以小组有代表性的基准测试 benchmark
+
+* Multi-Program Benchmark
+
+  * Single-Program Benchmark 比较简单，**benchmark 就是一个程序加上一个特定的输入**
+  * Multi-Program Benchmark 会比较复杂，每个程序都可能有不同的runtime，不同的互动interaction取决于他们如何互相匹配 (align with)
+  * **Multi-Program Benchmark，多程序基准测试的问题**
+    * **负载不平衡，资源竞争 (program alignment matter)**
+  * <B, T, F, S0>：B 是一组single benchmark；T 是benchmark的终止条件；F 函数，可以决定和哪个B运行在一个特定的core；S F的初始状态
+
+* 性能测试的综合指标
+
+  * SPEC Ratio：为了简化测试结果，SPEC决定使用单一的数字来归纳所有12种整数基准程序。具体方法是将被测计算机的执行时间标准化，即将被测计算机的执行时间除一个参考处理器的执行时间，结果称为SPEC ratio。SPEC ratio值越大，表示性能越快（因为SPEC ratio是执行时间的倒数）；SPEC是个比例，而不是绝对执行时间
+
+  * 几何平均值：连乘积开项数次方根
+
+  * 算术平均值：就是普通的平均值
+
+  * 调和平均值：又称倒数平均数，是总体各统计变量倒数的算术平均数的倒数
+
+    ![1557825523789](/Pictures/Computer_Architecture/1557825523789.png)
+
+* Example: System Throughput
+
+  * Normalized Turnaround Time (NTT)，是个比例，T(mutli program) / T(single program)
+  * Average Normalized Turnaround Time (ANTT)，算术平均
+  * IPC Throughput，算术平均
+
+* Experimental Lifecycle 实验生命周期
+  * Vague idea 模糊的概念 => “groping around” experiences 摸索的经历 => Initial observations 初步观察
+  * Hypothesis 假设 => Model 建模 => Experiment 实验 => Data, analysis, interpretation 数据分析解释 (循环)
+  * Results & final Presentation 结果陈述
+* Summary
+  * Amdahl’s Law
+  * Calculating CPI （公式）
+  * Analyzing memory access time
+  * Little’s Law
+  * Estimating server power
+  * Trace-/Execution- driven simulation
+  * Simulation acceleration
+  * Concepts of workload characterization （如何设计一个好的workload）
+  * Multi-programmed workload
+
+------
+
+### 第八讲 多处理器和线程级并行
+
+##### Multiprocessor Architecture
+
+* speedup 和 scaleup
+  * speedup：如果资源变成n倍，对于同一个task，处理速度可以快n倍
+  * scaleup：如果资源变成n倍，就可以处理n倍规模的task
+
+* Flynn 对并行架构的分类
+
+  * SISD，Single Instruction Single Data 单指令流单数据流
+  * SIMD，Single Instruction Multiple Data 单指令流多数据流
+    * 对不相交的数据集应用相同的指令流；vector supercomputer
+  * MISD，Multiple Instruction Single Data 多指令流单数据流
+    * 目前还没有商用
+  * MIMD，Multiple Instruction Multiple Data 多指令流多数据流
+    * 每个节点在自己的数据集上执行自己的数据流
+    * 通用的多处理器选择的体系结构
+
+* 多处理器架构的中重要性
+
+  * 再继续做ILP (指令级并行) 可能是低效率的，特别是针对服务器级别的应用程序
+  * 云处理计算，Cloud-oriented processing，海量数据和互联网请求
+  * scale up差不多到头了，提高桌面级的性能已经不那么重要了
+  * 多处理器研发有更好的投资回报，因为做得好就只是复制就可以了，不用独特的设计
+
+* 不同的并行化层级
+
+  * Thread-Level Parallelism 线程级并行
+    * 多处理器是由多个chip组成的，每个chip上多个core
+  * Data-Level Parallelism 数据级并行
+    * many-core accelerator 多核加速器，通过互联网络
+  * Request-Level Parallelism 请求级并行
+    * 多计算机系统，即一组服务器；数据中心和仓储式计算机
+
+* 多处理器中的内存架构
+
+  * Shared Cache；Bus-based Shared Memory；Dance-hall；Distributed Memory
+
+  ![1557829720177](/Pictures/Computer_Architecture/1557829720177.png)
+
+* 多处理器的两种分类：根据内存的组织形式分类
+
+  * Centralized Shared-Memory，UMA架构
+    * 多个处理器共享相同的物理内存，上述的a/b类型
+    * 通常被称为 **SMPs (symmetric multiprocessors**，对称多处理器)，处理器对任何内存位置都具有相同的访问时间 (因为共享地址空间)
+  * Distributed Shared-Memory (DSM)，NUMA架构
+    * 物理上内存被处理器分离开，上述的c/d类型
+    * 两个主要的优势：内存带宽是scalable的，只要继续加就可以；本地访问的延迟很低
+    * 主要的缺点：通信比较复杂，node到node之间的延迟比较高
+  * 共享内存意味着地址空间也是共享的，SMP和DSM都是
+
+* 两种不同MIMD系统的比较，多处理器和多机(集群)
+
+  * Multiprocessors，SMP和DSM
+    * 紧密耦合的体系结构
+    * 处理器通过总线或者互联网络链接
+    * 由许多处理器组成，2个以上，多的几十个
+    * 同一个共享地址空间
+    * 通过load/store，隐式通信数据
+    * 线程级并行
+  * Multicomputers, Clusters，WSCs
+    * 松散耦合的体系结构
+    * 通过局域网连接的PC
+    * 由许多结点组成 node
+    * 有多个私有地址空间
+    * 在处理器之间 显示传递信息
+    * 请求级并行
+
+##### Cache Coherence Problem
+
+* 共享内存系统希望做到的事情
+  * 通过并行性来提高性能
+  * more important，使用多个进程的并行程序在不同物理处理器上运行的结果 和 在相同物理处理器上运行时的结果应该 没什么不同
+* Cache Coherence的问题
+  * 主要原因：私有数据和共享数据同时存在
+  * 私有数据在本地，只供一个处理器使用，共享数据在全局，由多个处理器同时使用
+  * 共享数据有多个copy副本，分布在不同的缓存中，并由不同的处理器操作
+  * 当不同的CPU看到相同内存位置的不同值的时候，就会出现cache  coherence的问题
+  * cache coherence的问题在 write-back 系统和 write-through 系统中都是存在的
+
+* 单处理器中的一致性问题 (Uniprocessors)
+  * 即使是单处理器都可能出现问题
+  * Device可以通过DMA直接读取内存，而最新的数据可能还在write-back cache中，没有被flush到内存中去
+  * **Memory 要做到读取内存地址X，应该返回任何处理器在地址X处写入的最新的值**
+    * 但最新这个概念也很难定义，如果两个cpu同时写呢？如果时间很接近呢？
+* Cache Coherency 的精确定义
+  * 定义1：program order，单处理器的 “read after write”，如果之前写了新值n，之后的读就要读到这个新值
+  * 定义2：write propagation，处理器A的写操作 **eventually** 会被处理器B看到
+    * 这两个条件还不够充分，如果有两个处理器同时写操作，不同处理器可能会看到不同的值
+  * 定义3：write serialization，其他处理器read的顺序和真实的write顺序应该是一致的
+* Cache Coherency 的正式定义
+  * 对于每个位置，都可以构造一个在此位置的、所有操作的串行顺序，该顺序与执行的结果一致，并且 ( hypothetical serial order )
+    * 任何特定处理器发出的内存操作都按照上述处理器发出的顺序执行
+    * 每个读操作返回的值是最后一次按串行顺序写入该位置的值
+  * 就像一个没有cache的共享内存系统，会强制保证顺序
+* Coherence 和 Consistency 的区别
+  * Coherence 一致性，强调读出值的异同
+  * Consistency 一贯性，强调读的时间概念，有一个顺序的概念
+
+##### Snooping Protocol 
+
+* Enforcing Coherence
+
+  * 实现一致性的关键是跟踪数据块的任何共享状态
+  * **Snooping Protocol**
+    * 监视interconnect上的所有事务
+    * 每个缓存都有一个共享状态的副本
+    * 通常会更快，如果有足够的带宽
+  * **Directory-based Protocol**
+    * 不在interconnect上广播
+    * 共享状态保存在一个single的目录中
+    * 更容易支持大量处理器
+
+* Cache Coherence Through Bus Snooping
+
+  ![1557887533547](/Pictures/Computer_Architecture/1557887533547.png)
+
+  * 具有本地缓存的多个处理器被放置在共享总线上
+  * 所有写操作都将在总线上以事务的形式显示到内存中
+  * 所有事务都以相同的顺序对所有处理器可见
+  * 每个处理器不断地“窥探”总线 (snoops)
+
+* Snooping Protocol
+
+  * 协议是一种分布式算法
+  * 维护缓存一致性的两种方法
+    * update-based：写时更新其他缓存副本
+    * invalidation-based：写操作时是其他缓存副本失效
+
+  ![1557888082952](/Pictures/Computer_Architecture/1557888082952.png)
+
+* A 3-state (MSI) Write-Back Invalidation Protocol
+
+  ![1557888707774](/Pictures/Computer_Architecture/1557888707774.png)
+
+  ![1557888743234](/Pictures/Computer_Architecture/1557888743234.png)
+
+  * Features 3 states: modified (M), Shared (S), Invalid (I)
+  * 2 possible processor requests: PrRd and PrWr
+  * 3 possible bus-side requests:
+    * Bus Read (BusRd)
+    * Bus Read Exclusive (BusRdX): ensures write propagation
+    * Bus Write Back (BusWB)
+
+------
+
+### 第九讲 片上多处理器与多核系统
+
+##### Thread-Level Parallelism
+
+* Thread：处理器执行程序的最小单元
+
+  * 具有执行所必须的所有状态；同一个进程中的线程是共享代码和数据的
+  * 线程的用法比较casual，可以指并行程序中的真实的thread，也可以只是一段独立的程序
+
+* Thread-Level Parallelism
+
+  * 使用本质上并行的多线程执行
+  * **粒度是指线程的计算量大小**
+
+* 多线程的必要性
+
+  * 指令级并行无法掩盖长时间的memory stall，比如load/store，FU的利用率比较低
+  * 现代处理器大部分是用 hardware multi threading 来提高资源利用率的
+  * 多线程处理器可以在不同的线程并行执行不同的指令流
+    * 多分processor resource，比如register和PC
+    * 往pipeline中添加了 thread swtich的逻辑
+
+  ![1557897089555](/Pictures/Computer_Architecture/1557897089555.png)
+
+* 多线程的类型
+
+  * Fine-grained (interleaved) multithreading 细粒度
+    * 线程切换的间隔是clock cycle
+    * 降低了单个线程的执行速度
+  * Coarse-grained multithreading 粗粒度
+    * 当有长延迟的stall时，触发线程切换
+    * short-latency的时间无法被隐藏 
+  * Simultaneous multithreading (SMT 同步多线程)
+    * 指令会被多线程同时执行，在同一个clock cycle
+    * 较大地提升了资源的利用率
+
+  ![1557897719027](/Pictures/Computer_Architecture/1557897719027.png)
+
+  * SMT在利用率上的影响
+    * SMT 可以利用程序的独立性来实现并行性，也可以在单个程序中利用并行性
+    * 调度、指令的mix 都是由硬件来完成的，没有compiler的事
+    * 需要从多个program counter中获取数据并访问多个复杂的register set
+  * Intel 的SMT技术实现叫 HT，hyper threading
+
+* **Chip Multi-Processor (CMP) 片上多处理器**
+
+  * 多处理器其实流行过一段时间
+  * CMP是多处理器的一种特殊类型，多核聚集在单个processor socket上
+  * CMP 和 multicore processor 似乎是两回事
+    * multicore processor主要有前面讲过的shared-memory multiprocessor，MIMD
+  * CMP 和 SMT的比较
+    * CMP中，多processor，多个物理核是有各自独立的资源的，比如 L1 cache, TLB, PC, GPR是独立的，L2 cache 可能是共享的
+    * SMT中，多thread，多线程是共享处理器资源的，PC，GPR是独立的，cache 和 TLB 是共享的 (可能这里还是个单process)
+
+* 并行化程度比较
+
+  * 纵坐标granularity是粒度
+
+  ![1557899084413](/Pictures/Computer_Architecture/1557899084413.png)
+
+##### Introduction to Multicore
+
+* Multicore 出现的理由：单个superscalar处理器无法充分利用线程级并行，而multi core可以
+
+  ![1557899245212](/Pictures/Computer_Architecture/1557899245212.png)
+
+  ![1557899260518](/Pictures/Computer_Architecture/1557899260518.png)
+
+* 回顾，指令级并行，superscalar
+
+  ![1557899875538](/Pictures/Computer_Architecture/1557899875538.png)
+
+* Single core SMT 和 Multicore solution 对比
+
+  * Single core SMT：大多数情况只能充分利用指令级并行；要运行的更快只能提高时钟频率；会大幅增加功耗和散热；设计越来越趋向耗时，难以验证有效性，因为是在scale up
+  * Multicore：很适应线程级并行；在同一块chip上集成了两个或更多的核；充分利用核的性能，选用一个比较高效的主频；采用经过验证的/成熟的处理器设计，制造成本更低
+
+* Large Superscalar 和 CMP 对比
+
+  * Large Superscalar：就是单线程做ILP，需要一点程序员的工作
+  * CMP：一些ILP和一些细粒度的TLP，需要比较多的程序员工作，倾向于大量的并行
+
+* Typical Multicore Cache Organization
+
+  * Private L1 +  Shared L2，例子：Dual-core Xeon Processors
+  * Private L1 and L2，例子：AMD Athlon，Intel Pentium D
+
+* 一些多核设计的案例
+
+  ![1557901667782](/Pictures/Computer_Architecture/1557901667782.png)
+
+  ![1557901680819](/Pictures/Computer_Architecture/1557901680819.png)
+
+  ![1557901721445](/Pictures/Computer_Architecture/1557901721445.png)
+
+  ![1557901736010](/Pictures/Computer_Architecture/1557901736010.png)
+
+* **多核架构设计的挑战**
+  * Shared resource management，共享资源管理
+  * ILP and TLP tradeoffs balance，指令级并行和线程级并行的平行
+  * Grain size vs. number of cores，粒度和核数
+  * On -/Off -chip bandwidth requirements，片上/外带宽要求
+  * Latencies (execution, cache, memory) reduction，减少延迟 (执行、缓存、访存)
+  * Multiple domains in terms of power management，电源管理的多个领域
+  * Partitioning resources between threads/cores，在线程/内核之间对资源进行分区
+  * On-die interconnect，on-die 互联
+
+##### Design Space Exploration
+
+* 如何混合不同的核，两种方案
+
+  * 少量，复杂，重量级的核，更强调低线程延迟
+  * 大量，简单，轻量级的核，更强调核心区域 (core area)
+  * general processor core 普通的核
+    * small，power-efficient
+    * large，high-performance
+  * specialized core 专门定制的核
+    * 特定任务中使用的加速器
+  *  EV4 - EV8，规模从小到大
+    * EV4：每个CMOS管的微内核
+    * EV5：chip上有二级缓存
+    * EV6：支持乱序执行 OoO
+    * EV8：包含 SMT 同步多线程
+
+  ![1557903080808](/Pictures/Computer_Architecture/1557903080808.png)
+
+* Heterogeneous chip multiprocessors 异构多处理器芯片
+
+  * 也被叫做 asymmetric chip multiprocessors，非对称多处理器芯片
+    * 将每个应用程序都匹配到最合适其性能需求的核心
+    * 为所有工作负载需求提供更有效的区域覆盖
+  * Single ISA Heterogeneous CMP：CMP由一组异构的处理器核心组成，所有这些核心都可以执行相同的ISA
+  * 异构是体现在不同的 execution bandwidth，cache size，in-order / out-of-order
+
+* Heterogeneous-ISA chip multiprocessors 异构指令集架构多处理器芯片
+
+  * 可以在选择ISA这一点上做的多样化一点
+  * 应用程序应该能在核心之间自由迁移
+  * challenge：运行时状态是和ISA相关的，迁移的开销会比较大
+  * 常见的迁移过程包括：process scheduling，page table manipulation，binary translation，state transformation 进程调度,页表操作,二进制翻译,状态转换
+
+  ![1557904037900](/Pictures/Computer_Architecture/1557904037900.png)
+
+##### From Multicore to Manycore
+
+* Manycore 和 Multicore 对比
+  * Manycore：核的数量很多，在往更高的并行度优化，有更好的整体吞吐量性能，但单个线程的性能一般般
+  * Multicore：核的数量不多，在并行化和串行代码都会做优化，乱序执行，深度流水线，更强调单个线程的性能
+* Intel Many Integrated Core (MIC) 架构
+  * 一个manycore的处理器 + 61 个single的 in-order core
+  * 每个core都支持 4个 hyper thread
+  * L2 cache是完全一致的
+  * 在内部运行一个OS，会占用一个core
+* Intel Single-Chip Cloud Computer (SCC)
+  * 总的来说还是一个manycore架构；但更重要的是这个云数据中心的一个浓缩
+  * 并没有在硬件层面上做cache coherence，交给软件去做了
+  * 使用message passing当做主要的通信方式
+* Summary
+  * Thread, Multithreading, SMT
+  * CMP and multicore
+  * Benefits of multicore 
+  * Multicore system architecture
+  * Heterogeneous multicore system
+  * Heterogeneous-ISA CMP
+  * Multicore and manycore
+  * Design challenge
+
+------
+
+### 第十讲 数据级并行化与GPGPU
+
+##### DLP Overview
+
+* 数据级并行 DLP：并行性来自跨大数据集的同步操作，而不是来自多个线程
+
+  * 比较适用于大型的科学研究/工程项目
+  * SISD，Single Instruction Single Data 单指令流单数据流
+  * SIMD，Single Instruction Multiple Data 单指令流多数据流
+
+  ![1557921047758](C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1557921047758.png)
+
+##### Vector Processor
+
+* Vector Operation，向量操作
+  * 向量操作通常包括：读取一组数据元素，在element array上操作
+  * 我可以理解成向量指令是把若干条数据操作一起做吗
+* Vector Instruction，向量指令
+  * 定义：向量指令对一系列数据项进行操作
+  * 向量指令的一系列优势
+    * 减少获取指令需要的带宽，单个vector指令指定了大量的工作
+    * 在检查硬件的时候data hazard会比较少，同一个vector中的独立运算
+    * 内存访问的延迟会均摊，vector指令有自己的内存访问模式
+
+* Vector Architecture，向量架构
+
+  * 两种主要的向量架构
+    * memory-memory vector processors：所有vector操作都是内存对内存的
+    * vector-register processors：vector操作等价于load/store操作
+
+* Vector Process，向量处理器
+
+  * vector processor通常是由vector units 和 ordinary pipelined scalar units组成的
+  * Vector Register，内存中固定大小的bank来装一个vector，通常包含64-128个 FP/浮点元素，需要确定最大向量长度 (MVL) 
+  * Vector Register file，是指8-32 个vector register
+
+  ![1557922449353](C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1557922449353.png)
+
+* VMIPS的参数：
+
+  * Vector registers：64-element register，16个读端口，8个写端口
+  * Vector functional units：5个完全流水线化的FU，hazard检测
+  * Vector load/store unit：load/store一个vector，每个clock cycle 一个word
+
+* Multiple Lanes 
+
+  * 使用multiple parallel pipeline，或者说叫lanes，可以实现在一个cycle这个产生多个结果
+  * 比如`ADDV C,A,B`，vector register A的元素和vector register B的元素是 硬连接的，hardwired
+
+  ![1557922629277](C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1557922629277.png)
+
+* Vector Instruction Execution
+
+  * Vector 操作的执行时间主要取决于：vector操作的长度，结构冒险，vector操作中的数据依赖
+
+  * Start-up time 的定义：pipeline latency，FU pipeline的深度
+
+  * VMIPS，基于vector register的体系架构
+
+  * VMIPS的FU，consume one element per cycle，执行时间大概和vector length差不多
+
+  * Pipelined multi-lane vector execution：
+
+    `T vector = T scalar + (vector length/lane number) - 1`
+
+* Vector Chaining
+  * Chaining 就是vector版本的register bypassing
+  * Convoy  就是指可以一起执行的vector 指令，整个convoy中没有结构冒险，没有数据冒险
+* Vector Length Register (VLR)
+  * vector的长度不一定就恰好的是64怎么办呢
+  * 控制任何向量运算的长度，不能大于最大值 maximum vector length (MVL)
+  * 对长度超过MVL的可以使用 strip mining操作，第一个循环做短段 (n mod MVL)，后面的都做成 VL = MVL 
+* Vector Mask Register
+  * 如果有if操作怎么办
+  * 提供每个元素的条件执行操作，基于一个boolean vector，也就是vector mask register (矢量掩码寄存器)
+  * 指令仅仅对掩码寄存器中对应项为 1 的向量元素执行操作
+
+##### GPGPU
+
+* GPU 概述
+  * GPU是指图像处理单元，graphics processing unit，基本上是一个大规模的并行架构
+  * GPGPU，general-purpose computation on GPU，GPU上的通用计算
+    * 利用可用的GPU执行单元加速
+    * cpu代码运行在host上，GPU代码运行在device上
+  * GPGPU通过高级编程接口把大规模多线程硬件暴露出来了
+
+* Graphics Pipeline 
+
+  * 现代GPU把图形计算组织在graphics pipeline 中
+  * 名词解释：vertices 顶点，primitives (triangle，points，lines) 原始结构，fragments 碎片，pixels 像素
+
+  ![1557926187745](C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1557926187745.png)
+
+* Graphics Workload，通常是一些 相同的，独立的，基于像素流的计算
+
+  * Identical, independent computation on multiple data inputs
+
+* Processing Data Parallel Workloads
+
+  * MIMD, Multiprocessor Approach, 把独立的任务分配到多个CPU上
+  * SPMD Approach, Single Program Multiple Data，把相同的、独立的任务分配到多个CPU上
+  * SIMD / Vector Approach，消除冗余单元，把相同的、独立的任务分配到多个执行单元 (execution unit)，只有一个CPU
+  * SIMD / Vector Approach，single PC，single register file，1 heavy thread + data parallel ops，把相同的、独立的任务分配到多个执行单元 (execution unit)，只有一个CPU
+  * SIMT Approach，multiple threads + scalar ops (single PC, multiple register file)
+
+* SIMT 和 SIMD 的区别
+
+  * SIMT中文译为单指令多线程，英文全称为Single Instruction Multiple Threads
+  * GPU中的SIMT体系结构相对于CPU的SIMD中的概念。为了有效地管理和执行多个单线程，多处理器采用了SIMT架构。此架构在第一个unified computing GPU中由NVIDIA公司生产的GPU引入。
+  * 不同于CPU中通过SIMD（单指令多数据）来处理矢量数据；GPU则使用SIMT，SIMT的好处是无需开发者费力把数据凑成合适的矢量长度，并且SIMT允许每个线程有不同的分支。 纯粹使用SIMD不能并行的执行有条件跳转的函数，很显然条件跳转会根据输入数据不同在不同的线程中有不同表现，这个只有利用SIMT才能做到。
+  * SIMT与SIMD本质相同：都是单指令多数据。
+  * SIMT比SIMD更灵活，允许一条指令的多数据分开寻址；SIMD是必须连续在一起的片段
+  * SIMT形式上是多线程，本质上还是一个线程，只不过数据可以零散的分散开。但是如果你真的将数据分散开的话，执行效率上又会大打折扣，因为不满足并行访问的要求。
+  * 总之SIMT是SIMD的一种推广，更灵活而已。
+
+* 可以用CUDA或者OpenCL 编写 GPGPUs
+
+* CUDA Parallel Computing Model
+
+  * CUDA, Stands for Compute Unified Device Architecture， CUDA™是一种由NVIDIA推出的通用[并行计算](https://baike.baidu.com/item/并行计算/113443)架构，该架构使[GPU](https://baike.baidu.com/item/GPU)能够解决复杂的计算问题。 它包含了CUDA[指令集架构](https://baike.baidu.com/item/指令集架构)（[ISA](https://baike.baidu.com/item/ISA)）以及GPU内部的并行计算引擎。 开发人员现在可以使用[C语言](https://baike.baidu.com/item/C语言)来为CUDA™架构编写程序
+  * CUDA 是 HW/SW 架构，使 NVIDIA GPU能够执行 C，c++等编写的程序
+  * GPU 实例化一个内核程序，由大量CUDA线程并行执行
+  * Grid：一组执行相同内核的线程块
+
+* Hardware Execution
+
+  * GPU 硬件包含一组多线程SIMD处理器，执行一个线程块网格 grid of thread block
+
+* Example：Tesla GPU Architecture
+
+  * Tesla的主要设计目标是在相同的统一处理器架构上执行 顶点和像素碎片 的着色器程序
+
+  * TPC，texture/processor cluster
+  * SM，streaming multiprocessors
+  * SP，steaming processor
+  * GPC，Graphics Processor Cluster
+
+* Warps
+
+  * GPU依赖于大量的硬件多线程来保持算术单元的占用
+  * Wrap是指32条相同类型的并行CUDA线程
+    * 都从同一个程序地址开始，所有wrap中的线程都使用一个common PC，wrap的调度单元在SM中
+
+* Warp Scheduling
+
+  * 线程调度发生在warp的力度上 
