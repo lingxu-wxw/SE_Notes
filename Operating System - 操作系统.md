@@ -517,12 +517,13 @@ Fork：copyuvm
 
   * 两种IPC模型：shared memory，message passing
   * POSIX中的IPC方式：pipe，message passing，signal，shared memory，semaphore，etc.
-
 * 辨析：Exception，Interrupt，System call
 
-  * Exception：一种非法程序操作
-  * Interrupt：由硬件设备产生的信号
-  * System call：用户程序可以请求OS操作
+  * Exception：一种非法程序操作，能复现
+  * Interrupt：由硬件设备产生的信号，不能复现
+  * System call：用户程序可以请求OS操作，能复现
+
+##### Exception
 
 * Intel CPU上的Exception簇
 
@@ -532,5 +533,433 @@ Fork：copyuvm
 
   * IDT是exception table的别称；有256个entry，每个entry都是handler；在处理相对应的interrupt时，需要给出 %cs 和 %eip
   * 可以通过 `int n` 调用System call
+
+* Exception Handler
+
+  * 处理器在栈上push return address的时候，可能是当前指令(page fault指令)，或者下一条指令(硬件中断)
+  * 处理器还会在栈上push一些额外的处理器状态，当handler返回的时重启中断程序的必要内容，比如当前的condition code
+  * 在user向kernel切换的时候，所有item都是被push到kernel stack，而不是user stack
+  * exception handler在kernel mode运行，可以完全访问所有系统资源
+  * 要往kernel stack中push的内容
+
+  ![1558168046512](C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1558168046512.png)
+
+  * 为什么一定要push到kernel stack？
+
+* 会触发user到kernel的几种事件 
+
+  * Device interrupt：来自外部的中断，输入引脚 NMI引脚上 (nonmaskable interrupt)，输入引脚 INTR
+  * Software interrupt：中断指令的执行，INT
+  * Program fault：程序错误，执行出现错误的情况，除零错误
+
+  ![1558168902842](C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1558168902842.png)
+
+* 硬件中断和软中断
+
+  * 硬件中断是由与系统相连的外设(比如网卡 硬盘 键盘等)自动产生的. 每个设备或设备集都有他自己的IRQ(中断请求), 基于IRQ, CPU可以将相应的请求分发到相应的硬件驱动上(注: 硬件驱动通常是内核中的一个子程序, 而不是一个独立的进程).处理中断的驱动是需要运行在CPU上的, 因此, 当中断产生时, CPU会暂时停止当前程序的程序转而执行中断请求.
+  * 软中断不会直接中断CPU, 也只有当前正在运行的代码(或进程)才会产生软中断. 软中断是一种需要内核为正在运行的进程去做一些事情(通常为I/O)的请求
+  * 硬件中断和软中断的区别
+    * 硬件中断是由外设引发的, 软中断是执行中断指令产生的.
+    * 硬件中断的中断号是由中断控制器提供的, 软中断的中断号由指令直接指出, 无需使用中断控制器.
+    * 硬件中断是可屏蔽的, 软中断不可屏蔽.
+    * 硬件中断处理程序要确保它能快速地完成任务, 这样程序执行时才不会等待较长时间, 称为上半部.
+    * 软中断处理硬中断未完成的工作, 是一种推后执行的机制, 属于下半部.
+
+* Exception 发生的时候，有哪些必须满足的条件
+
+  * 必须保存处理器的寄存器，用来恢复
+  * 必须set成在kernel中执行
+  * 必须要从kernel中挑一个位置来开始执行
+  * 必须能够获取事件的各种信息，比如说system call argument
+  * 必须能够安全的完成
+  * 必须保证用户进程和kernel的隔离
+
+* kernel中的interrupt函数的返回
+
+  * iret指令：需要恢复上下文，从kernel切回user mode，继续执行用户程序
+
+------
+
+### 第八讲 Interrupt
+
+* Intel 中的不同术语
+  * Interrupt 异步的，设备生成
+    * maskable：device生成，与IRQs相关联，可以被暂时禁用
+    * nonmaskable：一些关键的硬件故障
+  * Exception 同步的，来自软件
+    * Processor-detected
+      * Fault 故障，可纠正，可重新启动，如page fault
+      * Traps 陷阱，不需要重新执行，例如断点
+      * Aborts 中止，严重错误，进程通常会通过signal终止
+    * Programmed exception 软件中断
+      * int (system call), int3 (breakpoint)
+      * into (overflow), bounds (address check)
+* 一些术语
+  * Vector, Interrupt vector, Trap number
+  * IRQ: Interrupt Request
+  * Interrupt, trap, fault, exception
+  * Software interrupt / system call
+  * IDT: Interrupt Descriptor Table 中断描述符表
+  * ISP: Interrupt Service Procedure 中断服务程序
+
+* 中断号有256个可能的值，Intel为 exception保留了前32个，剩下的可以用于自己的目的，例如处理device服务请求，或者处理system call
+
+* Interrupt 概念
+
+  * 中断有点像system call，但设备可以在任何时候产生中断
+  * 主板上的硬件在device需要被 ”注意到“ 的时候，向cpu发乎信号，比如键盘信号；所以要对设备编程生成中断，并安排cpu 接受中断
+
+* Interrupt 执行的顺序
+
+  * push FLAGS 寄存器
+  * 清除 IF 和 TF，EFLAGS中的interrupt able flag和trap flag
+  * push CS
+  * push IP
+  * 获取interrupt vector的内容，置上IP和CS，开始执行ISP
+
+* Interrupt hardware
+
+  * IO 设备有唯一的/共享的 IRQ，IRQ由特殊的硬件映射到interrupt vector，然后传递给CPU，这种硬件叫做PIC programmable interrupt controller
+
+  ![1558170109870](C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1558170109870.png)
+
+* APIC，IO-APIC 和 LAPIC
+
+  * APIC，Advanced PIC，用于SMP系统 (对称多处理器，UMA架构)
+    * 适用于所有现代系统，中断通过system bus路由到cpu
+  * LAPIC 和 前端 IO-APIC
+    * device是连接到 IO-APIC的，IO-APIC通过bus和LAPIC相连
+  * interrupt路由
+    * 有一点像网络的实现，允许广播或者选择性的route 中断，能够分配中断处理负载，路由到最低优先级的进程，如果同等优先级就仲裁或round robin
+
+  ![1558170439701](C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1558170439701.png)
+
+* 为设备分配IRQ 
+
+  * IRQ的分配因硬件不同为不同，有的是hardwire硬连线，有的是物理设置，有的是可编程的，PCI总线就是在引导分配IRQ
+  * 一些IRQ的设计是由架构决定的：IRQ0:间隔计时器，IRQ2: 8259A级联引脚
+  * Linux设备驱动程序在设备打开时请求IRQ
+  * 一些硬件IRQ是预设定的
+    * 系统定时器(IRQ0)，键盘控制器(IRQ1)，软盘控制器(IRQ6)，实时时钟(IRQ8)和数学协处理器(IRQ13)
+  * 其他大部分IRQ是通过user决定的，可以通过硬件/跳线，也可以通过软件，如可安装的驱动程序和固件PNP
+  * 还有一些可用于附加设备的IRQ
+    * 调制解调器(IRQ5)，打印机(IRQ7)，声卡(IRQ9/IRQ10)，视频卡(IRQ11)和PS/2鼠标(IRQ12)，IRQ3和IRQ4通常用于串行端口，IRQ14和IRQ15用于IDE (primary和secondary)
+  * interrupt vector中为IRQ所做的分配：32以下是不可屏蔽的 interrupt和exception，128 是system call，251-255用于IPI inter-processor interrupt 处理器间中断，IRQ的编号都是 IRQ# + 32
+
+* Interrupt Priority
+
+  * NMI：Non Maskable Interrupt 不可屏蔽中断
+
+  ![1558176908532](C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1558176908532.png)
+
+* EOI：End of Interrupt
+
+  * 在一个基于IRQ的中断程序结束时，会给PIC芯片发送EOI信号
+  * 如果IRQ来自Master PIC，那么只向主PIC发出这个命令就足够了；如果IRQ来自Salve PIC，则需要向两个PIC芯片发出命令
+
+* OS设计原则：Maximizing Parallelism
+
+  * 让所有IO设备尽可能繁忙
+  * 通常IO中断表示某项操作的结束，另一项要求应尽快发出
+  * 大多数device是互不干扰彼此的数据结构的，没有屏蔽其他device的理由
+
+* Handle Nested Interrupt
+
+  * 尽快 unmask global interrupt
+  * 只要reasonable，就re-enable来自该IRQ的中断；但这可能会导致重新进入相同的处理程序
+  * 中断处理期间不启用 IRQ-specific的掩码
+
+* Nested Execution
+
+  * 中断可以被中断
+    * 对于不同的不断，handler并不需要要重入reentrant；一小部分需要在禁用中断的情况下handle
+  * 异常也可以被中断
+    * 通过中断 (需要服务的设备)
+  * 异常最多嵌套两层
+    * 异常表示编码错误，可以exception - page fault，两层肯定到kernel了，这时候的代码不应该有bug，否则就是一个triple fault
+    * 当发生故障时，CPU调用exception handler。如果此时发生错误，则称为double fault，CPU将尝试使用另一个exception handler处理该错误。如果该调用也导致错误，则系统将因为triple fault 而 reboot
+
+* Interrupt Masking
+
+  * mask的两种不同类型：global，selective
+    * global就是延迟所有interrupt，selective就是mask掉单个IRQ，因为通常来自同一类型的几个中断的干扰最常见
+
+* 有关 interrupt 和 exception 的三个关键数据结构
+
+  * GDT，The global descriptor table
+    * 定义系统的内存段及其访问特权，CPU有义务强制执行这些特权
+  * IDT, The interrupt descriptor table
+    * 为处理所有“中断”和“异常”的各种代码例程定义入口点
+  * TSS，The task-state segment
+    * 保存寄存器SS和ESP的值，CPU将在进入内核模式时加载这些值
+
+* CPU 如何找到 GDT/IDT 存在哪里
+
+  * 有两个专用的寄存器：GDTR和IDTR，两者都有相同的48位格式
+  * 内核必须在系统启动期间设置这些寄存器(set-and-forget)
+  * 特权指令:LGDT和LIDT用于设置这些寄存器值；非特权指令:用于读取寄存器值的SGDT和SIDT
+
+
+  ![1558179202556](C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1558179202556.png)
+
+* CPU 如何找到 TSS 存在哪里
+
+  * 专用系统段寄存器TR将描述符的偏移量保存到GDT中
+
+  ​	![1558179309176](C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1558179309176.png)
+
+##### Bottom Half
+
+* 中断处理的哲学/核心思想
+  * 在interrupt handler中尽可能少地执行操作，把不重要的行动推迟到后面做，就形成了top和bottom上下两半
+
+    * 上半部分：完成最小的工作量并返回 (ISR, interrupt service routines 中断服务程序)
+    * 下半部分：延迟处理 (四种方法：softirqs, tasklets, workqueues,
+      kernel threads，软中断，微线程，工作队列，内核线程)
+
+    ![1558179662316](C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1558179662316.png)
+
+* Top Half 中做的事 ：Do it Now !
+  * 只执行最小的公共函数：保存寄存器，unmask其他中断，最后撤销此次操作：恢复寄存器，返回到以前的上下文
+  * 通常为了快，使用汇编写的；然后调用device driver中的合适的interrupt handler (用C写的)
+  * IRQ在上半部分通常是被屏蔽的
+  * 不要试图在top half中做太多工作，因为IRQ是被屏蔽的，让可能会让stack涨的太大；通常会在下半部分对request进行一个派对，并为延迟处理设置一个flag
+* Top Half 如何找到handler
+  * 在现代的硬件设备中，多个IO设备可以共享一个IRQ，因此可以共享interrupt vector
+  * 多个ISR可以和一个vector相关联
+  * Each device's ISR for that IRQ is called
+  * Device determines whether IRQ is for it
+* Bottom Half : Do it Later !
+  * 中断 (与异常相反) 不与特定instruction相关联，也不和process相关联
+  * 当前运行的process，在中断发生的时候，和这个中断没有任何关系
+  * interrupt handler不能sleep ！
+* interrupt handler不能sleep 所意味的事情
+  * 不能 sleep 或 做任何可能导致sleep的事
+  * 不能应用 current
+  * 不能用 GPF_KERNEL 申请内存，它可能会sleep；只能用GPF_ATOMIC，它会失败
+  * 不能调用schedule
+  * 不能执行down的信号量操作，但可以使用up
+  * 不能和user space进行数据通信，比如copy_to_user, copy_from_user
+* Interrupt stack
+  * 中断发生时使用的stack是哪一个
+    * exception，当前process的kernel stack
+    * interrupt，hard IRQ stack，1 per processor
+    * softirqs：soft IRQ stack，1 per processor
+  * 这些stack都会在boot的时候被kernel设置进IDT和TSS
+* Softirqs
+  * 静态分配:在内核编译时指定
+  * 优先级从高到低：High-priority tasklets 高优先级微线程，Timer interrupts 定时器中断，Network transmission 网络传输，Network reception 网络接受，Block devices 块设备，Regular tasklets 正则微线程
+* Softirqs 在什么时候运行
+  * 在kernel 的一些行为之后：system call后，exception后，interrupt后 (上半部分，IRQs，定时器intr)，当scheduler运行ksoftirqs的时候
+  * 软中断可以在多个CPU上同时执行，代码必须是可重入的
+  * 当软中断运行时，硬件中断一直是enable的
+  * 软中断可以重新安排自己的时间，这可能会饿死用户级process
+  * 软中断调度一次只能运行有限数量的请求
+  * 其余的由内核线程ksoftirqd执行，它与用户进程争夺CPU时间
+
+* Tasklets
+  * 建立在软中断之上，可以动态创建和销毁
+  * 在schedule它的cpu上运行 (cache affinity 缓存关联)
+  * 单个tasklets在执行期间会被lock，没有重入性的问题
+  * tasklets可以在多个cpu上同时运行，同一个tasklet只能在一个cpu上运行
+  * tasklets的问题
+    * 比较难get right，要谨慎提防sleep，比系统中的其他task有更高的优先级，如果编码不好会产生无法控制的延迟，正在进行是否要消除tasklet的讨论
+* Work Queue
+  * 始终在kernel stack运行，是由scheduler调度的
+  * softirqs和tasklets运行在中断上下文，work queue在伪进程上下文
+    * 即一个有内核上下文，但没有用户上下文的进程
+  * 因为这是一个伪流程上下文所以可以sleep
+    * work queue可以被多个device共享，因此sleep会延迟队列中的其他工作
+  * work queue是kernel-only的，没有user mode跟它相关联，所以不要尝试把数据复制到user space
+* Kernel threads
+  
+  * 总是在kernel mode运行，也没有user context
+
+![1558247236987](C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1558247236987.png)
+
+* 为什么interrupt handler不能sleep：防止死锁出现
+
+![1558247436538](C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1558247436538.png)
+
+------
+
+### 第九讲 System call
+
+* 部分system call 列表
+
+  ![1558247787338](C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1558247787338.png)
+
+* 跟踪system call的执行
+
+  * Linux可以使用ptrace 和strace来跟踪syscall，每次执行syscall时都会打印输出，包括参数和返回代码
+
+  ![1558248471000](C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1558248471000.png)
+
+*  调用syscall的方法
+  * 从代码角度来看：application层通过library层，调用lib函数；application层直接写汇编 “int 0x80”
+  * 从机器角度来看：int 0x80；SYSENTER；SYSCALL
+* 库函数和syscall 的返回代码
+  
+  * 库调用在出错时返回-1，并在全局变量errno中放置特定的错误代码，系统调用返回特定的负值来指示 %eax 中存放的错误
+* 传递syscall的参数
+  * 第一个参数总是 syscall #
+  * Linux允许最多6个附加参数，ebx，ecx，edx，esi，edi，ebp
+  * 需要更多参数的syscall会把剩下的参数打包在一个struct中，并将该struct的指针作为第六个参数传递
+  * Problem，必须要验证指针的合法性，可能是invalid的，如果NULL就会导致OS崩溃
+* 如何验证user指针的合法性
+  * 做一次彻底的检查cost太大了，要完全检查指针是否处于调用进程的所有有效区域之内
+  * 解决方法是做一个不完全的检查：Linux对地址指针做一个简单的检查，并且只确定指针变量是否在用户内存的最大可能范围内(在用户空间里就可以了)，即使指针值通过此检查，特定值仍然可能无效
+  * 在内核代码中取消对无效指针的引用通常会被解释为内核bug，并在控制台上生成Oops消息，然后杀死出错的进程。Linux做了一些非常复杂的事情来避免这种情况
+
+
+* 处理user pointer带来的fault
+
+  * 内核必须要用一段奇怪的代码 (paranoid) 来访问用户指针，比如 copy_from_user ，kernel知道哪些地址会抛出无效的内存访问异常
+  * 当page fault的时候，kernel的page fault handler会检查出错的eip
+  * 如果eip在一段 paranoid routines中，kernel就不会报错，相反就会调用 fixup代码
+  * 这些paranoid的核心理念是：不直接访问用户的内存，用户都是危险的
+
+  ![1558250163187](C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1558250163187.png)
+
+* 新的指令 SYSENTER/SYSEXIT 和 SYSCALL/SYSRET
+
+  * int 0x80已经过时了
+  * SYSENTER/SYSEXIT是intel先提出的，SYSCALL/SYSRET是AMD先提出的
+  * 在32位kernel中，只兼容SYSENTER/SYSEXIT；64位kernel只兼容SYSCALL/SYSRET
+  * SYSCALL/SYSRET 的延迟更低，大概快个25%
+    * 简化了OS的调用和返回，消除了不必要的检查，加载预先确定的值到CS和SS两个段寄存器
+
+* System call的执行流
+
+  * 找到IDT中对应的第n个描述符
+  * 检查%cs中的CPL是否 <= DPL，DPL是描述符中的特权级别，0是kernel，3是user
+  * 将%esp和%ss保存在cpu内置的寄存器中，仅当目标段选择器的PL < CPL时才这样做
+  * 从task segment descriptor加载%ss和%esp (TSS结构)
+  * 按照%ss，%esp，%eflags，%cs，%eip的顺序，push到kernel stack上
+  * 清除%eflags的一些位，IF和TF吧
+  * 将%cs和%eip设为描述符中的值
+
+##### VDSO 
+
+##### Virtual Dynamic Shared Object 虚拟动态共享对象
+
+* VDSO的动机
+  * syscall造成的延迟不能忽略 (negligible)，比如说在syscall gettimeoftoday中，一点延迟的影响就特别大
+  * 如何降低syscall的延迟？大部分的时间都用来save/restore上下文，如果没有mode switch，就不需要save/restore状态了
+* gettimeofday的具体实现
+  * 函数由kernel定义，在编译过程中作为kernel代码的一部分
+  * 但运行的时候是在user space运行，代码被load到用户共享的页面中，称为VDSO，time通过只读的方式映射到了用户控件，只能在kernel mode下更改
+* vsyscall 和 VDSO
+  * vsyscall：用来执行特定的系统调用，减少系统调用的开销。某些系统调用并不会向内核提交参数，而仅仅只是从内核里请求读取某个数据，例如gettimeofday()，内核在处理这部分系统调用时可以把系统当前时间写在一个固定的位置(由内核在每个时间中断里去完成这个更新动作)，mmap映射到用户空间。这样会更快速，避免了传统系统调用模式INT 0x80/SYSCALL造成的内核空间和用户空间的上下文切换。
+  * vsyscall的局限：分配的内存较小；只允许4个系统调用；Vsyscall页面在每个进程中是静态分配了相同的地址；
+  * VDSO：提供和vsyscall相同的功能，同时解决了其局限；vDSO是动态分配的，地址是随机的；可以提供超过4个系统调用；vDSO是glibc库提供的功能
+
+##### FLEX-SC
+
+##### Flexible System Call Scheduling with Exception-Less System Call
+
+* FLEX-SC的动机
+
+  * 如何进一步降低syscall的延迟？延迟的来源主要在于state switch，要save/restore和check privilege，还有一些cache pollution
+
+* Flexible System Call
+
+  * 新的syscall机制，介绍了用户和内核共享的system call page
+  * 用户线程可以把syscall请求push到system call page
+  * 内核线程用轮询syscall到system call page
+  * 通过将调用和执行解耦来消除同步
+
+  ![1558253754026](C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1558253754026.png)
+
+*  
+
+------
+
+### 第十讲 IO
+
+* 为什么需要 IO 子系统
+  * device的种类特别多，每一种都不同，我们需要为他们设计标准化的设备接口
+  * device都是 unreliable 的，会产生媒体错误和传输错误，我们要想办法让他们可靠
+  * device都是 unpredictable 的，有的时候还比较 slow，我们要有合适的办法去管理他们
+* IO 子系统的设计目标
+  * 为不同种类的device提供统一的接口
+  * 提供IO硬加的抽象层，用于管理和硬件的交互，隐藏硬件和操作的具体细节
+
+* 三种类型的Device Interface
+
+  * Character devices；Block devices；Network devices
+
+  ![1558272791435](C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1558272791435.png)
+
+* Character Device 字符设备
+
+  * 比如：键盘鼠标，串口，USB设备
+  * 顺序访问，每次一个字符；经常使用开放的文件接口
+  * IO command：get()，put()
+
+* xv6 中的IO指令：inb(port)，outb(port, data)
+
+* Block Device 块设备
+
+  * 比如：disk driver，tape driver，DVD-ROM
+  * 通过统一的块IO接口访问数据块；用原始的IO或者文件系统访问；通过memory-mapped的方式访问是可能的
+
+* Network Device 网络设备
+
+  * 比如：以太网，无线，蓝牙
+  * 不同于block/character device，network device是有自己的接口的，不需要用文件接口；它提供特殊的网络接口，支持各种网络协议，可以收发网络数据包
+
+* user 如何处理device带来的timing问题
+
+  * Blocking IO：Wait
+
+    * read/write时都将进程置于waiting状态，直到数据就绪
+
+  * Non-blocking IO：Don‘t Wait
+
+    * 从read/write请求立即返回，并成功传输字节数，但read可能什么都不返回，write也可能什么都没写进去
+
+  * Asynchronous IO：Tell Me Later
+
+    * read/write都会访问用户缓冲区的指针然后立即返回，稍后内核将填充缓冲区/接受数据，然后通知user
+
+  * 同步和异步IO
+
+    ![1558273730595](C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1558273730595.png)
+
+* DMA transfer的步骤
+
+* DMA响应、DMA传输、DMA结束4个步骤
+
+  * 请求：CPU对DMA控制器初始化，并向I/O接口发出操作命令，I/O接口提出DMA请求
+  * 响应：DMA控制器对DMA请求判别优先级及屏蔽，向总线裁决逻辑提出总线请求。当CPU执行完当前总线周期即可释放总线控制权。此时，总线裁决逻辑输出总线应答，表示DMA已经响应，通过DMA控制器通知I/O接口开始DMA传输。
+  * 传输：DMA控制器获得总线控制权后，CPU即刻挂起或只执行内部操作，由DMA控制器输出读写命令，直接控制RAM与I/O接口进行DMA传输；在DMA控制器的控制下，在存储器和外部设备之间直接进行数据传送，在传送过程中不需要中央处理器的参与。开始时需提供要传送的数据的起始位置和数据长度。
+  * 结束：当完成规定的成批数据传送后，DMA控制器即释放总线控制权，并向I/O接口发出结束信号。当I/O接口收到结束信号后，一方面停 止I/O设备的工作，另一方面向CPU提出中断请求，使CPU从不介入的状态解脱，并执行一段检查本次DMA传输操作正确性的代码。最后，带着本次操作结果及状态继续执行原来的程序。
+  * 由此可见，**DMA传输方式无需CPU直接控制传输，也没有中断处理方式那样保留现场和恢复现场的过程**，通过硬件为RAM与I/O设备开辟一条直接传送数据的通路，使CPU的效率大为提高。
+
+* IO设备通知 (notifying) OS的方式
+  * OS必须要被notify的情况：IO设备完成操作或出现错误
+  * 两种notify method：polling，interrupt-driven
+  * polling轮询：IO设备将完成/错误的信息放入device-specific的状态寄存器中，OS定期检查状态寄存器
+    * 优点：低开销
+    * 缺点：如有不频繁或者不可预测的IO操作，可能要浪费很多轮询周期
+  * Interrupt-driven 中断驱动：优点：能很好地处理不可预知的事件；缺点：中断的开销相对较高
+  * 有的设备融合了polling和interrupt，高带宽网络对第一个传入的包interrupt，之后就一直polling，知道hardware为空
+* Device Driver
+  * 定义：内核中与device直接交互的device-specific的代码
+    * 支持标准的内部接口
+    * 相同的kernel IO系统可以轻松地与不同的device driver交互
+    * 使用 ioctl() syscall，支持特定于device的特殊配置
+
+* IDE 端口
+
+  * 端口 0x1F0-0x1F7
+    * 0x1f0: write/read port
+    * 0x1f2: number of sectors 
+    * 0x1f3-0x1f5: sector number
+    * 0x1f6: diskno and sector number
+    * 0x1f7: command registers, status bit
+
+  * 端口 0x3F6 interrupt control line   
 
 * 
