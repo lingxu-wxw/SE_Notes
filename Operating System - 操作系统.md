@@ -253,6 +253,11 @@ TF: Trap Flag - 将该位设置为1以允许单步调试模式，清零则禁用
 
 ##### }
 
+* Memory-mapped IO
+  * side effect是什么？？
+* TODO：IO的直接映射（Port映射）和MMIO哪个更好一点
+  * 
+
 ##### xv6源码分析 bootasm.S, bootmain.c, entry.S {
 
 * BIOS会将磁盘的第一个扇区load到物理地址0x7c00，并以real mode开始执行
@@ -370,9 +375,9 @@ Fork：copyuvm
 
 * 逻辑地址 - 线性地址 - 物理地址的转换
 
-  ![1556339216237](C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1556339216237.png)
+  ![1556339216237](Pictures/Operating_System/1556339216237.png)
 
-  ![1556339247367](C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1556339247367.png)
+  ![1556339247367](Pictures/Operating_System/1556339247367.png)
 
 * Boot阶段的主要工作：
 
@@ -393,14 +398,14 @@ Fork：copyuvm
 
     * ENBRYO可以理解为到RUNNABLE之前的一个过渡。allocproc会在进程表中找到一个标记为UNUSED的位置。当它找到这样一个没有被使用的位置后，allocproc将其状态设置为EMBRYO，使其标记为被使用并给这个进程一个独有的pid。接下来，它尝试为进程的内核线程分配内核栈。如果分配失败了，allocproc会把这个位置的状态恢复为UNUSED并返回0来标记失败。
 
-    ![1556342655313](C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1556342655313.png)
+    ![1556342655313](Pictures/Operating_System/1556342655313.png)
 
 * Process Control Block，PCB
 
   * 每个process都会有一个PCB，内容包括Process state, Process counter, CPU registers, CPU scheduling information, Memory management information, Accounting information, I/O status information
   * xv6 中的进程数据结构
 
-  ![1556343005224](C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1556343005224.png)
+  ![1556343005224](Pictures/Operating_System/1556343005224.png)
 
 * Context Switch 上下文切换
 
@@ -408,7 +413,7 @@ Fork：copyuvm
   * 上下文切换需要保存的内容应该是存在进程对应的kernel stack中的
   * 上下文切换换栈的瞬间
 
-  ![1556343241697](C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1556343241697.png)
+  ![1556343241697](Pictures/Operating_System/1556343241697.png)
 
 * Process Scheduling Queue 进程调度队列
 
@@ -423,7 +428,7 @@ Fork：copyuvm
 
 * Process的创建：fork，一次执行两次返回；execute，一次执行没有返回；奇妙的机制
 
-  ![1556344453826](C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1556344453826.png)
+  ![1556344453826](Pictures/Operating_System/1556344453826.png)
 
 *  
 
@@ -437,17 +442,17 @@ Fork：copyuvm
   
 * Threading Model
 
-  ![1557209601573](C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1557209601573.png)
+  ![1557209601573](Pictures/Operating_System/1557209601573.png)
 
 * Process cooperation的优点：information sharing, computation speed-up, modularity, convenience
 
 * IPC的两种模型：如上图，message passing 和 shared memory
 
-  ![1557209792779](C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1557209792779.png)
+  ![1557209792779](Pictures/Operating_System/1557209792779.png)
 
 * xv6中实现IPC的数据结构：struct pipe
 
-  ![1557209952876](C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1557209952876.png)
+  ![1557209952876](Pictures/Operating_System/1557209952876.png)
 
 * IPC - Message Passing
 
@@ -505,7 +510,7 @@ Fork：copyuvm
 
 * client thread上的调用顺序
 
-  ![1557212448931](C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1557212448931.png)
+  ![1557212448931](Pictures/Operating_System/1557212448931.png)
 
 *  
 
@@ -527,7 +532,7 @@ Fork：copyuvm
 
 * Intel CPU上的Exception簇
 
-  ![1557213531390](C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1557213531390.png)
+  ![1557213531390](Pictures/Operating_System/1557213531390.png)
 
 * IDT / Trap Vector in xv6
 
@@ -542,7 +547,7 @@ Fork：copyuvm
   * exception handler在kernel mode运行，可以完全访问所有系统资源
   * 要往kernel stack中push的内容
 
-  ![1558168046512](C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1558168046512.png)
+  ![1558168046512](Pictures/Operating_System/1558168046512.png)
 
   * 为什么一定要push到kernel stack？
 
@@ -552,7 +557,7 @@ Fork：copyuvm
   * Software interrupt：中断指令的执行，INT
   * Program fault：程序错误，执行出现错误的情况，除零错误
 
-  ![1558168902842](C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1558168902842.png)
+  ![1558168902842](Pictures/Operating_System/1558168902842.png)
 
 * 硬件中断和软中断
 
@@ -621,7 +626,7 @@ Fork：copyuvm
 
   * IO 设备有唯一的/共享的 IRQ，IRQ由特殊的硬件映射到interrupt vector，然后传递给CPU，这种硬件叫做PIC programmable interrupt controller
 
-  ![1558170109870](C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1558170109870.png)
+  ![1558170109870](Pictures/Operating_System/1558170109870.png)
 
 * APIC，IO-APIC 和 LAPIC
 
@@ -632,7 +637,7 @@ Fork：copyuvm
   * interrupt路由
     * 有一点像网络的实现，允许广播或者选择性的route 中断，能够分配中断处理负载，路由到最低优先级的进程，如果同等优先级就仲裁或round robin
 
-  ![1558170439701](C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1558170439701.png)
+  ![1558170439701](Pictures/Operating_System/1558170439701.png)
 
 * 为设备分配IRQ 
 
@@ -650,7 +655,7 @@ Fork：copyuvm
 
   * NMI：Non Maskable Interrupt 不可屏蔽中断
 
-  ![1558176908532](C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1558176908532.png)
+  ![1558176908532](Pictures/Operating_System/1558176908532.png)
 
 * EOI：End of Interrupt
 
@@ -700,13 +705,13 @@ Fork：copyuvm
   * 特权指令:LGDT和LIDT用于设置这些寄存器值；非特权指令:用于读取寄存器值的SGDT和SIDT
 
 
-  ![1558179202556](C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1558179202556.png)
+  ![1558179202556](Pictures/Operating_System/1558179202556.png)
 
 * CPU 如何找到 TSS 存在哪里
 
   * 专用系统段寄存器TR将描述符的偏移量保存到GDT中
 
-  ​	![1558179309176](C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1558179309176.png)
+  ​	![1558179309176](Pictures/Operating_System/1558179309176.png)
 
 ##### Bottom Half
 
@@ -717,7 +722,7 @@ Fork：copyuvm
     * 下半部分：延迟处理 (四种方法：softirqs, tasklets, workqueues,
       kernel threads，软中断，微线程，工作队列，内核线程)
 
-    ![1558179662316](C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1558179662316.png)
+    ![1558179662316](Pictures/Operating_System/1558179662316.png)
 
 * Top Half 中做的事 ：Do it Now !
   * 只执行最小的公共函数：保存寄存器，unmask其他中断，最后撤销此次操作：恢复寄存器，返回到以前的上下文
@@ -775,11 +780,11 @@ Fork：copyuvm
   
   * 总是在kernel mode运行，也没有user context
 
-![1558247236987](C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1558247236987.png)
+![1558247236987](Pictures/Operating_System/1558247236987.png)
 
 * 为什么interrupt handler不能sleep：防止死锁出现
 
-![1558247436538](C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1558247436538.png)
+![1558247436538](Pictures/Operating_System/1558247436538.png)
 
 ------
 
@@ -787,13 +792,13 @@ Fork：copyuvm
 
 * 部分system call 列表
 
-  ![1558247787338](C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1558247787338.png)
+  ![1558247787338](Pictures/Operating_System/1558247787338.png)
 
 * 跟踪system call的执行
 
   * Linux可以使用ptrace 和strace来跟踪syscall，每次执行syscall时都会打印输出，包括参数和返回代码
 
-  ![1558248471000](C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1558248471000.png)
+  ![1558248471000](Pictures/Operating_System/1558248471000.png)
 
 *  调用syscall的方法
   * 从代码角度来看：application层通过library层，调用lib函数；application层直接写汇编 “int 0x80”
@@ -819,7 +824,7 @@ Fork：copyuvm
   * 如果eip在一段 paranoid routines中，kernel就不会报错，相反就会调用 fixup代码
   * 这些paranoid的核心理念是：不直接访问用户的内存，用户都是危险的
 
-  ![1558250163187](C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1558250163187.png)
+  ![1558250163187](Pictures/Operating_System/1558250163187.png)
 
 * 新的指令 SYSENTER/SYSEXIT 和 SYSCALL/SYSRET
 
@@ -869,7 +874,7 @@ Fork：copyuvm
   * 内核线程用轮询syscall到system call page
   * 通过将调用和执行解耦来消除同步
 
-  ![1558253754026](C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1558253754026.png)
+  ![1558253754026](Pictures/Operating_System/1558253754026.png)
 
 *  
 
@@ -889,7 +894,7 @@ Fork：copyuvm
 
   * Character devices；Block devices；Network devices
 
-  ![1558272791435](C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1558272791435.png)
+  ![1558272791435](Pictures/Operating_System/1558272791435.png)
 
 * Character Device 字符设备
 
@@ -925,7 +930,7 @@ Fork：copyuvm
 
   * 同步和异步IO
 
-    ![1558273730595](C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1558273730595.png)
+    ![1558273730595](Pictures/Operating_System/1558273730595.png)
 
 * DMA transfer的步骤
 
@@ -962,4 +967,464 @@ Fork：copyuvm
 
   * 端口 0x3F6 interrupt control line   
 
+*  
+
+------
+
+#### 第十一讲 File System：xv6 ~ ext4
+
+* Virtual File System Interface
+  * 现实中存在的问题：OS可能挂载了不同底层文件系统的多个分区，如果进程针对不同的文件系统还要提供不同的API的话就很麻烦
+  * Linux使用虚拟文件系统接口（VFS)，向进程暴露POSIX的api，将请求转发到低层文件系统特定的驱动程序；windows的也差不多
+  * 文件系统有ext2-4，NTFS，FAT32等
+* xv6 FS design
+  * xv6的文件系统实现了最低限度的Unix fs interface，包括`superblock，inode，dentry`
+  * 缺点：设计不是很注重文件系统的layout，没有磁盘调度，cache策略是write-through，简化了磁盘数据一致性的麻烦，但性能不好
+  * xv6的block size是512 byte
+
+* xv6 FS disk layout
+
+  * block 0是不用的，block 1是superblock，block 2之后分别是inode，bitmap，data block和log block
+
+  ![1560002634798](Pictures/Operating_System/1560002634798.png)
+
+* 概述：Free-space list bit vector
+
+  * 就是in-use bitmap的意思，将空闲块列表表示为位向量
+  * 2TB磁盘-> 512M块（block size 4M byte？？？）-> 64MB位 （1B=8bit）
+
+* 概述：Multi-level Indexed Allocation
+  * 主要是在描述inode的direct和indirect
+
+  * ```
+    [fs.h]
+    #define NADDRS    (NDIRECT+1)
+    #define NDIRECT   12
+    #define INDIRECT  12
+    #define NINDIRECT (BSIZE / sizeof(uint))
+    #define MAXFILE   (NDIRECT  + NINDIRECT)
+    ```
+
+  * 文件大小，不用indirect最多12个块，用了的话最多12+128个块，每个块又512byte了
+
+    * inode中的最后一个地址作为128个磁盘地址(512 / 4)的块的磁盘地址
+
+  * 目录 directory，是特殊的文件，包含多个dirent结构
+
+    * dirent是目录内的文件，field有 inode-num和filename
+
+##### EXT File system
+
+* inode 的优点
+  * 优化了有很多小文件的文件系统的性能：每个inode都可以直接指向48KB的数，4MB文件只需要一个layer
+  * 更快的文件访问：metadata的局部性更好，随机访问的时间会更少，因为都放在一起，不需要遍历FAT那样的链式结构
+  * 更容易的自由空间管理：bitmap可以缓存在内存中，以便快速访问；inode和date space可以分开处理
+
+* ext file system 概况
+  * Ext文件系统是使用inode的：inode是数据块的imbalaneced tree，针对小文件很多这个常见情况进行了优化
+  * 问题：ext的locality较差：inode与它们对应的数据离得很远，这将导致长时间的磁盘搜索
+  * 问题：ext容易出现碎片，ext为新数据选择第一个可用块，并不尝试保持文件块的连续
+
+* Fast File System (FFS) and Ext2
+
+  * FFS的主要贡献：又花了spinning disk的性能
+  * 发现：进程倾向于访问相同目录中的文件，有空间局部性
+  * 关键思想：将directory groups和它的文件都放在cylinder group中，这个设计引入到了ext2中，称为block group
+
+* block group
+
+  * 在ext中，只有一组关键数据结构
+    * 一个data bitmap，一个inodebitmap
+    * 一个inode table，一个data block array
+  * 在ext2中，每个block group都包含自己的关键数据结构
+
+  ![1560003578547](Pictures/Operating_System/1560003578547.png)
+
+* ext2的分配策略：ext2尝试将相关文件和目录保存在同一个block group中
+
+* ext2的优点和缺点
+  * 优点：ext2支持所有其他ext的特性，甚至还能做的很好，因为在空间局部性上做的很ok
+  * 缺点：大文件必须跨block grooup；随着文件系统变得越来越复杂，文件系统损坏的几率也会增加；例如无效的inode、不正确的directory entry等，就是说有点脆
+
+* 数据块寻址的文件大小上限
+
+  ![1560003810728](Pictures/Operating_System/1560003810728.png)
+
+* Extent 概述
+
+  * 问题：对于大文件来说，indirect实际上非常低效，每1024个块读取(并查找)一个额外的块，这一点在删除大的CD/DVD图像文件时非常明显
+  * extent用单一的descriptor描述了是一组连续的/相邻的块
+    * 这是一种表示大文件的有效方法，更好的CPU利用率，更少的元数据IO，就是多了一个length的参数
+  * 现代文件系统尽量减少碎片，因为它导致了很多的seek，性能低下；entent更适合于连续文件
+
+  ![1560004008079](Pictures/Operating_System/1560004008079.png)
+
+* 实现extent特性
+  * ext4和NTFS都用了extent
+  * ext4 inode包含4个extent，而不是块指针
+    * 每个extent最多可以处理128MB的连续空间(假设为4KB块)
+    * 如果需要更多区段，则分配一个data block；这就类似于一个indirect了
+
+* Revisiting Directories
+  * 在ext、ext2和ext3中，每个目录都是一个包含很多entry的文件
+    * entry不是顺序存储的；有些被删除的entry还在，只是它们可能是空的
+  * 问题：在大目录中搜索文件需要O(n)时间
+    * 实际上，不能在目录中存储>10K文件，不然查找和打开文件花费的时间太长了（10k？）
+* From Lists to B-Trees，目录entry的优化
+  * ext4和NTFS将目录编码为b树，以将查找时间提高到O(log N)
+  * b树是一种平衡树，它为磁盘上的存储进行了优化，项目以块的顺序存储
+
+* ext4的优点和缺点
+  * ext4的两个改变：使用extent，目录存储用b树
+  * 优点：ext4(和NTFS)支持所有基本的文件系统功能，改进了ext3 block group的性能，extent和b树目录文件性能很好
+  * 缺点：下一代文件系统有更好的特性，写时复制语义 copy-on-write semantics (btrfs和ZFS)
 * 
+
+------
+
+#### 第十二讲 Crash Consistency
+
+##### File System Durability & Crash Recovery
+
+* Durability：耐用性
+* 为什么 fs crash recovery比较困难
+  * 这里举了一个文件系统crash的例子
+
+##### Sync Metadata Update + fsck
+
+* FS必须确保它可以恢复它的元数据(对实际FS的最低需求)：
+  * 内部一致性，没有悬空的引用  dangling references，Inode和block free list 只包含used的item，一个目录中的名称要唯一等等
+  * 弱语义FS提供了有限的保证：create、rename、delete的原子性，通常任何东西都没有持久性
+
+* 应用怎么handle 弱语义？weak semantics
+  * Fsync和rename(shadow copy技术)
+  * Fsync强制持久性，仅当文件实际写在磁盘上时才return
+  * rename是一个原子操作，只有旧名称或新名称，而不是半旧半新
+  * Mac OS集中使用rename来确保原子性
+
+* FSCK会做什么
+  * check superblock：如，确保文件系统大小大于分配的块数，如果出现错误就使用superblock的另一个副本
+  * check free blocks：扫描inode、indirect block、double indirect block，生成正确的bitmap
+  * check inode state：检查类型，常规文件、目录、symbolic link等，清除可疑inode并清除inode bitmap
+  * check inode links：通过扫描整个fs树来检查链接数是否对的上，如果count不匹配，修复inode；如果分配了inode，但没有dir包含它，则lost+found
+  * check duplicate：两个inode指向同一个块
+  * check bad block：指向某个超出范围的地址，fsck应该会移除指针
+  * check directory：唯一一个fsck知道更多语义的文件，确保`. 和 ..`没问题，确保没有dir link超过一次，在一个目录中没有相同的文件名
+
+* fsck的问题：太慢了！！
+
+* Xv6-rev0策略：谨慎地安排磁盘写操作，以避免挂起引用
+
+  ```
+  1. initialize a new inode before creating dirent 
+  2. delete dirent before marking inode free 
+  3. mark block in-use before adding it to inode addrs[] 
+  4. remove block from addrs[] before marking free  
+  5. zero block before marking free 
+  ```
+
+* app-visible syscall semantics
+  * durable：使用写穿缓存，同步I/O, O_SYNC
+  * atomic：通常，Mkdir是一个例外
+  * ordered：如果所有写入都是同步的
+
+* Sync I/O vs. Async I/O
+  * 异步I/O是一个很差的抽象，在很多方面：Reliability，Ordering，Durability，Ease of programming
+
+  * 同步I/O更好，但是速度慢100倍，调用者被阻塞，直到操作完成
+
+
+* Barrier: Flush the Disk
+  * 磁盘的write buffer，磁盘将通知OS写入完成时，可能只是简单地放在write buffer里，数据没有在磁盘上，不durable，不ordered
+  * 一种方案是禁用buffer，另一种方案是flush，强制将数据写入磁盘媒体
+*  
+
+------
+
+#### 第十三讲 Journaling and ext3
+
+* 概述：Recovery approach
+  * 同步元数据更新 Synchronous meta-data update + fsck：用于xv6-rev0，在检查期间，同步元数据，比如文件大小
+    * 同步元数据更新的要点在于有一个commit point
+  * 日志(ext 3/4)、xv6-rev6和以下版本：在进行实际的元数据更新之前先写log，崩溃后，从日志中恢复
+  * 软更新soft update(在FFS上修改FreeBSD fs)
+
+* JFS：Journaling FS
+  * 主要功能：加速崩溃后的恢复时间；大磁盘上的fsck可能非常慢，“消除崩溃后文件系统恢复时间非常长”
+  * 使用JFS，只需在崩溃后从最后一个checkpoint重新阅读日志
+
+* JFS 和 log-structured file system，LFS 论文读过
+  * LFS只包含一个日志，所有内容都append到末尾
+  * LFS指定了数据如何存储在磁盘上，JFS没有规定数据如何存储在磁盘上（是指layout吗）
+* JFS的工作原理
+  * 原理一：每一次disk update都看做是一个事务(原子更新)
+    * 将新数据写入磁盘(日志)；在update commit之前，更新都不是最终的
+  * 原理二：每一次block write的commit都是原子的（通过log保证）
+    * 提交块是磁盘上的一个数据块；不一定要刷新到磁盘!
+
+* 如何从日志中获取数据呢
+  * commit之后，新的数据就会出现在日志中
+    * 它需要被写回磁盘上的home location（先写log再写data）
+    * 在将数据重新同步到磁盘之前，无法回收该日志空间（保证原子性）
+* checkpoint
+  * 关闭transaction，所有后续的文件系统操作都将进入另一个事务
+  * 将事务刷新到磁盘(日志)，锁定缓冲区
+  * 将所有内容刷新到日志后，更新journal header block
+  * 只有在缓冲区同步到磁盘之后，才能在日志中解开缓冲区的锁定（缓冲区中是新更新的log部分）
+  * 在日志中释放空间（相当于打了一个checkpoint）
+* ext3 和 JFS 的对比
+  * ext3相对ext2的一个主要改变就是增加了log，ext2是以前类似于xv6的无日志文件系统
+  * 两者在两个独立的层
+    * /fs/ext3，只是添加了事务的文件系统；/fs/jdb，记录日志的stuff(JFS)
+  * ext3根据需要调用JFS：启动/停止事务，在unclean reboot（通常是crash发生了）之后请求日志恢复
+  * 做复合事务：具有多个更新的事务
+
+* Ext3 Structures
+  * 在内存中：write-back block cache，per-transaction info
+  * 在磁盘中：fs，circular log
+
+* ext3的log中有什么
+  * log superblock，记录starting offset and starting seq 
+  * descriptor blocks
+  * data block
+  * commit block
+  * 大概的结构就是：|super: offset+seq #|... |Descriptor 4|...blocks...|Commit 4| |Descriptor 5|... 
+
+* ext3 如果实现比较好的性能
+
+  * 方法一：批处理，每隔几秒提交一次，而不是在每次系统调用之后，因此每个事务都包含许多系统调用
+  * 解释一：为什么批处理有助于性能?
+    * 将固定事务成本分摊到多个事务中，包括描述符和data block
+    * “写吸收” write absorbtion，批处理中的许多系统调用其实修改的都是相同的块，批处理就一起写了，省了一部分写(i-node、bitmap、dirent)
+    * 更好的并发性，等待前一个系统调用完成了再继续做别的事，这样的情况会少一点
+  * 方法二：Ext3允许并发事务和系统调用
+    * 和批处理有一点细微的区别
+    * 可能同时有多个事务状态：有些已经完全提交到磁盘日志中，有些人日志写入才做了一部分，还比如有的刚刚接收新系统调用的“open”
+    * ext3每隔几秒提交一次当前事务 (或者用fsync())
+
+* 一个事务完全提交到disk的整个过程
+
+  ```
+    1. block new syscalls，阻塞别的syscall
+    2. wait for in-progress syscalls to stop()
+    3. open a new transaction, unblock new syscalls
+    4. write descriptor to log on disk w/ list of block #s
+    5. write each block from cache to log on disk
+    6. wait for all log writes to finish
+    7. write the commit record
+    8. wait for the commit write to finish
+    9. now cached blocks allowed to go to homes on disk (but not forced)
+    # log commit以后其实就好了，现在data cache里的内容允许被写进磁盘home了，但它是不是现在写都没事
+  ```
+
+* ext3 log体系在并发的时候能否保持正确性呢？
+
+  * 没问题的，还会有lock保护，比如在同一个目录同时创建两个相同名字的文件是做不到的，因为第一个开始create的进程会拿到目录锁
+  * 但也有其他东西是可以真正并发的(缓存中的不同块)，或者事务组合了两个系统调用的update也是在并发
+
+
+* ext3 log体系有没有可能出现因乱序导致的脏读或者更新没读到呢？
+  * 看ppt的意思好像是会的
+  * 比较重要的一点，commit顺序必须与系统调用读/写状态的顺序一致，不然问题很大（如果顺序不对），Ext3牺牲了一些性能来获得正确性（也没办法吧？）
+*  ext3 log体系允不允许 其他事务T2写T1事务要写的block？
+  * ext3 allows T2 to start before T1 finishes committing -- 允许有一定程序的交错
+    * T1: |-syscalls-|-commitWrites-|
+    * T2:            |-syscalls-|-commitWrites-|
+  * 好像有点危险，可能会破坏原子性
+  * 解决方案：当T1关闭时，ext3向T1提供block cache的私有副本，T1从缓存的这个快照提交，使用copy-on-write是有效的；当T1提交时，副本允许T2中的系统调用继续进行（？？？）
+  * 要点：正确性需要崩溃后+恢复状态，就好像syscalls是按原子顺序执行的一样，Ext3使用各种技巧来允许一些并发
+
+* ext3 log体系什么时候可以重用之前事务使用的log space呢
+  * 重用是肯定要有的，因为ext3是circular的
+  * 一旦在日志中释放了T1之前的所有事务，并且T1缓存的块都被写到磁盘上的FS中，T1的部分就可以重用（这是一个check条件吧）；好像是有一个指针在维护当前最新的可以被重用的block在哪的
+* ext3 log体系如何应对syscall的时候已经没有足够的空间的呢
+  * 场景：假设我们把syscall的block添加到T2事务，到一半的时候，意识到T2不适合放在磁盘上（太大了之类的），我们不能提交T2，因为系统调用还没有完成；我们也不能退出这个系统，无法撤消系统扫描，T2中的其他系统调用程序可能已经阅读了它的修改（问题很大
+  * 解决方法：reservation 预留
+  * syscall提前声明一下它要用多少log space，不够就算了，panic掉返回一点信息
+
+* ext3的性能测试案例
+  * 测试1：在一个目录中创建100个小文件，xv6需要超过10秒(每个系统调用需要很多磁盘写操作)
+  * 测试2：重复修改缓存中相同的direntry、inode、bitmap，因为批处理写吸收的存在好像问题不大
+  * 测试3：然后提交几个元数据块和100个文件块
+* ext3 crash了以后怎么recovery
+  * 第一步，找到日志的开头——第一个non-free的描述符，可能可以根据日志“superblock”中的offset和seq#找
+  * 第二步，找到日志的末尾，扫描到坏magic或没有出现预期的seq号，返回到上次提交记录
+  * 第三步，replay第一步和第二步框定的所有块通过最后一个完整的事务（就是被crash整崩的那个）
+* Durability of ext3
+  * 综述，ext3不像xv6那样立即耐久稳定，
+    * creat()返回 -> 可能数据还不在磁盘上，这时候crash事务就被撤销
+    * 需要fsync(fd)强制提交当前事务，然后wait
+    * 如果在每次系统调用之后都提交ext3，它的性能是否会很好?
+      * 会log更多的块，但没有写吸收了
+      * 每个系统调用均摊10毫秒，而不是0毫秒
+* Ordered Mode vs Journaled Mode
+  * Journal file content比较慢，每个数据块写两次，写log，写data
+    * 那不这样做会更好吗？并没有；log肯定要先写，如果先更新metadata，crash可能会让文件指向带有其他人数据的块
+  * 简单来说，journal mode的写顺序应该是：log meta，log data，home meta，不知道什么时候home data
+  * ext3 ordered mode
+    * 不要将file content写入日志
+  * 简单来说，ordered mode 的写顺序是log meta，home meta，不知道什么时候home data，log data省略了
+  * 这样当然也是可能带来一些问题的
+    * 问题：rmdir, re-use block for write() to some file, crash before rmdir or write committed
+    * 解决：re-use 超危险，一定要syscall commit 以后才行，别还没commit就自说自话开始reuse了
+* checksum
+  * ext4相对于ext3的一点优化
+  * 问题：在编写提交块之前，事务的日志块必须位于磁盘上，ext3在启动提交块写入之前等待磁盘显示“done”；为了提高性能，磁盘通常有write caches和re-order writes
+  * 解决：提交块包含所有数据块的校验和
+* xv6 和 ext3 比较
+  * 咦这个还没比过吗
+  * ext3修复了xv6日志的许多性能问题
+    * 一次只有一个事务，现在可以并发
+    * 同步写入磁盘日志，但是5秒窗口
+    * 微小更新->整个块写入——yes(间接)
+    * 提交后同步写入到home
+  * ext3的log系统非常成功，但是没有checksum，ext4加上了
+  * 但是对于使用fsync()的应用程序不是很有效
+
+##### Virtual Disk & VMRAM
+
+* 虚拟磁盘的特性 feature
+  * 动态增长的image size，snapshot，de-duplication
+  * 这些特性可以显著地简化VM部署、备份等任务
+  * 虚拟磁盘在主要的云基础设施中得到了广泛的应用，例如OpenStack
+
+------
+
+#### 第十四讲 FS：FAT32 & NTFS
+
+##### FAT File system
+
+* cluster 和 sector
+
+  * sector是磁盘上最小的存储单元，512 byte
+  * cluster是可以用来保存文件的最小磁盘空间：**data cluster位于分区的元数据后面，不同的cluster大小取决于volume大小**
+
+  ![1560078775928](Pictures/Operating_System/1560078775928.png)
+
+* FAT的结构
+
+  ![1560077093726](Pictures/Operating_System/1560077093726.png)
+  * boot sector：卷volume的layout，fs structure，boot code
+  * reserve sector：描述分区根目录中的文件和文件夹
+  * FAT 1，original FAT，File allocation table 
+  * FAT 2,dupliacte
+  * root folder，描述root的file和folder
+  * other folders and all files：主要就是data部分
+
+* 结构：FAT boot sector
+
+  * 位于每个分区的第一个逻辑扇区，在格式化volume时创建，以2字节扇区标记结束(总是0x55AA)
+
+
+  * 组件 component：
+    * 一个基于x86的CPU跳转指令
+    * 原始设备制造商标识(OEM ID)
+    * BIOS参数块(BPB)
+    * Extented BPB
+    * 可执行的启动代码
+
+* 结构：FAT 1 and FAT 2
+
+  * 将所有cluster标识为这样几种状态：unused, cluster in use by a file, bad cluster, last cluster in a file
+
+  * FAT 2用于一致性检查程序
+
+  * FAT是一种链式结构，这样一个个块块就是cluster
+
+    ![1560077885407](Pictures/Operating_System/1560077885407.png)
+
+* 结构：FAT root folder
+
+  * FAT Root Folder Structure的entry：name，attribute byte，create time/date，last access date，last modification time/date，first cluster，file size
+
+  * file naming：支持长文件名，main folder entry存8.3 short file name，secondary folder entry存long file name
+
+    ![1560078444246](Pictures/Operating_System/1560078444246.png)
+
+  * 短文件名要保证长度最多就那么长，THEQUI~1FOX，如果重了就THEQUI~2FOX，最后可以搞到T~999999FOX，再conflict就error
+
+* ExFAT 的 file name search
+  
+* 首先按照hash搜索名称，通过比较哈希值来搜索目录中的每条记录；当找到匹配项时，将对文件名进行比较，以确保在发生冲突时找到了正确的文件
+  
+* FAT的优点和缺点
+  * FAT的优点：
+    * 目录和文件的层次树 Hierarchical tree
+    * 可变长度的文件
+    * 基本文件和目录元数据
+  * FAT的缺点：
+    * FAT32最多支持2TB磁盘（还好吧？不过FAT是u盘用的多）
+    * 定位free chunk需要扫描整个FAT（这个太坑了
+    * 容易出现内部和外部碎片，大文件的时候
+    * 因为链式结构，读需要大量的随机搜索
+
+##### NTFS
+
+* NTFS Cluster
+  * cluster：smallest allocated disk space to hold file，跟上面FAT一样的定义
+  * 从分区开始按顺序排列逻辑集群号
+  * 集群从扇区0开始(与FAT不同)
+  * 软盘floppy disk不使用NTFS
+  * 不同的集群大小取决于卷大小
+  * ![1560079372934](Pictures/Operating_System/1560079372934.png)
+
+* NTFS的结构
+
+  ![1560079412908](Pictures/Operating_System/1560079412908.png)
+  * NTFS boot sector：卷volume的layout，fs structure，boot code
+  * Master File Table，这个是最重要的，包含file和folder的attribute
+  * File System Data，Data no contained within MFT
+  * Master File Table Copy， a copy of MFT
+
+* 结构：Master File Table，MFT
+
+  * 包含的属性：一个关系型数据库；rows：文件记录；columns：文件属性；每个文件至少包含一个条目entry
+
+  * MFT的metadata file：master file table, master file table, log file, volume file, attribute definitions, root file name index, cluster bitmap .... 太多了不想写了我也没仔细看
+  * MFT Zone
+    * 作用有防止碎片，默认情况下占有12.5%的volume，按需分配额外的MFT区域
+
+* NTFS File Record Attributes
+
+  * File attribute 的定义：将每个文件和文件夹视为一组文件属性
+  * Resident Attributes vs. Nonresident Attributes 常驻属性和非常驻属性
+    * 小文件和文件夹完全包含在文件的MFT记录中(通常小于900字节)
+  * File attribute 的类型：标准信息（访问模式，时间戳，link cnt），属性列表，文件名，data/index，object ID
+
+* NTFS File naming
+
+  * 如何生成简短的文件名：删掉不支持的字符（空格等），删掉多余的间隔符（逗号句号什么的），把文件名截断成6个字符，然后加~和数字
+  * 这不就是FAT的操作吗
+
+* NTFS Compression（file and folder）
+
+  * NTFS压缩：在NTFS中实现，仅在磁盘中压缩，在将数据移动到内存之前解压
+  * 移动和复制文件或文件夹：改变压缩状态，增加系统开销
+
+* NTFS hard link
+  * 在不复制原始文件的情况下为硬链接添加目录项
+  * 应用程序可以使用任何硬链接修改文件
+  * 不能在每个硬链接的基础上为文件提供不同的安全描述符
+
+* NTFS Sparse Files 稀疏文件？？：该文件包含由零组成的大量数据
+
+##### MBR & MOUNT
+
+* Master Boot Record：MBR
+  * 我印象中是一个磁盘分区的时候要用到的东西
+  * ![1560081984823](Pictures/Operating_System/1560081984823.png)
+
+* 磁盘分区最多可以分四个，第四可以弄成extended partitions，就可以继续加
+
+* Mounting a File System 安装文件系统
+  * 读取目标文件系统的superblock，包含关于文件系统的元数据，版本、大小、磁盘上关键结构的位置等
+  * 确定安装点 mount point
+    * Windows操作系统：选择一个驱动器字母
+    * 在Linux上：将新文件系统挂载到特定目录下
+
+* 为什么要“安全地弹出”一个设备?
+  * 刷新缓存到该设备的写入
+  * 干净地卸载该设备上的文件系统
+
+------
+
