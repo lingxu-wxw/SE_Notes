@@ -599,6 +599,7 @@ Fork：copyuvm
     * Programmed exception 软件中断
       * int (system call), int3 (breakpoint)
       * into (overflow), bounds (address check)
+  
 * 一些术语
   * Vector, Interrupt vector, Trap number
   * IRQ: Interrupt Request
@@ -651,11 +652,20 @@ Fork：copyuvm
     * 调制解调器(IRQ5)，打印机(IRQ7)，声卡(IRQ9/IRQ10)，视频卡(IRQ11)和PS/2鼠标(IRQ12)，IRQ3和IRQ4通常用于串行端口，IRQ14和IRQ15用于IDE (primary和secondary)
   * interrupt vector中为IRQ所做的分配：32以下是不可屏蔽的 interrupt和exception，128 是system call，251-255用于IPI inter-processor interrupt 处理器间中断，IRQ的编号都是 IRQ# + 32
 
-* Interrupt Priority
+* Interrupt Priority 中断优先级
 
   * NMI：Non Maskable Interrupt 不可屏蔽中断
 
   ![1558176908532](Pictures/Operating_System/1558176908532.png)
+
+* 中断处理分为四个阶段：
+
+  ```
+  1、保存被中断程序的现场，其目的是为了在中断处理完之后，可以返回到原来被中断的地方继续执行；
+  2、分析中断源，判断中断原因，当同时有多个中断同时请求的时候还要考虑中断的优先级；
+  3、转去执行相应的处理程序；
+  4、恢复被中断程序现场，继续执行被中断程序。
+  ```
 
 * EOI：End of Interrupt
 
@@ -2038,10 +2048,15 @@ readerFinish
 ##### Concurrency Bug Characteristics
 
 - LOC： line of code
+- 这个survey探讨了105个真实的并行错误，来自4个大型开源企业项目中
+  - bug pattern
+  - manifestation conditon
+  - diagnosing strategy
+  - fixing methods
 - Non-Deadlock Bug Pattern
-  - atomicity violation：before-or-after，有的操作一定要用lock保护
-  - order violation：执行有严格的先后顺序，malloc struct初始化一般是memset成0
-- 如何触发bug
+  - atomicity violation，违背了原子性：before-or-after，有的操作一定要用lock保护
+  - order violation，违背了执行顺序：执行有严格的先后顺序，malloc struct初始化一般是memset成0
+- 如何触发bug？这是为了能够让bug可以被复现出来，思考这样几个问题
   - 要使用多少个thread？
   - 要使用多少个变量会参与进来？
   - 要访问多少次变量？
@@ -2050,9 +2065,14 @@ readerFinish
   - 统计结果，96%的bug只有两个thread参与就够了
 - other finding
   - 70%的concurrency bug导致程序crash或者hang
-  - 重现bug是critical的
-  - 程序员缺少debug工具
-  - 60%的patch都包含了bug
+  - 重现bug是critical的，不然没法debug
+  - 程序员缺少debug工具，或者是可以直接发现代码bug的工具
+  - 60%的patch（补丁）都包含了bug，太惨了
+- summary
+  - Bug检测需要查看order-violation Bug和multi-variable concurrency  Bug
+  - 测试可以针对更现实的交叉覆盖目标 interleaving coverage
+  - 修复并发性bug并不简单，也不容易纠正
+  - 需要来自自动化工具的支持
 
 ##### Bugs in Exception Handler
 
@@ -2060,5 +2080,293 @@ readerFinish
 - other finding
   - 触发一个bug大概三个node够用了
   - failure大多数可以通过unit test触发，大多数可以看system log看出来的
-- OS Bugs
-  - belief set：MUST set，MAY set
+  - 如果有各failure并不是每次发生，但会发生，就要认为它是会发生的
+
+##### OS Bugs
+
+- belief set：MUST set，MAY set
+  - 常见错误一：NULL pointers
+  - 常见错误二：copy-paste error
+
+* general rules
+  * 不调用禁用interrupt或者禁止spin lock的blocking function
+  * 检查NULL结果
+  * 不分配大的堆栈变量
+  * 不重用已分配的内存
+  * 在内核模式下使用用户指针之前，请检查它们
+  * 记得释放锁
+
+* 在 JOS 中没有说明的规则
+  * kernel mode禁用interrupt
+  * 只有env 1可以访问磁盘
+  * 所有寄存器在上下文切换时都会被save/restore
+  * 应用程序代码永远不会用CPL 0执行
+  * 不要分配已经分配的物理页面
+  * 要将错误消息传播给用户应用程序(例如，资源不足)
+  * 派生程序用的时候要应该打开文件描述符0、1和2
+  * 用户指针用在kernel之前，要通过一次TRUP
+
+------
+
+#### 第二十讲 Lock Race & Dead Lock
+
+* Review : Bug survey
+  - order-violation bug, multi-variable concurrency bug
+  - Fancy way of finding bug 
+    - error handlers
+    - C-P pattern miner, copy-paste
+    - iComment
+    - Invariable in the kernel
+* Checking function pointers
+  - current_task和kernel stack是共享一个4K的页
+  - 内核中的函数指针总量大概4000个，大概4个页就能存完 (32位)
+  - OSck，从根目录开始出发遍历所有数据结构，run queue记录了所有runnable的task，是给scheduler看的
+  - 如果有进程在run queue，但不在task structure里 => 可以跑，看没办法被ps发现 (黑客攻击)
+    - ps aux，展示所有活跃的进程
+  - FSck，对文件系统做一遍扫描，处理一下refcnt等
+
+##### Data race 
+
+- data race的定义：
+  - 针对一个共享变量，同时两个或两个以上的操作
+  - 至少有一个是写操作
+  - 线程没有使用显示的机制来阻止访问的同时进行
+- data race detector：主要有两种策略
+  - Happens-before based
+  - Lockset based
+- data race并不总是会导致bug：比如不那么care数字的精确值的时候 (淘宝商品的浏览量)
+- 其他上课讲的零零碎碎
+  - 单核的情况会有data race吗？会的哦，只要multi thread就行了
+  - event-driven 和 multithread
+  - cli 和 sti 都在关中断
+  - exception handler尽量不要拿锁
+
+##### happens-before based
+
+- 两种情况：sequential thread 和 different thread
+  - different thread 通过 lock和join 等sycn方法来判断在不同thread上的先后关系
+  - happen before具有传递性
+- Happy-before情况下，data race 的定义
+  - 针对相同内存位置，同时两个或两个以上的操作
+  - 至少有一个是写操作
+  - 这两件事与另一件事都没有happen-before的关系
+- Happy-before策略的评价
+  - 优点：被它找到的data race一定是真的
+  - 缺点：
+    - 实现比较困难，开销太大了：可以标记一下部分变量不做happen before，只对shared 的变量做，相当于剪枝，thread_local的变量就不用在意了
+    - 有时候会错过一些data race，并不一定能找出全部
+
+##### Lockset based
+
+* lockset-based情况下，data race 的定义
+  * 针对相同内存位置，同时两个或两个以上的操作
+  * 至少有一个是写操作
+  * 没有锁可以保护对相同数据的所有访问
+
+- lockset的算法
+
+  - 记录哪些lock保护着哪些变量，这东西出自eraser那篇论文
+
+  ![1558580468315](Pictures/Operating_System/1558580468315.png)
+
+![1558580911188](Pictures/Operating_System/1558580911188.png)
+
+![1560253273041](Pictures/Operating_System/1560253273041.png)
+
+- lockset 方法的 challenge：
+  - 问题一：初始化 (因为第一次共享变量初始化大概是没有锁的，memset)，那第一次判断就凉凉
+  - 问题二：read-only shared variable (有些变量就是只写一次的，static const，其实后面就不会有问题了，没拿着锁也没事
+  - 问题三：read-write lock (读写锁，有时候被读锁保护，有时候被写锁保护，但在算法算两个不同的锁，交一下就warning)
+
+* 解决问题一和二
+  * 延迟refinement的判断，先等初始化以后再说，初始化那下读不判断
+    * 但没有很简单的办法知道什么时候算初始化完成了
+    * 启发式的方法：当第一次被第二个线程访问的时候
+  * 多添加几种状态 virgin， exclusive，shared，shared-modified，等最后到了shared-modified了就可以随便用定义式判断data race了
+
+* 解决问题三，算法改良，考虑进读写锁
+
+  ```
+  1.Let locks_held(t) and write_locks_held(t) be the set of locks held in any mode and write mode by thread t
+  2.For each v, initialize Cr(v) and Cw(v) to the set of all locks
+  3.On each read to v by thread t, 
+    set Cr(v):= Cr(v) ∩ locks_held(t)
+    if Cr(v)={ }, then issue a warning
+  4.On each write to v by thread t, 
+    set Cw(v):= Cw(v) ∩ write_locks_held(t)
+    if Cw(v)={ }, then issue a warning
+  ```
+
+* lockset策略的评价
+  * 优点：更有效的方法检测数据竞争，预测尚未显示的数据竞争
+  * 缺点：可能多报，报出不是race的地方；限制了lock的同步方法
+
+##### Deadlock
+
+* deadlock发生的条件
+  * 锁是独占锁；一个线程拿到锁了以后其他线程只能等；没有抢占
+  * 这种情况下出现循环等待
+
+* 如何处理deadlock
+  * pessimistic 的方法，避免死锁的发生，维持等待没有抢占
+  * optimistic 的方法，等死锁发生了再检测恢复，打破不能抢占的规矩
+  * 这一部分的内容其实CSE讲的更详细，这里ppt我也没怎么细看，之后二刷的时候去看CSE吧
+
+* Livelock
+  * 类似于死锁，process的状态之间不断地发生变化，但其实啥也没干成
+
+
+* Dimmunix - Teaser
+  * 通常是很难处理死锁的；dimmunix是一个用于开发死锁免疫的工具，当死锁的症状第一次出现的时候，Dimmunix自动捕获它的signature，然后避免输入相同的pattern
+
+------
+
+#### 第二十一讲 Introduction to Virtualization
+
+* 背景：
+  - 处理器，内存，磁盘，网络的性能都在上升；处理器大概20%每年，内存/磁盘大概60%一年，存储的增长比不过数据的增长
+  - 利用率通常都低于20%；比如在黑五用的很多但平时不太用的
+  - 机器的maintenance很贵，电费，空调，维修
+  - virtualization的重要性：简化管理
+
+##### What is virtualization
+
+* isomorphism 同构，在形式上，虚拟化涉及到从客户状态到主机状态的同构的构建
+* 虚拟化的三个好处：isolation 隔离, Encapsulation 封装, interposition 干涉
+  * Isolation，隔离的分类：fault isolation，software isolation，performance isolation
+    * DLL-Hell in windows
+  * Encapsulation 封装，所有VM状态都可以被捕获到一个文件中，通过对文件进行操作来操作VM
+  * interposition，VM中所有的guest操作都要经过monitor，这样monitor就可以做inspect，modify，deny之类的操作
+    * 具体一点就是，压缩 Compression，加密 Encryption，profiling 分析，translation 翻译
+    * side-channel
+* 为什么一定要用虚拟化技术，不用OS？
+  - VMM是在hardware interface操作的，硬件接口通常比软件接口更小，定义的更好
+  - OS提供的抽象太多了，状态比较多，迁移会比较麻烦，用的software interface
+  - hypervisor和microkernel有一些相似性
+  - VMM的缺点，semantic gap 语义鸿沟，VMM不知道guest在做什么；OS会知道guest在做什么(software interface)/(process，pipe，thread，file system)等，知道data和metadata，VMM是不知道这些东西的
+
+* spinlock和condition variable (这应该是上课插播的一段复习)
+  - spinlock的原理在于关闭中断，一直check某个变量，在变量产生变化后结束spin，整个过程应该是比较简短的，大概几个cycle吧
+  - VMM没有办法真正的关掉中断，(中断是物理层面的)，物理中断会由hypervisor接管，然后可能被schedule掉
+  - 虚拟机(xen)调度的时间片 30ms，有点大，这对spinlock的打击是很大的
+  - 提高性能的方式是减掉一层抽象；hypervisor观察一下猜测一下VMM是不是正在spinlock中，要让底层知道一点信息
+* virtualization benefit
+  - server consolidation，提高资源利用率 (整合服务器)
+  - mobility: load balance 
+  - enhance security：可以把一些安全的虚拟机放在防火墙的保护之后
+  - trusted computing，可信计算，把可能有问题的放在VM里面跑
+
+##### How to virtualization
+
+* 如何做到虚拟化
+
+  * 在另一个平台上运行现有的软件组件
+    * 组件可能是application,OS，平台可能是硬件也可以是软件
+  * 保证隔离，组件不能访问其他的数据或环境
+  * 保证透明，不能修改组件；相当于组件和平台双向隔离
+
+* architecture & interface
+
+  - ISA：instruction set architecture，硬件软件的接口
+  - ABI：application binary interface，提供可访问系统中可用的硬件资源和服务的程序，**ABI提供了进程和机器之间的接口**；**还有张图表示 ABI = system call + user ISA**
+  - API：application programming interface，关键元素是标准库(或多个库)，通常在高级语言的源代码级定义
+
+  ![1560258208422](Pictures/Operating_System/1560258208422.png)
+
+  - WINE的作用是虚拟化ABI，windows emulation，linux里跑windows?? 代码实现的是win32的API，就是windows给application提供的接口
+  - VM的作用是虚拟化ISA
+  - python是基于API的
+
+* 问答题，at which layer ? 大概是这样吧
+
+  * hello world，API
+  * web game，API
+  * dota，API
+  * office 2013，API
+  * window 8，ISA
+  * java application，ABI/API
+  * python scripts，API
+
+##### Types of hypervisor
+
+* virtualization 的种类
+  * process virtualization
+  * device virtualization：RAID
+  * system virtualization：VMware, Xen
+
+* Design  space 
+
+  - QEMU user mode，process VM，same ISA
+  - JVM，process VM, different ISA
+  - KVM，Xen，system VM，same ISA
+  - Android Studio ARM代码，system VM，different ISA
+    - Android Studio内嵌了QEMU
+
+  ![1560259711632](Pictures/Operating_System/1560259711632.png)
+
+* system VM，same ISA
+
+  - **type 1：Hypervisor (VMM)**，hardware上直接运行VMM，上面是guest OS, eg. Xen, VMware ESX Server
+  - **type 2：Hosted Virtual Machines**，hardware上有host OS，再是VMM和guest OS，虽然多了一层抽象，但是更常用，效率更高，用起来更简单，eg. VM workstation
+
+  ![1560259931312](Pictures/Operating_System/1560259931312.png)
+
+  ![1560259941178](Pictures/Operating_System/1560259941178.png)
+
+* VMM的三种不同的架构：
+
+  - type 1，Xen
+  - type 2，Linux KVM， QEMU，但又有点不一样
+    - type 2的设计目标，在现有操作系统上像跑应用程序一样跑虚拟机
+    - 这样做可以重用现有的device driver，可以获得OS的支持（文件系统和调度层面）,总之就是弄起来方便
+  - 一个虚拟机就是一个进程，这个进程有多少线程，是分配这个虚拟机的CPU的个数
+
+  ![1560260161986](Pictures/Operating_System/1560260161986.png)
+
+* Host Monitor Architecture
+
+  ```
+  备注中很长的好几段话：
+  	world switch：虚拟机监视器在内核级运行在它自己的地址空间中。VMM时间与主机共享硬件。当UserApp在主机中运行时，它通过一个World开关切换到VMM。world switch保存主机的所有寄存器、页表等，然后加载VMM的状态。最初，VMM的状态由UserApp设置。这包括寄存器应该是什么以及页表的结构和内容。当VMM自愿放弃CPU时，它会切换回主机。
+  	CPU/Memory virtualization：为了提高性能，所有CPU和内存虚拟化都在VMM内部处理。这就是这个架构背后的整个思想。VMM可以访问CPU的所有特权状态，以提供尽可能快的CPU/内存虚拟化。
+  	Device IO(network,disk,display,keyboard,timer,USB)：为了利用操作系统抽象和现有设备驱动程序，VMM将所有设备请求转发给用户应用程序。然后UserApp使用系统调用接口访问设备。
+  	Interrupts：因为VMM不处理设备，所以它只是将所有中断转发到主机。注意，VMM必须处理CPU生成的异常，比如页面错误和非法指令错误。
+  ```
+
+  ![1560260445249](Pictures/Operating_System/1560260445249.png)
+
+* Host Monitor Scheduling
+
+  ```
+  备注中描述的调度的过程：从blue调度到green
+  1. The CPU scheduler runs the blue UserApp .
+  2. The UserApp switches to its VMM.
+  3. The blue guest is run and gets CPU time.
+  4. A time interrupt comes in.
+  5. The VMM forwards the timer interrupt to the host. The host scheduler runs.
+  6. The host scheduler deschedules the blue UserApp and schedules the green UserApp.
+  7. The green UserApp switch to its VMM.
+  8. The green guest gets CPU Time
+  ```
+
+  ![1560260612718](Pictures/Operating_System/1560260612718.png)
+
+* Hosted Architecture Tradeoffs
+  * 优点：
+    * 可以像应用程序一样安装（不需要磁盘分区，虚拟磁盘是主机文件系统上的一个文件，不需要host-rebooting）
+    * 可以像应用程序一样运行，使用主机的调度器
+  * 缺点：
+    * I/O路径很慢，需要多次world switches
+    * 依赖于主机调度，可能不适合密集的VM工作负载
+
+* Hypervisor
+
+  * 特点：small size，以特殊的hardware mode运行，guest OS运行在正常的特权级别
+  * 用途：安全，系统管理，容错
+
+  ![1560261182465](Pictures/Operating_System/1560261182465.png)
+
+* 
+
+------
+
