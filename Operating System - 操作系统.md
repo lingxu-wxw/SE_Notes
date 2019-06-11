@@ -2,7 +2,7 @@
 
 ------
 
-### 第一讲 Introduction & 8 Important Problems in Modern Operating Systems
+#### 第一讲 Introduction & 8 Important Problems in Modern Operating Systems
 
 * 操作系统是什么
   * 定义：操作系统是管理硬件资源、控制程序运行、改善人机界面和为应用软件提供支持的一种系统软件；向上提供服务，向下管理资源
@@ -125,7 +125,7 @@
 
 ------
 
-### 第二讲 OS Structures
+#### 第二讲 OS Structures
 
 * OS Design and Implementation
 
@@ -177,7 +177,7 @@
 
 ------
 
-### 第三讲 PC Programming & Booting
+#### 第三讲 PC Programming & Booting
 
 * x86架构 (32-bit)
   * EIP随着指令增加；指令是不定长的；EIP会被call, ret, jmp, cond. jmp修改
@@ -292,7 +292,7 @@ ljmp    $(SEG_KCODE<<3), $start32
 
 ------
 
-### 第四讲 Memory init：xv6 & VM
+#### 第四讲 Memory init：xv6 & VM
 
 * Core i7的内存结构
 
@@ -371,7 +371,7 @@ Fork：copyuvm
 
 ------
 
-### 第五讲 Process
+#### 第五讲 Process
 
 * 逻辑地址 - 线性地址 - 物理地址的转换
 
@@ -434,7 +434,7 @@ Fork：copyuvm
 
 ------
 
-### 第六讲 IPC 
+#### 第六讲 IPC 
 
 * Review Questions
   
@@ -516,7 +516,7 @@ Fork：copyuvm
 
 ------
 
-#### 第七讲 Exception
+第七讲 Exception
 
 * Review
 
@@ -1260,7 +1260,7 @@ Fork：copyuvm
 * Ordered Mode vs Journaled Mode
   * Journal file content比较慢，每个数据块写两次，写log，写data
     * 那不这样做会更好吗？并没有；log肯定要先写，如果先更新metadata，crash可能会让文件指向带有其他人数据的块
-  * 简单来说，journal mode的写顺序应该是：log meta，log data，home meta，不知道什么时候home data
+  * 简单来说，journal mode的写顺序应该是：log meta，log data，home meta，不知道什么时候home data **（这个可能写错了，等我之后看笔记check一下）**
   * ext3 ordered mode
     * 不要将file content写入日志
   * 简单来说，ordered mode 的写顺序是log meta，home meta，不知道什么时候home data，log data省略了
@@ -1428,3 +1428,637 @@ Fork：copyuvm
 
 ------
 
+#### 第十五讲 File System Flash FS
+
+* xv6中的Transaction Semantics 
+
+  * begin_trans, log_write, commit_trans, recovery
+
+* 事务提交到磁盘的完整步骤
+
+  * 为syscall开启一个transaction -> 把transaction标记为done -> 等待正在进行的syscall stop/return -> 写描述符对于要写的block s，写log -> 把每个块的内容从cache写到log上 -> 等待log写完 -> 添加commit记录 -> （可选）把块的内容写到home disk
+
+* NV-RAM 中存在的一些问题
+
+  * NV-RAM是被当disk用的，cpu的cache被视为memory，crash会丢失还没有write back的cache内容；层次结构已经发生变化了
+  * CPU拥有cache flush 到 memory的指令
+
+  ![1560125796756](Pictures/Operating_System/1560125796756.png)
+
+##### Intro to flash file system
+
+* 定义：flash file system
+
+  * Flash文件系统是为在闪存设备上存储文件而设计的；传统的文件系统不能在flash文件系统上使用吗
+
+* 闪存盘和普通磁盘的区别
+  * flash disk organization：A chip (e.g. 1GB) => blocks (e.g. 512KB) =>    pages (e.g. 4KB) => cells（有点像体系结构那个）
+
+  ![1560125994143](Pictures/Operating_System/1560125994143.png)
+
+  * flash cell：是一个浮动栅晶体管，分为SLC和MLC
+    * 浮栅上的电子数决定了阈值电压V，阈值电压表示逻辑位值(0或1)
+
+  * SLC和MLC flash的区别：SLC一个cell存一个bit，性能好，耐久，容量小；MLC一个cell存两个bit，性能差，不耐久，容量大
+
+* 闪存盘的特点
+
+  * 不对称的读写，以及擦除erase特性
+    * 读/写的unit是page，8-16KB
+    * erase的unit的block，4-8MB
+  * 物理限制，每次write都要erase一块block，erase-before-write的限制，以及每个block可以被erase的次数应该是有限的
+  * 随机存取 random access：优化磁盘文件系统，尽可能避免磁盘查找；Flash设备没有机械盘那个寻道时间
+  * wear leaving，当一个块被反复erase时，闪存设备就会磨损；所以写的block要设计的比较均匀
+  * Heterogeneous cells：指MLC和SLC两种cell
+
+* 用flash进行file storage 需要注意什么
+  * naive的操作，直接1:1映射，适用于read-only，没有wear levelling，容易写穿block，不是很安全（在电源损耗方面）
+  * Flash Translation Layer (FTL)，增加了一层manager抽象，适用于可写的file system，磨损比较平整，But, one journalling FS on top of the other
+
+* 实例学习，真实的flash file system，flexFS
+
+  * 目标：高性能，高容量，高耐久（什么都要
+  * 方法：flexiable cell programming，SLC和MLC平衡着用，各取其长
+    * MLC通过将数据同时写入LSB和MSB位，使用单元格的所有四个值
+    * SLC通过将数据写入LSB位(或MSB位)，只使用单元格的两个值
+  * 具体操作：利用flexible cell programming，提供高性能的SLC和高容量的MLC，提供一种处理MLC磨损特性差的机制
+
+* flexFS的架构分析
+
+  ![1560126923254](Pictures/Operating_System/1560126923254.png)
+  * flash manager：管理不同的cell
+  * performance manager：利用I/O特性，实现高性能、高容量
+  * wear manager：保证合理的使用寿命，均匀分布erase
+
+* 架构：flash manager
+
+  * 有三种类型的block：SLC, MLC, free
+
+  ![1560127426694](Pictures/Operating_System/1560127426694.png)
+
+* 架构：performance manager
+
+  * 关键技术：hot-and-cold，把经常读写的东西放在耐久性更好的SLC中
+
+    * dynamic allocation, background migration, locality-aware data management
+
+  * ![1560128158554](Pictures/Operating_System/1560128158554.png)
+
+  * migration 的过程通常是放在background执行的，为了防止一整块出现IO request的response time delay，做一个切片
+
+    ![1560128370190](Pictures/Operating_System/1560128370190.png)
+
+  * dynamic allocation的算法
+    * 有一个参数 α，![1560128480827](Pictures/Operating_System/1560128480827.png)
+    * α 越大表示性能越好，迁移时间越短，SLC的页数少，写时间长，可以往SLC多放一点内容
+    * copy is the time required to copy a single page from SLC to MLC
+    * Np is the number of pages in SLC
+    * Tpredict is the idle time of next time window predicted
+
+* 架构：wear manager
+
+  * wearing rate跟α的值是直接相关的，α比较大的话，涉及到的block数也会比较多
+  * 尽量保证当前的wearing rate和expect rate相同（虽然不知道为什么要这样做），如果当前rate过低可以适当上调α，rate过高可以降低一点α
+
+* 架构结论：提出了一种新的MLC NAND闪存文件系统，利用灵活的单元编程实现SLC性能和MLC容量，同时确保合理的wearing/lifetime
+
+* 另一个可以的架构：SLC/MLC hybrid storage
+
+  ![1560128889479](Pictures/Operating_System/1560128889479.png)
+
+  * 由单片SLC芯片和多片MLC芯片组成
+  * 使用SLC芯片作为MLC芯片的写缓冲区
+    * 将经常访问的小数据重定向到SLC芯片
+    * 将大量数据重定向到MLC芯片
+
+##### Log-based File Systems，LFS
+
+* 背景：
+
+  * 计算机硬件一直在发展，RAM变得又便宜又大，但随机存取还是很慢
+  * 这让我们希望改变磁盘的使用方式，把更多的数据缓存的放在RAM里，就可以做更少的磁盘读取
+  * 可以做一个针对顺序写操作进行优化的文件系统，LFS
+
+* LFS 概述
+
+  * key idea：buffer内存中的所有写操作(包括元数据)，将这些segment按顺序写入磁盘，将磁盘视为循环缓冲区，陈旧的数据不会被覆盖（而是替换）
+  * 优点：所有的写操作都是大的、连续的
+  * 问题：如何在这种设计中管理元数据和维护结构?
+
+  ![1560129246728](Pictures/Operating_System/1560129246728.png)
+
+* LFS 具体一些问题的解决
+
+  * buffering write，每一个inode指向自己文件中所包含的block
+
+  * 如何找到inode：甚至要找的inode还可能有很多个副本
+
+    * 解决方法，增加一个inode map的间接影射
+
+  * inode映射分散在整个log中，怎么找到最新的inode map呢
+
+    * 解决方法，加一个checkpoint模块指向最新的inode map，CR固定，总是cache在内存中，定期写入磁盘，例如30秒之类的
+
+* LFS 读取文件实例分析
+
+  ```
+  1. Look up inode 1 in the checkpoint region
+  	inode map containing inode 1 is in sector X
+  2. Read the inode map at sector X
+  	inode 1 is in sector Y
+  3. Read inode 1
+  	File data is in sectors A, B, C, etc.
+  ```
+
+* LFS的directory
+
+  * LFS中的目录和普通文件存的方法也没什么不一样，由inode指向
+  * 目录包含 name 到 inode 的一个 map
+
+* LFS 垃圾回收
+
+  * 每一个cluster都会有一个summary block（跟checkpoint好像不是一个东西），这个块中包含 block-inode的一个反向映射
+  * garbage collector就读取summary block中的信息，查找过期的块
+
+* LFS failure recovery
+  * 主要还是依赖checkpoint
+  * 整个恢复过程貌似很快，这里没有fsck（这应该是ext2，xv6里有的东西）
+  * 恢复最后一个checkpoint，并查看在checkpoint之后可以恢复多少数据，可能会丢掉一部分
+
+* LFS 总结
+  * 这是一个很奇怪的设计，跟传统的文件系统结构都不太一样，不能很好地映射目录层次的关系，不是很清晰；但现在LFS被广泛接受了
+  * 回顾一下SSD磁盘对file system的要求，要实现wear leveling，写最好分散一点；要定期进行垃圾收集，防止写放大；LFS看起来是SSD的理想文件系统
+  * write amplification 和 write absorbtion
+    * write absorbtion 是 ext3的批处理特性
+    * write amplification体系结构里提过，写入放大（WA）是闪存和固态硬盘之间相关联的一个属性，因为闪存必须先删除才能改写，在执行这些操作的时候，移动（或重写）用户数 据和元数据(metadata)不止一次。这些多次的操作，不但增加了写入数据量，减少了SSD的使用寿命，而且还吃光了闪存的带宽（间接地影响了随机写 入性能）
+
+* 新型的文件系统特性：copy-on-write
+  * 现代文件系统吸收了LFS的思想，实现了copy-on-write
+  * 更新后的数据被写入磁盘上的空空间，而不是覆盖原始数据，防止数据损坏，提高顺序写性能
+  * 由LFS开创，现在用于ZFS和btrfs；btrfs可能是Linux中的下一个默认文件系统
+  * 另外，默认情况下，LFS保存数据的旧副本，旧版本的文件可能有用，例如:意外删除文件
+
+------
+
+#### 第十六讲 File System GFS
+
+##### Intro to GFS
+
+- Flash的特点：读写不对称；读可以随便读，写最小是一个block而且要擦除原先的内容；所以要做一些load balance，加一层抽象做映射，减少flash的写操作数量
+
+- GFS是基于任何人都可以买到的便宜结点来做的 (commodity)；上层有很多google自己的应用，比如google search，big table等
+
+- GFS需要满足的特性：
+
+  - 性能好，可扩展/可伸缩/scalability，可靠性，availability
+  - failure比之前的分布式文件系统更加normal
+  - 文件通常会比较大，google做search存的文件类型大多都是网页 (做index/存图片)
+  - 文件的操作更多是append而不是overwrite
+  - 做一个co-design，去掉文件系统中一些不必要的东西
+
+- GFS的设计假设 design assumption
+
+  - 硬件很容易坏掉；文件的容量都很大
+  - 两种类型的读操作：large streaming reads, small random reads，大型流读取，小型随机读取
+  - 一种类型的写操作：large sequential writes (大型顺序写入，但是有很高的并发度，因此更重要的是bandwidth)
+  - 保证来自多个client的并发写中的原子性
+  - 高持续带宽比低延迟更有价值
+
+- 典型的workload类型
+
+  - 读操作：large streaming reads, small random reads
+    - 大型流读取通常要读1MB或更多，可能还是连续区域
+    - 小的随机读取通常只是在任意偏移量上的几个KBs
+  - 写操作：sequential writes，主要是append
+    - 文件一旦写好，就很少再修改了
+    - 在任意偏移量上的小的写并不是很高效的操作
+  - 多个client(例如~100)并发地写一个文件，append操作
+    - 例如，生产者-消费者队列，多路合并
+
+- GFS 的 interface
+
+  - 常见API：不是POSIX兼容的，create, delete, open, close, read, write
+  - 特殊API：
+    - snapshot 很快的构建文件/目录的tree，操作很快因为数据根本不改
+    - record append 允许多个client同时向一个文件进行写操作
+
+- 架构：design architecture
+
+  - **组件：GFS client，GFS master，GFS chunkserver**
+
+  ![1560143214322](Pictures/Operating_System/1560143214322.png)
+
+  - GFS client, GFS master（一个，元数据）, GFS chunkserver（多个，数据）
+  - chunkserver的size是fix的（对比于file），每个chunkserver都有一个64-bit的handle/类似于id
+  - master存有file到chunk的映射，chunk的位置
+  - **Important principle：**
+    - **data flow和control flow分开，分别和master/chunkserver交互**；client直接与chunkserver交互所有文件操作，意味着可以通过基于网络拓扑的昂贵数据流调度来提高性能
+    - **chunkserver和client都不会cache数据，因为数据太大了**；工作集通常太大而无法缓存，chunkserver可以使用Linux的缓存
+
+- Single Master node
+
+  - client不通过master进行读写，master将相关的chunkserver位置信息传递给client；client临时缓存chunkserver数据并直接访问chunkserver
+
+  - master中只存着metadata，大概只是做一个分发
+  - 有shadow master做容错 / 类似fat
+
+- Metadata on Master
+
+  - 三种meta：chunk namespace, map file - chunk, location of chunk replica
+  - Master通过每个块的心跳消息监视chunkserver是不是还活着
+  - GFS中没有inode，也没有symbolic link 和 hard link，每个文件和目录都表示为查找表中的一个节点，将路径名映射到元数据，使用前缀压缩有效地存储
+    - `/foo/bar`就是文件名，所以删目录/改目录名很慢，但google本身就没这种操作
+
+- The operation log
+
+  - operation log是用来记录metadata的变化的（元数据是persistent存储的），要保证order以便于做恢复
+  - master的恢复操作时通过operating log来做的
+    - 为了最小化启动时间，主节点定期检查日志
+    - 检查点以b树形式表示，可以直接映射到内存中，但是存储在dis中
+
+- Chunkserver node
+
+  - 通过心跳消息与master对话
+  - **chunkserver对它自己的磁盘上有什么块或没有什么块拥有最终决定权——而不是master**
+
+- Chunk size：chunk size是fix的，64 MB
+
+  - 缺点：内部碎片造成空间浪费；小文件很少，大文件很多，所以浪费不算太过分（没看懂）；GFS的每个数据要存三备份；小文件由几个块组成，然后这些块从并发客户机获得大量流量3 ， 
+  - 优点：client和master通信次数会变少；减少master上存储的metadata数量；由于客户机很可能对给定块执行许多操作，因此保持到chunkserver的持久TCP连接可以减少网络开销
+  - chunk和master之间会有heartbeat
+
+- Single master 采用这种设计的原因是什么？
+
+  - 可以在master上有global knowledge，因为就一个
+  - master不会成为瓶颈，client不会在master这里做读写操作，只是问chunk的location
+  - master崩了以后，client会很快发现，会启动新的master，然后做一个新的DNS
+    - 使用操作log和checkpoint，还可以在多台机器上复制主状态，以保证可靠；如果主进程失败，GFS可以在这些副本中的任何一个启动一个新的主进程，并相应地修改DNS别名
+  - master和shadow之间的一系列问题
+    - 一致性的问题？shadow master其实一直都可以提供读文件的能力，几乎是同步的
+    - 可以先读shadow，写稍微等一会，等到master恢复
+    - shadow会读master的operation log和checkpoint，master崩了的时候还可以先暂时对外提供master的服务
+    - shadow不是master的镜像：它们比primary master慢了几分之一秒
+  - 为什么不把shadow直接变成primary呢？
+    - 因为有很多shadow，为了一致性还是等primary恢复比较好
+
+- System interactions
+
+  - mutation：几乎都是append的写操作，要写三备份
+    - write，append，acts on all of the chunk’s replicas
+  - lease：60秒，类似cse的lab 3，有renew和revoke
+  - data flow，与control flow 分离
+    - 线性push数据以避免瓶颈和高延迟link
+
+- read/write algorithm
+
+  - 如果写操作的时候secondary挂了，选择client重试，而不是primary重试；读操作没事(没看懂)
+
+  ```
+  Read algorithm
+  1. 应用程序发出读取请求。
+  2. GFS客户机从(文件名，byte range)->(文件名，chunk index)转换请求，并将其发送给master。
+  3. master响应块chunk和replica位置(即存储副本的chunkserver)。
+  4. 客户端选择一个位置并将(chunk handle、byte range)请求发送到该位置。
+  5. chunkserver将请求的数据发送到client。
+  6. client将数据转发给应用程序。
+  ```
+
+  ```
+  Write algorithm
+  1. 应用程序发出写请求。
+  2. GFS客户机从(文件名，byte range)->(文件名，chunk index)转换请求，并将其发送给master。
+  3. master响应chunk handle和(primary+secondary)复制位置。
+  4. client将写数据推送到所有位置。数据存储在chunkserver的内部缓冲区中。
+  5. client向primary发送写命令。
+  6. primary确定存储在其缓冲区中的数据实例的串行顺序，并将该顺序的实例写入块。
+  7. primary向secondary发送串行命令，并告诉它们执行写操作。
+  8. seconary对primary有反应。
+  9. primary response 返回client。
+  
+  注意:如果其中一个块服务器上的写操作失败，则通知客户机并重试写操作。
+  ```
+
+- master operation，职能范围：
+
+  - replica placement;
+  - creation, re-replication, rebalancing; 
+  - garbage collection; 
+  - stale replica detection
+
+- Fault tolerance 和 diagnose 诊断
+
+  - 快速恢复，Master和chunkserver的设计目的是恢复它们的状态并在几秒钟内启动
+  - chunk replica，3-way mirror，可以跨多机器，跨多机架
+  - 主要的机制 Master Mechanisms：有一个进程一直在后台扫，观察有DK的chunk
+    - 记录对元数据所做的所有更改
+    - log定期设置checkpoint
+    - 在多台机器上复制log和checkpoint
+    - 在多台机器上复制master state
+  - 数据完整性 data integrity
+    * chunk会分成64 KB的block，还有32 bit的checksum（多一层保护），还有read/write times校验，还可以对很少使用的数据进行background scan
+
+- GFS 总结
+
+  - 这是可以工业应用的强大文件系统，可以跑在商用的硬件上，比较scalable
+  - 对于前面提到的指定任务和假设，性能良好
+  - GFS的创新
+    - 文件系统API是为程式化工作负载而定制的
+    - single-master设计，简化协调
+    - 元数据适合内存
+  - flat namespace
+  - 对组件故障有专门的处理：硬盘故障、数据损坏、网络断开等
+  - 吞吐量很高：
+    - 最小化master干涉操作，chunkserver本身发送和接收客户机数据
+
+##### Intro to NFS
+
+* 如何访问远端的文件
+
+  * ftp，telnet等，都是很明确的访问远程资源的用户定向连接
+  * 我们希望这个过程具有更高的透明度，允许用户像访问本地资源一样的访问远程资源
+  * NAS，network attached storage
+
+* file service typrs
+
+  * upload/download model	
+    * 优点当然是很简单
+    * 缺点：浪费，可能用户只需要文件的一小部分；如果用户没有足够的空间把文件下载下来呢；如果其他人修改了要读到的文件呢
+  * remote access model
+    * 就像是api一样，提供远程的功能接口，比如create, delete, read, write
+    * 优点是client可以只得到他们需要的部分东西，server可以管理文件系统的一致性
+    * 缺点：可能server和network会出现拥塞，部分data可能会反复不停的被要求访问
+
+* remote file service
+
+  * file service：为client提供文件访问的接口
+  * directory service，将文件的textual name（文本名称）映射到文件服务可以使用的内部位置（不是很懂）
+  * client module，文件和目录服务的客户端接口
+    * 如果操作正确，有助于提供访问透明性；例如在VFS层下实现FS
+
+  ![1560148495444](Pictures/Operating_System/1560148495444.png)
+
+* Server，stateful和stateless，有状态和无状态
+  * stateful，server需要维护client-specific的状态
+    * 更短的请求，处理request的时候性能更好
+    * 维持cache coherence，因为server掌握了谁在做什么的信息
+    * file locking是可能的（这是什么
+  * stateless，server并没有client的任何信息
+    * 每个request都要识别file和offset
+    * server/client 可以崩溃后恢复
+    * 不需要open/close
+    * 如果在server上删除文件，则会出现问题
+    * 不可能做file locing
+
+* 应对repeat access的方法：cache
+  
+  * data在很多地方都有replica：server buffer cache，client buffer cache，client disk
+* 实现cache的若干种策略
+  * write-through：将数据缓存在客户机上，但将修改发送到服务器
+  * delayed writes，write-behind/write-back：数据在本地缓存(注意一致性——其他数据不会看到更新)，定期(立即)更新远程文件，一次批量写入比多次少量写入更有效
+  * read-ahead，prefetch：在需要数据之前请求数据块，在实际需要的时候最小化等待
+  * write on close，承认我们有会话语义
+  * centralized control，跟踪谁在每个节点上打开和缓存了什么，有状态文件系统，signaling traffic
+* NFS，network file system 的设计目标
+  * 任何机器都可以是client或server
+  * 必须支持diskless工作站
+  * 必须支持异构系统，因为会有不同的HW, OS，底层文件系统
+  * 访问透明性
+  * 从failure中恢复：无状态，UDP，客户端重试
+  * 高性能，使用cache和prefetch
+
+* NFS一些问题的解决
+  * mount，Request access to exported directory tree
+  * access，Access files and directories (read, mkdir, …)
+
+* NFS的性能
+  * 通常比本地慢一点，也正常吧
+  * 通过在client上cache来改进
+    * 目标:减少远程操作的数量
+    * 缓存:read, readlink, getattr, lookup, readdir
+      * Cache file data at client (buffer cache)
+      * Cache file attribute information at client
+      * Cache pathname bindings for faster lookup
+  * server side
+    * cache是通过buffer cache“自动”进行的
+    * 所有NFS写操作都是直接写到磁盘的，write through
+
+* NFS的问题
+
+  * 文件的一致性
+  * NFS假设了时钟是同步的
+  * 不能保证能用使用append打开
+  * lock不能工作，因为无状态，可以添加单独的锁管理器(有状态的)
+  * 没有打开文件的引用计数，就可以删除自己/别人打开的文件
+  * 假设有全局UID空间
+
+  * 怎么看起来问题很多的样子....
+
+------
+
+#### 第十七讲 Scalable locking
+
+##### Scalability tutorials
+
+- scalability受限于阿姆达定律，取决于并行和串行的比例是多少
+
+- 一些可能需要有点概念的常数（单位是访问时间）
+
+  - LLC，最末级缓存
+
+  ![1560151830992](Pictures/Operating_System/1560151830992.png)
+
+  ![1560151846751](Pictures/Operating_System/1560151846751.png)
+
+- 三种内存模型：共享cache，共享mem，私有mem
+
+  ![1560151791370](Pictures/Operating_System/1560151791370.png)
+
+- fd是有POSIX语义的，第一个打开的fd一定是3
+
+##### Non-Scalable locking are dangerous
+
+- spinlock是non-scalable的，在竞争很激烈的时候表现出的性能就不好
+
+- 具体危险的地方在：当添加更多内核时，会导致性能崩溃；即使是很小的临界区也会导致性能崩溃
+
+- xv6代码分析
+
+  - `xchg`，类似`TestAndSet`，acquire锁之后第一件事是关中断 `pushcli()`；release最后 `popcli()`；放锁后下一个拿锁应该是随机的，但这建立在每个core访问那一块mem的时间都一样 (这个假设不一定成立) 
+  - `xadd`，类似`TicketLock`，解决了公平性的问题；在保持cache coherence上开销很大
+
+- Directory-based cache coherence
+
+  ![1560152046256](Pictures/Operating_System/1560152046256.png)
+
+- cache coherence维持的方法
+
+  - 这个在体系结构中讲的更多
+  - directory和snooping是常用的两种方式
+  - 即使经过了cache coherence的修正，ticket lock的开销还是太大了，每一次更新ticket后，所有想要锁的人都会来问他要新的ticket值，几百几千个cycle就过去了
+
+##### Scalable locking
+
+- while太快了，在while中稍微做一些loop延长时间；通过wait减少等待lock的数量
+
+  - 但这个提议被Linux否决了，没什么实质性的作用
+
+- 问题的核心：大量的程序在等single cache中的`curr_ticket`这个成员
+
+- MCS Lock：这是一个全局变量
+
+  - waiting 只有0和1两个值，next是下一个要锁的，MCS结构体就两个成员
+
+  - release 只有一次写操作，holder 改掉自己 next 的 wait值（从1改成0），程序都 spin 在 wait 这里
+
+  - `fetch_and_store` 的作用是确定前一个是谁，返回他，并让它的 next 指向自己
+
+  - `compare_and_swap`
+
+    ```c++
+    int compare_and_swap (int* reg, int oldval, int newval) 
+    {
+      ATOMIC();
+      int old_reg_val = *reg;
+      if (old_reg_val == oldval) 
+         *reg = newval;
+      END_ATOMIC();
+      return old_reg_val;
+    }
+    ```
+
+- 具体实现的一些边界情况
+
+  - lock函数中，predecessor == NULL表示前面没人占着锁，如果 !=NULL就进if去排队
+  - unlock函数中，如果还有下一个在等的，就要让拿走锁，改他的is_lock，他就从while loop出来了；如果没有在等了，还要再判断一遍...可能刚刚那个判断又过期了
+
+```c++
+mcs_node{
+  mcs_node next;
+  int is_locked;
+}
+mcs_lock{
+  mcs_node queue;
+}
+function lock(mcs_lock lock, mcs_node my_node){
+  my_node.next = NULL;
+  mcs_node predecessor = 
+        fetch_and_store(lock.queue, my_node);
+  if(predecessor != NULL){
+    my_node.is_locked = true;
+    predecessor.next = my_node;
+    while(my_node.is_locked){};
+  }
+}
+```
+
+```c++
+function unlock(mcs_lock lock, mcs_node my_node){
+  if(my_node.next == NULL){
+    if(compare_and_swap(lock.queue, my_node, NULL){
+      return;
+    }else{
+      while(my_node.next == NULL){};
+    }
+  }
+  my_node.next.is_locked = false;
+}
+```
+
+* 
+
+------
+
+#### 第十八讲 Synchronization Constructs 
+
+- scalable locking：随着资源增长性能也线性增长
+- non-scalable locking的危险性：会有cache coherence
+- 上节课讲的两种scalable locking：MCS lock
+  - 基本原理：链表，用wait来选择下一个
+  - MCS锁比Ticket好的地方：core越多的情况下，吞吐量下降幅度比较小；MCS锁在core少的情况下，因为要新建node，所以开销比ticket大一些
+
+##### Synchronization constructs 同步构造
+
+##### Read-Write Lock 
+
+- Example：OS网站的Calendar
+- 互斥锁到读写锁
+  - 四个接口：readerStart, readerFinish, writerStart, writerFinish
+  - 有shared data，numreader，numwriter 标识读者写者的数量；但实际上writer number只可能是0或者1
+  - 不能同时有读写，首先尝试用condition variable来实现
+- 读写锁的实现
+
+```
+readerStart
+	lock(metalock)
+	while (numwriter != 0) wait(readcv, metalock)
+	numreader++
+	unlock(metalock)
+	
+readerFinish
+	lock(metalock)
+	numreader--
+	if (numreader == 0) broadcast(writecv, metalock)
+	unlock(metalock)
+```
+
+* 原子指令是锁住cache line，所有CPU拥有这个cache line都会被lock住，直到这条指令完成。这是在体系结构层面的，所以开销很大
+
+- 读写锁存在的问题
+  - 需要等待消息(当前#reader)
+  - 需要发送消息(下一个阅读器)
+  - 消息序列化获取，会占用大量的消息带宽
+  - 解决方法：减少等待消息的时间 GOLL，减少消息数量 BR lock
+- 经典问题
+  - 初始情况 x=0, y=0
+  - T1： x=1; if (y==0) print("a");
+  - T2： y=1; if (x==0) print("b");
+  - 有可能同时输出a和b，因为乱序执行或者write buffer；指令执行后不一定真的写进cache里了，可能还在write buffer里面
+  - 怎么避免这种事情：加一条fence()，这条指令是等待直到write buffer刷进cache中，并不会直接催write buffer
+  - 和原子指令的联系：原子指令自带fence效果，一定是cache层面顺序执行的
+
+##### RCU Synchronization
+
+- 原则上不想让读者没有任何block和metadata，对写者没有感知，在任何时候都可以直接读
+- 由体系结构决定，8 bytes以下的读写都是原子的，所以对指针的修改是原子的
+- 增加写者的cost，每次写的时候都copy一份，read-copy-update；但这样就会增加很多旧的资源（每次写都会有旧资源）
+- 什么时候删除旧的资源：换完pointer以后，标识所有reader，当他们都结束以后就可以删了；（naive的实现方法）
+
+##### Lock-free Synchronization
+
+* 使用无锁的“乐观”同步，不受约束地执行临界区，并在最后检查是不是只剩自己一个（？？？）
+
+------
+
+#### 第十九讲 Bug survey
+
+- Review：Read-Write Lock
+  - 实现中存在的问题：writer被饿死的概率会比较大
+  - 优化，当读者没有的时候再唤醒写者
+
+##### Concurrency Bug Characteristics
+
+- LOC： line of code
+- Non-Deadlock Bug Pattern
+  - atomicity violation：before-or-after，有的操作一定要用lock保护
+  - order violation：执行有严格的先后顺序，malloc struct初始化一般是memset成0
+- 如何触发bug
+  - 要使用多少个thread？
+  - 要使用多少个变量会参与进来？
+  - 要访问多少次变量？
+  - 统计结果，66%的bug只包含一个变量，Multi-Variable Concurrency Bug不是很多
+  - 统计结果，触发bug大概3次访存左右就够了
+  - 统计结果，96%的bug只有两个thread参与就够了
+- other finding
+  - 70%的concurrency bug导致程序crash或者hang
+  - 重现bug是critical的
+  - 程序员缺少debug工具
+  - 60%的patch都包含了bug
+
+##### Bugs in Exception Handler
+
+- 不是很大的bug，但因为handler处理的不好，问题变得更大了
+- other finding
+  - 触发一个bug大概三个node够用了
+  - failure大多数可以通过unit test触发，大多数可以看system log看出来的
+- OS Bugs
+  - belief set：MUST set，MAY set

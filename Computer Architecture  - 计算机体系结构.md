@@ -1417,7 +1417,7 @@
   * SISD，Single Instruction Single Data 单指令流单数据流
   * SIMD，Single Instruction Multiple Data 单指令流多数据流
 
-  ![1557921047758](C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1557921047758.png)
+  ![1557921047758](/Pictures/Computer_Architecture/1557921047758.png)
 
 ##### Vector Processor
 
@@ -1443,7 +1443,7 @@
   * Vector Register，内存中固定大小的bank来装一个vector，通常包含64-128个 FP/浮点元素，需要确定最大向量长度 (MVL) 
   * Vector Register file，是指8-32 个vector register
 
-  ![1557922449353](C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1557922449353.png)
+  ![1557922449353](/Pictures/Computer_Architecture/1557922449353.png)
 
 * VMIPS的参数：
 
@@ -1456,7 +1456,7 @@
   * 使用multiple parallel pipeline，或者说叫lanes，可以实现在一个cycle这个产生多个结果
   * 比如`ADDV C,A,B`，vector register A的元素和vector register B的元素是 硬连接的，hardwired
 
-  ![1557922629277](C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1557922629277.png)
+  ![1557922629277](/Pictures/Computer_Architecture/1557922629277.png)
 
 * Vector Instruction Execution
 
@@ -1498,7 +1498,7 @@
   * 现代GPU把图形计算组织在graphics pipeline 中
   * 名词解释：vertices 顶点，primitives (triangle，points，lines) 原始结构，fragments 碎片，pixels 像素
 
-  ![1557926187745](C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1557926187745.png)
+  ![1557926187745](/Pictures/Computer_Architecture/1557926187745.png)
 
 * Graphics Workload，通常是一些 相同的，独立的，基于像素流的计算
 
