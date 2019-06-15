@@ -1,8 +1,8 @@
-## 计算机体系结构 
+### 计算机体系结构 
 
 ------
 
-### 第一讲 概述：从集成电路到数据中心
+#### 第一讲 概述：从集成电路到数据中心
 
 - 计算机架构：设计、分析、选择和互连硬件部件以制造出满足功能、性能和成本目标的计算机的科学和艺术
 - IC (integrated circuit) 集成电路
@@ -62,7 +62,7 @@
 
 ------
 
-### 第二讲 指令集架构
+第二讲 指令集架构
 
 * Review
 
@@ -221,7 +221,7 @@
 
 ------
 
-### 第三讲 指令级并行化探索 I
+#### 第三讲 指令级并行化探索 I
 
 * Review
 
@@ -363,7 +363,7 @@
 
 ------
 
-###  第四讲 指令级并行化探索 II
+####  第四讲 指令级并行化探索 II
 
 * Review 
   * Hazards (data/name/control)
@@ -541,7 +541,7 @@
 
 ------
 
-### 第五讲 缓存和主存系统
+第五讲 缓存和主存系统
 
 * Review
   * Three limitations of simple pipeline
@@ -715,7 +715,7 @@
 
 ------
 
-### 第六讲 数据存储和输入输出
+#### 第六讲 数据存储和输入输出
 
 * 目前IO性能的一些参数
   * 主频，Intel Core i5,  4.9 GHz
@@ -939,7 +939,7 @@
 
 ------
 
-### 第七讲 性能分析与评测简介
+#### 第七讲 性能分析与评测简介
 
 * Evaluation Metrics 评价指标
   * 典型的指标：Events frequency; Interval durations; Parameter sizes
@@ -1091,7 +1091,7 @@
 
 ------
 
-### 第八讲 多处理器和线程级并行
+#### 第八讲 多处理器和线程级并行
 
 ##### Multiprocessor Architecture
 
@@ -1238,7 +1238,7 @@
 
 ------
 
-### 第九讲 片上多处理器与多核系统
+#### 第九讲 片上多处理器与多核系统
 
 ##### Thread-Level Parallelism
 
@@ -1407,7 +1407,7 @@
 
 ------
 
-### 第十讲 数据级并行化与GPGPU
+#### 第十讲 数据级并行化与GPGPU
 
 ##### DLP Overview
 
@@ -1552,4 +1552,423 @@
 
 * Warp Scheduling
 
-  * 线程调度发生在warp的力度上 
+  * 线程调度发生在warp的粒度上 
+
+* 可能有一段没写完但不想写了
+
+------
+
+#### 第十一讲 片上互联网络简介
+
+##### Introduction and Terminology 简介和属于
+
+* A simple dedicated link network 简单的专用链接网络
+  * 一个channel由transmitter，link，receiver组成
+  * link，携带signal的一束电线
+  * channel，host和switch之间的single link
+  * buffer，传输时hold data
+  * node，连接到router/switch的网络端结点
+  * switch/router，连接一系列input channel和output channel，这个数值叫switch degree或者radix
+  * route/path，一组channel和switch的序列，次数被称为hop count
+  * message，network client收发的信息单元，可以被拆分成packet
+  * network interface，组成和处理message
+* network characters
+  * topology，拓扑结构，physical interconnection structure
+  * routing algorithm，路由算法
+    * Determines which routes messages may flow through the network
+    * 确定哪些路由消息可能流经网络
+  * switching strategy，决定下一跳
+    * Determines how the data in a message traverses its route 
+    * 确定消息中的数据如何遍历其路由
+  * flow control mechanism
+    * Determines when the message, or portions of it, move along its route
+    * 确定消息或消息的一部分何时沿着其路由移动，控制流量
+* properties of network topology
+  * **diameter，直径，任意两个节点间的最短路径的最大值**
+  * routing distance，link数+hop数
+  * average distance，平均路由距离
+  * non-blocking，可以从任意的input到output
+* direct network, indirect network 直连网络和间接网络
+* packet format
+  * 由 header，data payload，trailer组成(trailer checksum)
+  * flow control unit，可以通过link传输的最小信息单元，被称为flit
+  * header包括destination port，message id，sequence number，type等
+* network switch
+  * 实现了routing，arbitration仲裁(？)，和一些switching function
+  * network switch包含的组件：input port，receiver，input buffer，cross bar，control routing/scheduling，output buffer，transmiter，output port
+* switch strategy 
+  * 例如，circuit switching，专用的通信通道，流通道
+  * 例如，packet switching，把data划分成packet，在网络间传输和共享
+  * circuit和packet的比较：circuit switching的带宽性能更好，但需要更长的setup时间
+* performance evaluation，性能分析指标
+  * link width - w
+  * unit interval - i，单位时间
+  * signaling rate - f = 1/i，信号传导率
+  * channel bandwidth, b = w*f
+  * total bandwidth of all channel
+  * latency
+    * sending overhead, receiving overhead
+    * total routing time, arbitration time, switching time
+    * total time of flight of the packet，包的飞行时间？
+    * ![1560568098024](/Pictures/Computer_Architecture/1560568098024.png)
+
+##### Interconnection Topologies 互联拓扑
+
+* switch network topologies
+
+  * 可以把switched network看做一张图，vertices和edge就是node/switch 和 link
+  * 描述network graph的结构：
+    * distributed switch，Direct network have a host node connected to each switch, 有个host连到所有交换机了
+    * centralized switch，Indirect network have hosts connected only to certain switches ，host只连接到部分交换机
+  * regular比irregular更广泛使用grid/tree之类的东西
+
+* Bus 结构
+
+  * 把所有input和output全连在同一个switch上
+  * diameter = 1，degree = N
+  * 没有容错性能，会单点故障
+  * 因为发消息要独占bus，同时只能有一个事务，所以带宽不太好，O(1)
+  * frequency受限于物理条件
+
+  ![1560568504056](/Pictures/Computer_Architecture/1560568504056.png)
+
+* crossbar结构
+
+  * 一种full-connected的网络结构，每个结点都和其他所有结点直连
+  * diameter = 1
+  * 带宽挺好的，O(N)；但开销很大，O(N2)
+  * 如果结点数量不是很多，全连是挺好的选择；但随着结点数量增加，复杂度增加比较爆炸，如果合理采用多级连接multistage interconnection可以有效降低复杂度
+
+  ![1560568629061](/Pictures/Computer_Architecture/1560568629061.png)
+
+* linear arrays and rings
+
+  * 线性结构或者成环，适用于双向link
+  * diameter = N-1，平均距离是2/3 N，bisection width = 1（array）
+  * diameter = N-1，平均距离是1/2 N，bisection width = 1（ring）
+
+  ![1560568945210](/Pictures/Computer_Architecture/1560568945210.png)
+
+* multidimensional topology，2D mesh
+
+  * 高维度的array，2D的话结点就像网格一样连接起来，两个node之间可能存在不同的routing
+  * 结点之间的latency是non-uniform的（不均匀的），开销是O(n)
+
+  ![1560569194570](/Pictures/Computer_Architecture/1560569194570.png)
+
+  * 高维度的ring，更短的latency，更高的cost
+
+  ![1560569472967](/Pictures/Computer_Architecture/1560569472967.png)
+
+* Tree结构
+
+  * tree的特点是平面，层次的拓扑结构
+  * 是间接网络的实现方式，host都作为leaf结点
+  * routing距离按照log增长
+
+  ![1560569627745](/Pictures/Computer_Architecture/1560569627745.png)
+
+* Multistage interconnection network，层级网络
+
+  * 间接连接，有多层的switch
+  * mega 网络，log(N)个层级，N/2个switching unit
+
+  ​	![1560569707112](/Pictures/Computer_Architecture/1560569707112.png)
+
+* Butterfly Topology
+
+  * butterfly 也是log级的network，可以看做是有多个root结点的tree结构
+  * d-dimensional indirect butterfly的特性
+    * 连接 N=2的d次方的node，d是switch的层级数
+
+  ![1560569879951](/Pictures/Computer_Architecture/1560569879951.png)
+
+* hypercube 超立方体
+
+  * 结点数也是 N=2的d次方，d是switch degree
+  * 具有良好的 bisection bandwidth
+
+  ![1560569977958](/Pictures/Computer_Architecture/1560569977958.png)
+
+* Summary
+  * basic concepts, link/channel/buffer
+  * switch degree, average distance
+  * non-blocking network, direct/indirect network
+  * network performance, latency estimation
+  * network switch and switch strategy
+  * bus and crossbar
+  * array ring mesh torus tree butterfly hypercube
+
+------
+
+#### 第十二讲 数据中心即计算机
+
+##### Data Center Infrastructure
+
+* 云计算的三个A： AWS 亚马逊、AliCloud 阿里、Azure 微软
+
+* data center 概述
+
+  * data center的功能：
+    * data processing/computation (request level parallelism)
+    * data storage (large-scale，highly dependable)
+    * data communication (high bisection bandwidth 对分带宽)
+    * 用一截面将网络划分成对等的两半时(或者两个结点数目都相同的子网)时，穿过该截面的最大传输率；对分带宽越大，网络的通信能力越强。
+  * data center的组成部分：ICT equipment，power system，cooling system，other support modules (lighting，security)
+    * Information and Communication Technology，信息和通信技术
+
+* layers in data center
+
+  * 数据中心最基本的单位：1 U，4.445 cm
+  * Layer in a WSC， WSC (Warehouse-Scale Machines)
+    - server / node level
+    - rack 机架/ cluster level
+    - facility level / data center level
+
+* data center operation efficiency，数据中心的效率计算
+
+  * PUE： power usage effectiveness，PUT的值一般都会大于1
+  * WUE： water usage effectiveness
+  * CUE： carbon usage effectiveness
+
+  ![1560575684365](/Pictures/Computer_Architecture/1560575684365.png)
+
+  ![1560575693118](/Pictures/Computer_Architecture/1560575693118.png)
+
+* data center tier standard，数据中心层级划分
+
+  * 这个分级架构描述了从硬件获取数据并处理的可靠性
+  * 分级架构有四级，第四级是最可靠的，国内大概都在第三级别左右
+  * 指标有 availability，downtime per year，power backup等
+
+  ![1560575759304](/Pictures/Computer_Architecture/1560575759304.png)
+
+* datacenter infrastructure - power system
+
+  * transformer，变压器；
+  * Generator，发电机；
+  * panel，面板
+  * ATS, 自动转换开关电器，Automatic transfer switching equipment，mechanical switch，这是基于继电器的切换单元
+  * STS, 静态转换开关，static transfer switching equipment，super fast，electronic switch，这是基于电子电路的切换单元，所以超快
+    * ATS和STS的区别：速度不一样；容量差别，STS的容量会小很多，只能支撑一两个rack；STS可靠性更好，没有moving part
+  * UPS, 不间断电源，Uninterruptible Power System ，可能会有两个UPS为了防止单点故障
+  * PDU , 电源分配单元，Power Distribution Unit，可以降压，ATS过来的电压都比较高 (300+)，比如降到220或者48
+  * PSU：power supply unit，电力供应单元
+
+  ![1560575828497](/Pictures/Computer_Architecture/1560575828497.png)
+
+  ![1560575919161](/Pictures/Computer_Architecture/1560575919161.png)
+
+* datacenter infrastructure - cooling system
+
+  * CRAC：computer room air conditioning 
+  * COP指数，coefficient of performance，性能系数，热量与输出功之比
+    - 通常来说在data center中是1.0-1.5，有的时候是0.5-1.0
+
+* datacenter infrastructure - ICT system
+
+  * rack 机架之间都是用 switch和cable连接的
+    * switch的分类：top-of-rack TOR, end-of-row ROW
+  * 水平网络拓扑：Entrance facility，MDA，HDA，EDA
+    * MDA，main distribution area 主要分布区
+    * HDA，horizontal distribution area 水平分布区
+    * EDA，equipment distribution area 设备分布区
+
+  ![1560576086055](/Pictures/Computer_Architecture/1560576086055.png)
+
+##### Key Design Consideration
+
+* Design consideration of WSC
+  * WSC (Warehouse-Scale Machines)
+  * WSC的设计在许多方面都受到挑战，performance，energy efficiency，dependability/availability，networking
+  * service-level agreement，SLA
+    * 如何提供服务，要在服务的provider和user之间达成共识
+  * service-level objectives
+    * 衡量service的一个性能指标
+* Discussion：the tail at scale，扩展的尽头
+  * Zipf’s Law：语言学专家Zipf在研究英文单词出现的频率时,发现**如果把单词出现的频率按由大到小的顺序排列,则每个单词出现的频率与它的名次的常数次幂存在简单的反比关系**，这种分布就称为Zipf定律,它表明在英语单词中,只有极少数的词被经常使用,而绝大多数词很少被使用
+  * 抑制延迟可变性的一个简单方法是向多个副本发出相同的请求，并使用最先响应的副本的结果
+
+* Discussion：Utilization Matter
+  * workload consolidation 工作负载整合可以提高利用率
+    * 使用虚拟机技术，最小化online physical server
+  * D2D，die to die；C2C，core to core
+
+* Discussion：Power Provisioning Problem
+  * nameplate power 铭牌功率
+  * over-provisioning，超额供给，需要1000 W，提供2000 W；over-provisioning server，power不变，增加server的数量；over-provisioning power，所需功率不变，但提供高于需求的功率，优点在于，虽然成本高了，但可扩展性好，容灾备份也很好了
+  * over-subscribing，超额认购，总server nameplate power大于data center power capacity
+  * power shaving，移峰填谷
+  * distributed battery and battery-based peak shaving 调峰技术
+* Discussion：Cooling Approach
+  * power system的冷空气是从顶部来的，FaceBook中是三个机架rack配一组Battery Cabinet
+  * MDC，Module data center，制冷效率高，是一种portable(轻便的)的方法来部署data center capacity
+  * 惠普，单列顶端制冷
+  * Sun，双列柜间制冷
+  * SGI，柜间循环制冷
+
+* Summary
+  * what is a data center
+  * major metrics of data center design
+  * data center infrastructure
+    * power system
+    * cooling system
+    * ICT system
+  * the long tail concept
+  * data center capacity utilization
+  * types of power provisioning
+  * modular data center and cooling 
+
+------
+
+#### 第十三讲 面向功效和节能的设计
+
+##### Computer Power Management Basics
+
+* power demand 和 overall performance 是一对tradeoff的关系
+
+* ACPI，高级功率配置接口，advanced configuration and power interface
+
+  - 这个接口在OS之下，driver之上
+
+  ![1560579789260](/Pictures/Computer_Architecture/1560579789260.png)
+
+  - processor state记录了什么？处理器状态，记录了寄存器状态，又称为architecture state
+  - processor state和power state是有区别的
+
+* Global system states (G-states)
+
+  * G-state在highlevel描述了platform的性能，数字越大是越节能的
+  * g0：working，g1：sleeping，g2：soft off，g3：hard off (mechanical off，把电源拔了)
+
+* Sleep states (S-states)
+
+  * g0 对应 s0 正常运行，g1对应s1-s4，g2对应s5 停机
+  * S1，processor clock is off；S2，processor is off
+  * S3，suspend to RAM；S4，suspend to disk
+    * S3的断电时间比S4/S5好一点
+  * PLL (Phase Locked Loop)： 为锁相回路或锁相环，用来统一整合时钟信号，使高频器件正常工作，如内存的存取资料等
+  * DRAM的功耗很大，因为有很多 动态刷新，refresh
+
+* Processor Power State (C-states)
+
+  * C0，normal operating state，正常运行状态
+  * C1，clock gated
+    - clock gating 和 power gating
+  * C3，sleep状态，将系统执行中的一些关键数据都存储，其他的一些无用数据都存在了LLC
+  * C6，架构状态都存进了SRAM，core voltage降到零
+  * **S-state和C-state的区别：S强调服务器，C在英特尔处理器中描述，可能更加针对处理器**；ACPI中最关键定义的是C state
+
+* Processor Performance State (P-states)
+
+  * P state其实是对C0 normal operating state的展开，是最常见的
+  * P0是对应最高性能， Pn的n可以很大(6-8)，Pn的frequency和voltage随着n变大是越来越小的，但对un-core的部分没有任何的影响 (为什么呢?)
+    - un-core 是什么？传统芯片分为 on-chip 和 off-chip
+      - 片上：processor，cache，MC
+      - 片下：DRAM，memory
+    - 还可以分为core和un-core，只有processor在core上，cache，MC，DRAM/memory 在uncore部分
+  * 人眼的识别大概在100毫秒
+  * 能源成比型计算机，这太难做到了
+
+* thermal limitations
+
+  - TDP thermal design power, 热设计功耗
+  - 用于处理器热解决方案设计的最大持续功率
+
+* 总结
+
+  * G-states, S-states, C-states, P-states
+  * G是比较highlevel的，0-3分别是working，sleeping，soft off，hard off
+  * S存在BIOS中，由system配置，基本是把G的sleeping状态展开分析了
+  * G和S共同定义了working platform state，基于这个C是定义来save power的
+  * C0是normal operating state，P基本是C0的展开分析
+
+##### Discussion and Case Studies
+
+* MPP，maximal power point，提供最大电力的特殊工作点
+
+  ![1560581023462](/Pictures/Computer_Architecture/1560581023462.png)
+
+* PTP，performance-time-product
+
+  * 吞吐量×运行时/天=提交的指令总数
+  * 需要有效的优化跟踪
+
+* TPR，improve PTP using throughput-power ratio
+
+  * 每瓦性能评估计算效率
+
+* Per-core Load Adaptation Policy
+
+  * 不断优化单个核心，直到达到其最高或最低V/F级别
+  * 将额外的可再生能源以循环方式均匀地分配到所有核心
+  * 根据吞吐量-功率比(TPR)指标选择内核
+
+------
+
+#### 第十四讲 面向可靠性和可用性的设计
+
+##### Reliability and Availability
+
+- fault，error，failure
+
+  - fault，故障
+  - fault会导致error，但不一定会导致系统failure
+  - transient fault 瞬态故障只发生一次，然后不会持久；由瞬态故障引起的误差称为软误差 soft error
+
+- 可用性 availability 和 可靠性 reliability 的不同
+
+  - 可用性指 在某个时间点 t 能不能正常工作，通常是9的个数
+  - 可靠性指 连续正常运行的时间 t
+  - 可用性好但可靠性差：坏的非常频繁但是修的时间非常短
+
+  ![1560581404855](/Pictures/Computer_Architecture/1560581404855.png)
+
+- Discussion：ACE and AVF
+
+  - ACE：architecturally correct execution bit
+
+    - 程序的正确性需要ACE位的正确性
+    - un-ACE，不影响结果的bit位，对程序正确性不重要的位
+
+  - AVF：architectural vulnerability factor，体系结构脆弱因子
+
+    - 捕获结构中的fault将在程序输出中显示为error的概率
+    - 硬件结构H在N个周期内包含B位的AVF可以表示为
+
+    ![1560581532029](/Pictures/Computer_Architecture/1560581532029.png)
+
+- Discussion：SMT for fault tolerance
+
+  - symmetric multithread，对称多线程
+  - 为应用程序想要运行的每个线程创建两个独立的线程
+    - 执行相同的代码并接收相同的输入
+    - 输出的差异表示故障
+
+  ![1560581780093](/Pictures/Computer_Architecture/1560581780093.png)
+
+- Redundancy ：power delivery
+
+  - 3-D architecture：Dual Power Delivery Path + Dual-Corded Servers
+    - 双电源传输 + 双电缆服务器
+
+- Redundancy ：power supply
+
+  - Dual-corded（双电缆），每个服务器用两个PSU，高可用性，但是效率不是很高
+    - power supply unit，电力供应单元
+  - Single-corded（单电缆），采用单PSU，可以在dual-path环境中见到
+
+- Redundancy ：cooling system
+
+  - Dual Rotor Fan vs. Single Rotor Fan
+
+- Redundancy ：network system
+
+  - Fault-Tolerant Load Balancing
+
+* Summary
+  * Faults, error, and failure
+  * MTTF, MTBF, MTTR
+  * Availability, reliability
+  * ACE, AVF
+  * Redundancy
