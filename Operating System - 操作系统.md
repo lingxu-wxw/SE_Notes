@@ -1,4 +1,4 @@
-## 操作系统
+#### 操作系统
 
 ------
 
@@ -41,7 +41,7 @@
 
   * 典型服务器各组件的耗电情况
 
-    ![1554557487878](Pictures/Operating_System/1554557487878.png)
+    <img src="Pictures/Operating_System/1554557487878.png" style="zoom:45%"  />
 
   * 关于Power，OS可以做的事
 
@@ -56,7 +56,7 @@
 
   * Android操作系统的架构
 
-    ![1554557978966](Pictures/Operating_System/1554557978966.png)
+    <img src="Pictures/Operating_System/1554557978966.png" style="zoom:45%"  />
 
   * 移动端OS的特殊性
 
@@ -96,7 +96,7 @@
 
   * 新式的存储
 
-    ![1554607824587](Pictures/Operating_System/1554607824587.png)
+    <img src="Pictures/Operating_System/1554607824587.png" style="zoom:35%"  />
 
   * 关于存储，OS可以做的事
 
@@ -108,7 +108,7 @@
 
   * 虚拟化架构
 
-    ![1554608063907](Pictures/Operating_System/1554608063907.png)
+    <img src="Pictures/Operating_System/1554608063907.png" style="zoom:50%"  />
 
   * 虚拟化的优势
 
@@ -119,7 +119,7 @@
 
   * 虚拟化的方法
 
-    ![1554608224031](Pictures/Operating_System/1554608224031.png)
+    <img src="Pictures/Operating_System/1554608224031.png" style="zoom:35%"  />
 
 *  
 
@@ -137,25 +137,30 @@
 * Kernel 分类：Monolithic, Microkernel, Exokernel, Hybrid
 
   * Monolithic 宏内核：OS在kernel space运行，在supervisor mode 运行 （Linux BSD)
+
   * Microkernel 微内核：low-level address space management, thread management, and inter-process communication (IPC)等技术，（Mach  L4 kernel）
+
   * Hybrid kernel 复合内核：Windows ，NT kernel
 
-  ![1554882220939](Pictures/Operating_System/1554882220939.png)
+    <img src="Pictures/Operating_System/1554882220939.png" style="zoom:45%"   />
+
   * DOS：没有模块的划分，接口和实现没有很好的分离。DOS以后开始有一些Layered Approach，将OS分为若干level来实现
 
-  ![1554882284901](Pictures/Operating_System/1554882284901.png)
+    <img src="Pictures/Operating_System/1554882284901.png" style="zoom:40%"   />
 
   * UNIX：UNIX OS包括System program和kernel部分
 
-   ![1554882436070](Pictures/Operating_System/1554882436070.png)
+    <img src="Pictures/Operating_System/1554882436070.png" style="zoom:40%"   />
 
 * Microkernel 系统架构
 
   * 思想：将尽可能多的功能从kernel态移到user态
+
   * 优势：易于扩展；易于将OS移植到其他体系结构；因为kernel代码更少，所以更可靠，更安全
+
   * 缺点：kernel和user之间频繁通信的overhead
 
-  ![1554883036112](Pictures/Operating_System/1554883036112.png)
+    <img src="Pictures/Operating_System/1554883036112.png" style="zoom:35%"   />
 
 * 微内核相较于宏内核的改变
 
@@ -185,19 +190,25 @@
 ##### 五种CPU工作模式 (modes) {
 
 * 定义：Real Mode, Protected Mode, Virtual-8086 Mode, IA-32e Mode, System Management Mode
+
 * 名词解释：
   * PE，Protection Mode的开关
   * SMI，System Management Interrupt，系统管理中断，使系统进入SMM的特殊中断
   * SCI，System Control Interrupt，系统控制中断，专门用于ACPI电源管理的一个IRQ，需要OS支持
+  
 * Real-Address Mode是在bootloader阶段的运行模式，存在时间很短。内存寻址方式和8086相同，没有虚拟地址，由16位段寄存器（CS/SS/DS/ES）乘以0x10当做基地址，再加上16位偏移地址形成20位的物理地址，最大寻址空间1MB，最大分段64KB。
+
 * Protected Mode是最常用的模式，内存寻址采用32位段和偏移量（现在64位），最大寻址4GB，最大分段4GB。它提供了一些增强多工和系统稳定性的设计，比如内存保护，分页系统，虚拟内存等，防止程序随意访问地址，也拥有更大的内存访问空间。
+
 * Virtual-8086 Mode是在保护模式下运行的虚拟实模式环境，寻址方式与实模式相同。
+
 * IA-32e Mode是64位操作系统运行的模式，具有兼容模式和64位模式两种子模式。兼容模式可以运行在32位兼容环境，但不能运行虚拟8086程序；64位模式则完全处理64位指令
+
 * System Management Mode有独立于OS的地址空间，用来执行电源管理或系统安全方面的指令。
 
-![1555892328783](Pictures/Operating_System/1555892328783.png)
+  <img src="Pictures/Operating_System/1555892328783.png" style="zoom:55%"   />
 
-##### }
+ }
 
 ##### x86中的EFLAGS寄存器  {
 
@@ -214,31 +225,31 @@ IF: Interrupt Enable Flag - 该标志用于控制处理器对可屏蔽中断请�
 TF: Trap Flag - 将该位设置为1以允许单步调试模式，清零则禁用该模式
 ```
 
-![1555892720464](Pictures/Operating_System/1555892720464.png)
+<img src="Pictures/Operating_System/1555892720464.png" style="zoom:55%"   />
 
-##### }
+ }
 
 ##### 控制寄存器 Control Register { 
 
 * CR0中含有控制处理器操作模式和状态的系统控制标志；CR1保留不用；CR2含有导致页错误的线性地址；CR3中含有页目录表物理内存基地址，因此该寄存器也被称为页目录基地址寄存器PDBR（Page-Directory Base address Register）
 
-![1555893043340](Pictures/Operating_System/1555893043340.png)
+  <img src="Pictures/Operating_System/1555893043340.png" style="zoom:55%"   />
 
-##### } 
+ } 
 
 ##### 内存管理寄存器 Memory-Management Register {
 
 * 段选择符：32位汇编中16位段寄存器(CS、DS、ES、SS、FS、GS)中不再存放段基址,而 是段描述符在段描述符表中的索引值,D3-D15位是索引值,D0-D1位是优先级(RPL)用于特权检查,D2位是描述符表引用指示位TI,TI=0指 示从全局描述表GDT中读取描述符，TI=1指示从局部描述符中LDT中读取描述符。这些信息总称段选择符(段选择子)
 
-![img](https://img-blog.csdn.net/20160806195439147?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQv/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center)
+  <img src="https://img-blog.csdn.net/20160806195439147?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQv/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" style="zoom:80%"   />
 
 * 段描述符表：IA-32处理器把所有段描述符按顺序组织成线性表放在内存中，称为段描述符表。分为三类：全局描述符表GDT，局部描述符表LDT和中断描述符表IDT。GDT和IDT在整个系统中只有一张，而每个任务 都有自己私有的一张局部描述符表LDT，用于记录本任务中涉及的各个代码段、数据段和堆栈段以及本任务的使用的门描述符。GDT包含系统使用的代码段、数据段、堆栈段和特殊数据段描述符，以及所有任务局部描述符表LDT的描述符
 
-![img](http://blog.rootk.com/file/cdc5e2064e8f7279d6dabf4aaf3fc0b9.jpg)
+  <img src="http://blog.rootk.com/file/cdc5e2064e8f7279d6dabf4aaf3fc0b9.jpg" style="zoom:55%"   />
 
-![img](http://blog.rootk.com/file/fd20bfcfff3ea81f0640406db9316f83.jpg)
+  <img src="http://blog.rootk.com/file/fd20bfcfff3ea81f0640406db9316f83.jpg" style="zoom:55%"   />
 
-##### }
+ }
 
 ##### 内存寻址模型 Memory Model {
 
@@ -247,11 +258,12 @@ TF: Trap Flag - 将该位设置为1以允许单步调试模式，清零则禁用
 * 80386寻址适用于32位数据和总线地址，在Protected Mode时使用，存在虚拟地址到物理地址的映射关系，有分页系统，最大寻址空间4GB。
 
 * Physical Address Space Layout
+  
   * 1MB以上被称为extended memory；640KB-1MB是一个内存空洞
+  
+    <img src="Pictures/Operating_System/1555893901227.png" style="zoom:45%"   />
 
-![1555893901227](Pictures/Operating_System/1555893901227.png)
-
-##### }
+ }
 
 * Memory-mapped IO
   * side effect是什么？？
@@ -285,7 +297,7 @@ ljmp    $(SEG_KCODE<<3), $start32
 * 在entry.S中，cr4打开PSE大页，cr3设置entrypgdir基地址，cr0置上PG位和WP位
 * TODO： 补充一下 实模式到保护模式，开启页表 前后的微操
 
-##### }
+ }
 
 * 仿真 PC Emulation：用于OS test和debug；能提高利用率
 *  
@@ -296,11 +308,11 @@ ljmp    $(SEG_KCODE<<3), $start32
 
 * Core i7的内存结构
 
-![1554458469403](Pictures/Computer_Architecture/1554458469403.png)
+  <img src="Pictures/Computer_Architecture/1554458469403.png" style="zoom:55%"   />
 
 * 页表项结构 PTE
 
-![1555921993835](Pictures/Operating_System/1555921993835.png)
+  <img src="Pictures/Operating_System/1555921993835.png" style="zoom:45%"   />
 
 ```
 P: present
@@ -316,7 +328,7 @@ G: global page (no TLB updating on the address if CR3 is reset) - 一直放在TL
 
 * 页目录项结构 PDE
 
-![1555922102326](Pictures/Operating_System/1555922102326.png)
+  <img src="Pictures/Operating_System/1555922102326.png" style="zoom:45%"   />
 
 ```
 PS: page size (0=4KB, 1=4MB) - 4MB: super page
@@ -367,7 +379,7 @@ static struct kmap {
 Fork：copyuvm
 ```
 
-##### }
+ }
 
 ------
 
@@ -375,9 +387,9 @@ Fork：copyuvm
 
 * 逻辑地址 - 线性地址 - 物理地址的转换
 
-  ![1556339216237](Pictures/Operating_System/1556339216237.png)
+  <img src="Pictures/Operating_System/1556339216237.png" style="zoom:45%"   />
 
-  ![1556339247367](Pictures/Operating_System/1556339247367.png)
+  <img src="Pictures/Operating_System/1556339247367.png" style="zoom:45%"   />
 
 * Boot阶段的主要工作：
 
@@ -398,22 +410,26 @@ Fork：copyuvm
 
     * ENBRYO可以理解为到RUNNABLE之前的一个过渡。allocproc会在进程表中找到一个标记为UNUSED的位置。当它找到这样一个没有被使用的位置后，allocproc将其状态设置为EMBRYO，使其标记为被使用并给这个进程一个独有的pid。接下来，它尝试为进程的内核线程分配内核栈。如果分配失败了，allocproc会把这个位置的状态恢复为UNUSED并返回0来标记失败。
 
-    ![1556342655313](Pictures/Operating_System/1556342655313.png)
+      <img src="Pictures/Operating_System/1556342655313.png" style="zoom:45%"   />
+    
 
 * Process Control Block，PCB
 
   * 每个process都会有一个PCB，内容包括Process state, Process counter, CPU registers, CPU scheduling information, Memory management information, Accounting information, I/O status information
+
   * xv6 中的进程数据结构
 
-  ![1556343005224](Pictures/Operating_System/1556343005224.png)
+    <img src="Pictures/Operating_System/1556343005224.png" style="zoom:45%"   />
 
 * Context Switch 上下文切换
 
   * 调用syscall触发中断 - save当前进程的PCB - reload目标进程的PCB - 继续执行
+
   * 上下文切换需要保存的内容应该是存在进程对应的kernel stack中的
+
   * 上下文切换换栈的瞬间
 
-  ![1556343241697](Pictures/Operating_System/1556343241697.png)
+    <img src="Pictures/Operating_System/1556343241697.png" style="zoom:45%"   />
 
 * Process Scheduling Queue 进程调度队列
 
@@ -428,7 +444,7 @@ Fork：copyuvm
 
 * Process的创建：fork，一次执行两次返回；execute，一次执行没有返回；奇妙的机制
 
-  ![1556344453826](Pictures/Operating_System/1556344453826.png)
+  <img src="Pictures/Operating_System/1556344453826.png" style="zoom:50%"   />
 
 *  
 
@@ -442,17 +458,17 @@ Fork：copyuvm
   
 * Threading Model
 
-  ![1557209601573](Pictures/Operating_System/1557209601573.png)
+  <img src="Pictures/Operating_System/1557209601573.png" style="zoom:35%"   />
 
 * Process cooperation的优点：information sharing, computation speed-up, modularity, convenience
 
 * IPC的两种模型：如上图，message passing 和 shared memory
 
-  ![1557209792779](Pictures/Operating_System/1557209792779.png)
+  <img src="Pictures/Operating_System/1557209792779.png" style="zoom:40%"   />
 
 * xv6中实现IPC的数据结构：struct pipe
 
-  ![1557209952876](Pictures/Operating_System/1557209952876.png)
+  <img src="Pictures/Operating_System/1557209952876.png" style="zoom:45%"   />
 
 * IPC - Message Passing
 
@@ -476,6 +492,7 @@ Fork：copyuvm
 * 同步/异步消息
   * 同步消息 synchronous：block sender直到返回，block receiver直到收到消息
   * 异步消息 asynchronous：sender和receiver都不做block
+  
 * Buffering的实现有三种模式：Zero capacity (sender一直等待)，bounded capacity (当link被占满后sender等待)，unbounded capacity (无限长，sender不等待)
 
 ##### LRPC - Lightweight Remote Procedure Call
@@ -484,6 +501,7 @@ Fork：copyuvm
   * 管道 pipes，信号 signals，Unix-domain sockets (用于同一主机)
   * 信号量 POSIX semaphores，FIFOS nmaed piped，共享内存 Shared memory segments，POSIX message queues
   * System V semaphore sets, System V message queues
+  
 * Unix IPC的问题
   * 比较重量级 heavyweight
   * 通常会使用polling
@@ -494,6 +512,7 @@ Fork：copyuvm
   * 简单的stub：highly optimized marshalling
   * 并发性设计：避免共享数据结构
   * 统计性结果：大多数message都比较短，几百byte的占到90%+
+  
 * IPC之前设计高开销的地方
   * stub会复制大量数据
   * message buffer会通过内核复制内容，4次
@@ -502,6 +521,7 @@ Fork：copyuvm
   * scheduling，程序员看到线程跨域，系统实际上在不同的域中汇合两个线程
   * context switch，2次
   * dispatch，找一个接收线程来interpret消息，然后分派另一个线程，或者让另一个线程等待更多消息
+  
 * LRPC Binding：connection setup phase
   * 为调用接口中的每个procedure在内核中注册过程描述符(PDs)
   * 对于每个PD，参数栈(A‐stack)都在两个域中预先分配和映射读/写
@@ -510,7 +530,7 @@ Fork：copyuvm
 
 * client thread上的调用顺序
 
-  ![1557212448931](Pictures/Operating_System/1557212448931.png)
+  <img src="Pictures/Operating_System/1557212448931.png" style="zoom:45%"   />
 
 *  
 
@@ -532,7 +552,7 @@ Fork：copyuvm
 
 * Intel CPU上的Exception簇
 
-  ![1557213531390](Pictures/Operating_System/1557213531390.png)
+  <img src="Pictures/Operating_System/1557213531390.png" style="zoom:45%"   />
 
 * IDT / Trap Vector in xv6
 
@@ -542,22 +562,28 @@ Fork：copyuvm
 * Exception Handler
 
   * 处理器在栈上push return address的时候，可能是当前指令(page fault指令)，或者下一条指令(硬件中断)
+
   * 处理器还会在栈上push一些额外的处理器状态，当handler返回的时重启中断程序的必要内容，比如当前的condition code
+
   * 在user向kernel切换的时候，所有item都是被push到kernel stack，而不是user stack
+
   * exception handler在kernel mode运行，可以完全访问所有系统资源
+
   * 要往kernel stack中push的内容
 
-  ![1558168046512](Pictures/Operating_System/1558168046512.png)
+    <img src="Pictures/Operating_System/1558168046512.png" style="zoom:45%"   />
 
   * 为什么一定要push到kernel stack？
 
 * 会触发user到kernel的几种事件 
 
   * Device interrupt：来自外部的中断，输入引脚 NMI引脚上 (nonmaskable interrupt)，输入引脚 INTR
+
   * Software interrupt：中断指令的执行，INT
+
   * Program fault：程序错误，执行出现错误的情况，除零错误
 
-  ![1558168902842](Pictures/Operating_System/1558168902842.png)
+    <img src="Pictures/Operating_System/1558168902842.png" style="zoom:35%"   />
 
 * 硬件中断和软中断
 
@@ -627,18 +653,21 @@ Fork：copyuvm
 
   * IO 设备有唯一的/共享的 IRQ，IRQ由特殊的硬件映射到interrupt vector，然后传递给CPU，这种硬件叫做PIC programmable interrupt controller
 
-  ![1558170109870](Pictures/Operating_System/1558170109870.png)
+    <img src="Pictures/Operating_System/1558170109870.png" style="zoom:35%"   />
 
 * APIC，IO-APIC 和 LAPIC
 
   * APIC，Advanced PIC，用于SMP系统 (对称多处理器，UMA架构)
+    
     * 适用于所有现代系统，中断通过system bus路由到cpu
   * LAPIC 和 前端 IO-APIC
+    
     * device是连接到 IO-APIC的，IO-APIC通过bus和LAPIC相连
   * interrupt路由
+    
     * 有一点像网络的实现，允许广播或者选择性的route 中断，能够分配中断处理负载，路由到最低优先级的进程，如果同等优先级就仲裁或round robin
-
-  ![1558170439701](Pictures/Operating_System/1558170439701.png)
+    
+      <img src="Pictures/Operating_System/1558170439701.png" style="zoom:35%"   />
 
 * 为设备分配IRQ 
 
@@ -656,7 +685,7 @@ Fork：copyuvm
 
   * NMI：Non Maskable Interrupt 不可屏蔽中断
 
-  ![1558176908532](Pictures/Operating_System/1558176908532.png)
+    <img src="Pictures/Operating_System/1558176908532.png" style="zoom:50%"   />
 
 * 中断处理分为四个阶段：
 
@@ -711,17 +740,19 @@ Fork：copyuvm
 * CPU 如何找到 GDT/IDT 存在哪里
 
   * 有两个专用的寄存器：GDTR和IDTR，两者都有相同的48位格式
+  
   * 内核必须在系统启动期间设置这些寄存器(set-and-forget)
+  
   * 特权指令:LGDT和LIDT用于设置这些寄存器值；非特权指令:用于读取寄存器值的SGDT和SIDT
-
-
-  ![1558179202556](Pictures/Operating_System/1558179202556.png)
+  
+    <img src="Pictures/Operating_System/1558179202556.png" style="zoom:40%"   />
 
 * CPU 如何找到 TSS 存在哪里
 
   * 专用系统段寄存器TR将描述符的偏移量保存到GDT中
 
-  ​	![1558179309176](Pictures/Operating_System/1558179309176.png)
+    <img src="Pictures/Operating_System/1558179309176.png" style="zoom:45%"   />
+  
 
 ##### Bottom Half
 
@@ -729,11 +760,13 @@ Fork：copyuvm
   * 在interrupt handler中尽可能少地执行操作，把不重要的行动推迟到后面做，就形成了top和bottom上下两半
 
     * 上半部分：完成最小的工作量并返回 (ISR, interrupt service routines 中断服务程序)
+    
     * 下半部分：延迟处理 (四种方法：softirqs, tasklets, workqueues,
-      kernel threads，软中断，微线程，工作队列，内核线程)
-
-    ![1558179662316](Pictures/Operating_System/1558179662316.png)
-
+  kernel threads，软中断，微线程，工作队列，内核线程)
+      
+    
+    <img src="Pictures/Operating_System/1558179662316.png" style="zoom:40%"   />
+  
 * Top Half 中做的事 ：Do it Now !
   * 只执行最小的公共函数：保存寄存器，unmask其他中断，最后撤销此次操作：恢复寄存器，返回到以前的上下文
   * 通常为了快，使用汇编写的；然后调用device driver中的合适的interrupt handler (用C写的)
@@ -789,12 +822,12 @@ Fork：copyuvm
 * Kernel threads
   
   * 总是在kernel mode运行，也没有user context
-
-![1558247236987](Pictures/Operating_System/1558247236987.png)
+  
+    <img src="Pictures/Operating_System/1558247236987.png" style="zoom:60%"   />
 
 * 为什么interrupt handler不能sleep：防止死锁出现
 
-![1558247436538](Pictures/Operating_System/1558247436538.png)
+  <img src="Pictures/Operating_System/1558247436538.png" style="zoom:70%"   />
 
 ------
 
@@ -802,25 +835,28 @@ Fork：copyuvm
 
 * 部分system call 列表
 
-  ![1558247787338](Pictures/Operating_System/1558247787338.png)
+  <img src="Pictures/Operating_System/1558247787338.png" style="zoom:65%"   />
 
 * 跟踪system call的执行
 
   * Linux可以使用ptrace 和strace来跟踪syscall，每次执行syscall时都会打印输出，包括参数和返回代码
 
-  ![1558248471000](Pictures/Operating_System/1558248471000.png)
+    <img src="Pictures/Operating_System/1558248471000.png" style="zoom:45%"   />
 
 *  调用syscall的方法
   * 从代码角度来看：application层通过library层，调用lib函数；application层直接写汇编 “int 0x80”
   * 从机器角度来看：int 0x80；SYSENTER；SYSCALL
+  
 * 库函数和syscall 的返回代码
   
   * 库调用在出错时返回-1，并在全局变量errno中放置特定的错误代码，系统调用返回特定的负值来指示 %eax 中存放的错误
+  
 * 传递syscall的参数
   * 第一个参数总是 syscall #
   * Linux允许最多6个附加参数，ebx，ecx，edx，esi，edi，ebp
   * 需要更多参数的syscall会把剩下的参数打包在一个struct中，并将该struct的指针作为第六个参数传递
   * Problem，必须要验证指针的合法性，可能是invalid的，如果NULL就会导致OS崩溃
+  
 * 如何验证user指针的合法性
   * 做一次彻底的检查cost太大了，要完全检查指针是否处于调用进程的所有有效区域之内
   * 解决方法是做一个不完全的检查：Linux对地址指针做一个简单的检查，并且只确定指针变量是否在用户内存的最大可能范围内(在用户空间里就可以了)，即使指针值通过此检查，特定值仍然可能无效
@@ -830,11 +866,14 @@ Fork：copyuvm
 * 处理user pointer带来的fault
 
   * 内核必须要用一段奇怪的代码 (paranoid) 来访问用户指针，比如 copy_from_user ，kernel知道哪些地址会抛出无效的内存访问异常
+
   * 当page fault的时候，kernel的page fault handler会检查出错的eip
+
   * 如果eip在一段 paranoid routines中，kernel就不会报错，相反就会调用 fixup代码
+
   * 这些paranoid的核心理念是：不直接访问用户的内存，用户都是危险的
 
-  ![1558250163187](Pictures/Operating_System/1558250163187.png)
+    <img src="Pictures/Operating_System/1558250163187.png" style="zoom:50%"   />
 
 * 新的指令 SYSENTER/SYSEXIT 和 SYSCALL/SYSRET
 
@@ -880,11 +919,14 @@ Fork：copyuvm
 * Flexible System Call
 
   * 新的syscall机制，介绍了用户和内核共享的system call page
+
   * 用户线程可以把syscall请求push到system call page
+
   * 内核线程用轮询syscall到system call page
+
   * 通过将调用和执行解耦来消除同步
 
-  ![1558253754026](Pictures/Operating_System/1558253754026.png)
+    <img src="Pictures/Operating_System/1558253754026.png" style="zoom:40%"   />
 
 *  
 
@@ -904,7 +946,7 @@ Fork：copyuvm
 
   * Character devices；Block devices；Network devices
 
-  ![1558272791435](Pictures/Operating_System/1558272791435.png)
+    <img src="Pictures/Operating_System/1558272791435.png" style="zoom:40%"   />
 
 * Character Device 字符设备
 
@@ -940,7 +982,7 @@ Fork：copyuvm
 
   * 同步和异步IO
 
-    ![1558273730595](Pictures/Operating_System/1558273730595.png)
+    <img src="Pictures/Operating_System/1558273730595.png" style="zoom:40%"   />
 
 * DMA transfer的步骤
 
@@ -996,7 +1038,7 @@ Fork：copyuvm
 
   * block 0是不用的，block 1是superblock，block 2之后分别是inode，bitmap，data block和log block
 
-  ![1560002634798](Pictures/Operating_System/1560002634798.png)
+    <img src="Pictures/Operating_System/1560002634798.png" style="zoom:45%"   />
 
 * 概述：Free-space list bit vector
 
@@ -1046,9 +1088,10 @@ Fork：copyuvm
   * 在ext中，只有一组关键数据结构
     * 一个data bitmap，一个inodebitmap
     * 一个inode table，一个data block array
+    
   * 在ext2中，每个block group都包含自己的关键数据结构
 
-  ![1560003578547](Pictures/Operating_System/1560003578547.png)
+    <img src="Pictures/Operating_System/1560003578547.png" style="zoom:45%"   />
 
 * ext2的分配策略：ext2尝试将相关文件和目录保存在同一个block group中
 
@@ -1058,16 +1101,19 @@ Fork：copyuvm
 
 * 数据块寻址的文件大小上限
 
-  ![1560003810728](Pictures/Operating_System/1560003810728.png)
+  <img src="Pictures/Operating_System/1560003810728.png" style="zoom:40%"   />
 
 * Extent 概述
 
   * 问题：对于大文件来说，indirect实际上非常低效，每1024个块读取(并查找)一个额外的块，这一点在删除大的CD/DVD图像文件时非常明显
+
   * extent用单一的descriptor描述了是一组连续的/相邻的块
+    
     * 这是一种表示大文件的有效方法，更好的CPU利用率，更少的元数据IO，就是多了一个length的参数
+    
   * 现代文件系统尽量减少碎片，因为它导致了很多的seek，性能低下；entent更适合于连续文件
 
-  ![1560004008079](Pictures/Operating_System/1560004008079.png)
+    <img src="Pictures/Operating_System/1560004008079.png" style="zoom:45%"   />
 
 * 实现extent特性
   * ext4和NTFS都用了extent
@@ -1080,6 +1126,7 @@ Fork：copyuvm
     * entry不是顺序存储的；有些被删除的entry还在，只是它们可能是空的
   * 问题：在大目录中搜索文件需要O(n)时间
     * 实际上，不能在目录中存储>10K文件，不然查找和打开文件花费的时间太长了（10k？）
+  
 * From Lists to B-Trees，目录entry的优化
   * ext4和NTFS将目录编码为b树，以将查找时间提高到O(log N)
   * b树是一种平衡树，它为磁盘上的存储进行了优化，项目以块的顺序存储
@@ -1088,6 +1135,7 @@ Fork：copyuvm
   * ext4的两个改变：使用extent，目录存储用b树
   * 优点：ext4(和NTFS)支持所有基本的文件系统功能，改进了ext3 block group的性能，extent和b树目录文件性能很好
   * 缺点：下一代文件系统有更好的特性，写时复制语义 copy-on-write semantics (btrfs和ZFS)
+  
 * 
 
 ------
@@ -1307,13 +1355,15 @@ Fork：copyuvm
 * cluster 和 sector
 
   * sector是磁盘上最小的存储单元，512 byte
+
   * cluster是可以用来保存文件的最小磁盘空间：**data cluster位于分区的元数据后面，不同的cluster大小取决于volume大小**
 
-  ![1560078775928](Pictures/Operating_System/1560078775928.png)
+    <img src="Pictures/Operating_System/1560078775928.png" style="zoom:45%"   />
 
 * FAT的结构
 
-  ![1560077093726](Pictures/Operating_System/1560077093726.png)
+  <img src="Pictures/Operating_System/1560077093726.png" style="zoom:45%"   />
+
   * boot sector：卷volume的layout，fs structure，boot code
   * reserve sector：描述分区根目录中的文件和文件夹
   * FAT 1，original FAT，File allocation table 
@@ -1341,7 +1391,7 @@ Fork：copyuvm
 
   * FAT是一种链式结构，这样一个个块块就是cluster
 
-    ![1560077885407](Pictures/Operating_System/1560077885407.png)
+    <img src="Pictures/Operating_System/1560077885407.png" style="zoom:45%"   />
 
 * 结构：FAT root folder
 
@@ -1349,7 +1399,7 @@ Fork：copyuvm
 
   * file naming：支持长文件名，main folder entry存8.3 short file name，secondary folder entry存long file name
 
-    ![1560078444246](Pictures/Operating_System/1560078444246.png)
+    <img src="Pictures/Operating_System/1560078444246.png" style="zoom:40%"   />
 
   * 短文件名要保证长度最多就那么长，THEQUI~1FOX，如果重了就THEQUI~2FOX，最后可以搞到T~999999FOX，再conflict就error
 
@@ -1372,15 +1422,21 @@ Fork：copyuvm
 
 * NTFS Cluster
   * cluster：smallest allocated disk space to hold file，跟上面FAT一样的定义
+  
   * 从分区开始按顺序排列逻辑集群号
+  
   * 集群从扇区0开始(与FAT不同)
-  * 软盘floppy disk不使用NTFS
+  
+* 软盘floppy disk不使用NTFS
+  
   * 不同的集群大小取决于卷大小
-  * ![1560079372934](Pictures/Operating_System/1560079372934.png)
-
+  
+    <img src="Pictures/Operating_System/1560079372934.png" style="zoom:55%"   />
+  
 * NTFS的结构
 
-  ![1560079412908](Pictures/Operating_System/1560079412908.png)
+  <img src="Pictures/Operating_System/1560079412908.png" style="zoom:45%"   />
+
   * NTFS boot sector：卷volume的layout，fs structure，boot code
   * Master File Table，这个是最重要的，包含file和folder的attribute
   * File System Data，Data no contained within MFT
@@ -1422,8 +1478,9 @@ Fork：copyuvm
 
 * Master Boot Record：MBR
   * 我印象中是一个磁盘分区的时候要用到的东西
-  * ![1560081984823](Pictures/Operating_System/1560081984823.png)
-
+  
+  <img src="Pictures/Operating_System/1560081984823.png" style="zoom:40%"   />
+  
 * 磁盘分区最多可以分四个，第四可以弄成extended partitions，就可以继续加
 
 * Mounting a File System 安装文件系统
@@ -1451,9 +1508,11 @@ Fork：copyuvm
 * NV-RAM 中存在的一些问题
 
   * NV-RAM是被当disk用的，cpu的cache被视为memory，crash会丢失还没有write back的cache内容；层次结构已经发生变化了
-  * CPU拥有cache flush 到 memory的指令
+  
+* CPU拥有cache flush 到 memory的指令
+  
+    <img src="Pictures/Operating_System/1560125796756.png" style="zoom:35%"   />
 
-  ![1560125796756](Pictures/Operating_System/1560125796756.png)
 
 ##### Intro to flash file system
 
@@ -1464,13 +1523,14 @@ Fork：copyuvm
 * 闪存盘和普通磁盘的区别
   * flash disk organization：A chip (e.g. 1GB) => blocks (e.g. 512KB) =>    pages (e.g. 4KB) => cells（有点像体系结构那个）
 
-  ![1560125994143](Pictures/Operating_System/1560125994143.png)
+    <img src="Pictures/Operating_System/1560125994143.png" style="zoom:45%"   />
 
   * flash cell：是一个浮动栅晶体管，分为SLC和MLC
-    * 浮栅上的电子数决定了阈值电压V，阈值电压表示逻辑位值(0或1)
-
-  * SLC和MLC flash的区别：SLC一个cell存一个bit，性能好，耐久，容量小；MLC一个cell存两个bit，性能差，不耐久，容量大
-
+    
+* 浮栅上的电子数决定了阈值电压V，阈值电压表示逻辑位值(0或1)
+    
+* SLC和MLC flash的区别：SLC一个cell存一个bit，性能好，耐久，容量小；MLC一个cell存两个bit，性能差，不耐久，容量大
+  
 * 闪存盘的特点
 
   * 不对称的读写，以及擦除erase特性
@@ -1495,7 +1555,8 @@ Fork：copyuvm
 
 * flexFS的架构分析
 
-  ![1560126923254](Pictures/Operating_System/1560126923254.png)
+  <img src="Pictures/Operating_System/1560126923254.png" style="zoom:45%"   />
+
   * flash manager：管理不同的cell
   * performance manager：利用I/O特性，实现高性能、高容量
   * wear manager：保证合理的使用寿命，均匀分布erase
@@ -1504,7 +1565,7 @@ Fork：copyuvm
 
   * 有三种类型的block：SLC, MLC, free
 
-  ![1560127426694](Pictures/Operating_System/1560127426694.png)
+    <img src="Pictures/Operating_System/1560127426694.png" style="zoom:75%"   />
 
 * 架构：performance manager
 
@@ -1512,17 +1573,23 @@ Fork：copyuvm
 
     * dynamic allocation, background migration, locality-aware data management
 
-  * ![1560128158554](Pictures/Operating_System/1560128158554.png)
+      <img src="Pictures/Operating_System/1560128158554.png" style="zoom:45%"   />
 
   * migration 的过程通常是放在background执行的，为了防止一整块出现IO request的response time delay，做一个切片
 
-    ![1560128370190](Pictures/Operating_System/1560128370190.png)
+    <img src="Pictures/Operating_System/1560128370190.png" style="zoom:45%"   />
 
   * dynamic allocation的算法
-    * 有一个参数 α，![1560128480827](Pictures/Operating_System/1560128480827.png)
+    * 有一个参数 α
+    
+      <img src="Pictures/Operating_System/1560128480827.png" style="zoom:65%"   />
+    
     * α 越大表示性能越好，迁移时间越短，SLC的页数少，写时间长，可以往SLC多放一点内容
+    
     * copy is the time required to copy a single page from SLC to MLC
+    
     * Np is the number of pages in SLC
+    
     * Tpredict is the idle time of next time window predicted
 
 * 架构：wear manager
@@ -1534,7 +1601,7 @@ Fork：copyuvm
 
 * 另一个可以的架构：SLC/MLC hybrid storage
 
-  ![1560128889479](Pictures/Operating_System/1560128889479.png)
+  <img src="Pictures/Operating_System/1560128889479.png" style="zoom:45%"   />
 
   * 由单片SLC芯片和多片MLC芯片组成
   * 使用SLC芯片作为MLC芯片的写缓冲区
@@ -1552,10 +1619,12 @@ Fork：copyuvm
 * LFS 概述
 
   * key idea：buffer内存中的所有写操作(包括元数据)，将这些segment按顺序写入磁盘，将磁盘视为循环缓冲区，陈旧的数据不会被覆盖（而是替换）
+
   * 优点：所有的写操作都是大的、连续的
+
   * 问题：如何在这种设计中管理元数据和维护结构?
 
-  ![1560129246728](Pictures/Operating_System/1560129246728.png)
+    <img src="Pictures/Operating_System/1560129246728.png" style="zoom:45%"   />
 
 * LFS 具体一些问题的解决
 
@@ -1656,7 +1725,7 @@ Fork：copyuvm
 
   - **组件：GFS client，GFS master，GFS chunkserver**
 
-  ![1560143214322](Pictures/Operating_System/1560143214322.png)
+    <img src="Pictures/Operating_System/1560143214322.png" style="zoom:70%"   />
 
   - GFS client, GFS master（一个，元数据）, GFS chunkserver（多个，数据）
   - chunkserver的size是fix的（对比于file），每个chunkserver都有一个64-bit的handle/类似于id
@@ -1803,9 +1872,10 @@ Fork：copyuvm
   * file service：为client提供文件访问的接口
   * directory service，将文件的textual name（文本名称）映射到文件服务可以使用的内部位置（不是很懂）
   * client module，文件和目录服务的客户端接口
+    
     * 如果操作正确，有助于提供访问透明性；例如在VFS层下实现FS
-
-  ![1560148495444](Pictures/Operating_System/1560148495444.png)
+    
+      <img src="Pictures/Operating_System/1560148495444.png" style="zoom:40%"   />
 
 * Server，stateful和stateless，有状态和无状态
   * stateful，server需要维护client-specific的状态
@@ -1875,13 +1945,15 @@ Fork：copyuvm
 
   - LLC，最末级缓存
 
-  ![1560151830992](Pictures/Operating_System/1560151830992.png)
+    <img src="Pictures/Operating_System/1560151830992.png" style="zoom:35%"   /><img src="Pictures/Operating_System/1560151846751.png" style="zoom:40%"   />
 
-  ![1560151846751](Pictures/Operating_System/1560151846751.png)
+  
+
+  
 
 - 三种内存模型：共享cache，共享mem，私有mem
 
-  ![1560151791370](Pictures/Operating_System/1560151791370.png)
+  <img src="Pictures/Operating_System/1560151791370.png" style="zoom:40%"   />
 
 - fd是有POSIX语义的，第一个打开的fd一定是3
 
@@ -1898,7 +1970,7 @@ Fork：copyuvm
 
 - Directory-based cache coherence
 
-  ![1560152046256](Pictures/Operating_System/1560152046256.png)
+  <img src="Pictures/Operating_System/1560152046256.png" style="zoom:45%"   />
 
 - cache coherence维持的方法
 
@@ -2167,11 +2239,12 @@ readerFinish
 
   - 记录哪些lock保护着哪些变量，这东西出自eraser那篇论文
 
-  ![1558580468315](Pictures/Operating_System/1558580468315.png)
-
-![1558580911188](Pictures/Operating_System/1558580911188.png)
-
-![1560253273041](Pictures/Operating_System/1560253273041.png)
+    <img src="Pictures/Operating_System/1558580468315.png" style="zoom:50%"   />
+  
+    <img src="Pictures/Operating_System/1558580911188.png" style="zoom:35%"   /><img src="Pictures/Operating_System/1560253273041.png" style="zoom:35%"   />
+    
+    
+  
 
 - lockset 方法的 challenge：
   - 问题一：初始化 (因为第一次共享变量初始化大概是没有锁的，memset)，那第一次判断就凉凉
@@ -2268,10 +2341,12 @@ readerFinish
 * architecture & interface
 
   - ISA：instruction set architecture，硬件软件的接口
+
   - ABI：application binary interface，提供可访问系统中可用的硬件资源和服务的程序，**ABI提供了进程和机器之间的接口**；**还有张图表示 ABI = system call + user ISA**
+
   - API：application programming interface，关键元素是标准库(或多个库)，通常在高级语言的源代码级定义
 
-  ![1560258208422](Pictures/Operating_System/1560258208422.png)
+    <img src="Pictures/Operating_System/1560258208422.png" style="zoom:70%"   />
 
   - WINE的作用是虚拟化ABI，windows emulation，linux里跑windows?? 代码实现的是win32的API，就是windows给application提供的接口
   - VM的作用是虚拟化ISA
@@ -2300,28 +2375,34 @@ readerFinish
   - JVM，process VM, different ISA
   - KVM，Xen，system VM，same ISA
   - Android Studio ARM代码，system VM，different ISA
+    
     - Android Studio内嵌了QEMU
-
-  ![1560259711632](Pictures/Operating_System/1560259711632.png)
+    
+      <img src="Pictures/Operating_System/1560259711632.png" style="zoom:70%"   />
 
 * system VM，same ISA
 
   - **type 1：Hypervisor (VMM)**，hardware上直接运行VMM，上面是guest OS, eg. Xen, VMware ESX Server
+
   - **type 2：Hosted Virtual Machines**，hardware上有host OS，再是VMM和guest OS，虽然多了一层抽象，但是更常用，效率更高，用起来更简单，eg. VM workstation
 
-  ![1560259931312](Pictures/Operating_System/1560259931312.png)
+    <img src="Pictures/Operating_System/1560259931312.png" style="zoom:65%"   /><img src="Pictures/Operating_System/1560259941178.png" style="zoom:60%"   />
+  
+    
+  
 
-  ![1560259941178](Pictures/Operating_System/1560259941178.png)
 
 * VMM的三种不同的架构：
 
   - type 1，Xen
+
   - type 2，Linux KVM， QEMU，但又有点不一样
     - type 2的设计目标，在现有操作系统上像跑应用程序一样跑虚拟机
     - 这样做可以重用现有的device driver，可以获得OS的支持（文件系统和调度层面）,总之就是弄起来方便
+    
   - 一个虚拟机就是一个进程，这个进程有多少线程，是分配这个虚拟机的CPU的个数
 
-  ![1560260161986](Pictures/Operating_System/1560260161986.png)
+    <img src="Pictures/Operating_System/1560260161986.png" style="zoom:50%"   />
 
 * Host Monitor Architecture
 
@@ -2333,7 +2414,7 @@ readerFinish
   	Interrupts：因为VMM不处理设备，所以它只是将所有中断转发到主机。注意，VMM必须处理CPU生成的异常，比如页面错误和非法指令错误。
   ```
 
-  ![1560260445249](Pictures/Operating_System/1560260445249.png)
+  <img src="Pictures/Operating_System/1560260445249.png" style="zoom:55%"   />
 
 * Host Monitor Scheduling
 
@@ -2349,7 +2430,7 @@ readerFinish
   8. The green guest gets CPU Time
   ```
 
-  ![1560260612718](Pictures/Operating_System/1560260612718.png)
+  <img src="Pictures/Operating_System/1560260612718.png" style="zoom:55%"   />
 
 * Hosted Architecture Tradeoffs
   * 优点：
@@ -2362,11 +2443,499 @@ readerFinish
 * Hypervisor
 
   * 特点：small size，以特殊的hardware mode运行，guest OS运行在正常的特权级别
+
   * 用途：安全，系统管理，容错
 
-  ![1560261182465](Pictures/Operating_System/1560261182465.png)
+    <img src="Pictures/Operating_System/1560261182465.png" style="zoom:55%"   />
 
 * 
 
 ------
 
+#### 第二十二讲 Virtualization：CPU and Memory
+
+* Review
+
+  * OS的不同架构
+
+    <img src="Pictures/Operating_System/1560584050320.png" style="zoom:35%"   />
+
+  * VMM的不同架构
+
+    * type1和type2的区别在于有没有host OS，type 1没有host os
+      - Linux KVM和QEMU都是type2
+      - Xen是只有一个VMM的，是type1
+      - 平时常用的应该是有host OS的那个type
+    
+  * QEMU是一个用户态的应用程序，对于host OS来说，QEMU就是一个普通的应用程序就是进程，QEMU负责读取vm镜像，按照每条指令的顺序执行；QEMU就像是个解释执行器，python解释我们自己写的脚本，QEMU解释的是二进制解释器
+  
+    <img src="Pictures/Operating_System/1560584078191.png" style="zoom:40%"   />
+  
+  * 虚拟化的三个层次，API，ABI，ISA
+
+##### CPU Virtualization
+
+* Formal Requirement of Virtualization 对虚拟化提出的要求
+  * 本质上相同的执行环境(与实际机器相同)
+  * VM中程序的性能损失很小
+  * VMM完全控制系统资源
+
+* CPU虚拟化的方法：trap & emulate
+  * 比如，cli是一条特权指令，不能在user mode运行，但运行change CR3和set IDT两条指令也可以模拟出一样的效果
+  * trap，在用户模式下运行特权指令将会trap到VMM
+  * emulate，这些指令在VMM中通过函数方法实现；系统状态保存在VMM的内存中，并根据需要进行更改
+
+* 问题：x86的语法并不能完全虚拟化
+  * 比如，popf指令在kernel和user mode的意义不同，popf从堆栈中取出一个单词并放入flags寄存器，该寄存器中的一个标志是中断启用标志(IF)；在system kevek，IF标志由popf更新，在user level，IF标志没有更新，CPU悄悄地把IF的更新删除了
+  * 有17条不能trap&emulate的指令：SGDT, SIDT, SLDT, SMSW, PUSHF, POPF, LAR,
+    LSL, VERR, VERW, POP, PUSH, CALL, JMP, INT n, RET, STR, MOV
+* 解决：如何处理这17条指令
+  * instruction interpretation，指令解释，用软件的方式去emulate
+  * binary translation，二进制翻译，把它们翻译成其他指令
+  * para-virtualization，半虚拟化，在源码中替换掉它们
+  * new hardware，改变CPU
+* 方法一：instruction interpretation
+  * 使用内存模拟所有系统状态，例如在通用寄存器中使用数组GPR[8]；没有guest指令直接在硬件上执行
+  * 优点：很容易实现，复杂度很低
+  * 缺点：太慢
+* 方法二：binary translation
+  * Translate before execution，把17条指令转换为函数调用，由VMM完成这种操作
+  * VMware和QEMU采取了这样的方法，VMware在这方面做得很厉害
+  * 需要注意的问题
+    * 中断时的PC同步，这种方法可能有假设中断只会发生在基本块边缘(基本块是编译里的一个概念)，但实际上任何指令都可能发生中断
+    * 要小心地处理self-modifying code SMC，会自己改自己的代码
+
+* 方法三：para-virtualization
+  * 修改OS，让它和VMM合作；把那些特殊的指令更改为对VMM的调用，也称为hypercall，逻辑上有点像trap
+  * Xen是这样做的，亚马逊的EC2广泛使用了这种技术
+
+* 方法四：hardware supprot CPU virtualization
+
+  * 新增VMX，root mode和non-root mode
+
+  * VMX root operation：完全特权，用于虚拟机监视器
+
+  * VMX non-root operation：没有完全的特权，用于客户软件
+
+    * 减少guest依赖于ring的SW特权，解决ring aliasing和ring compression的问题
+
+  * 这两种操作形式都支持从0到3的所有四个特权级别
+
+  * CPU virtualization with VT-x，就是关于这个root mode和non-root mode
+
+    <img src="Pictures/Operating_System/1560585795942.png" style="zoom:45%"   />
+
+- VM entry and VM exit
+
+  - VM entry：从VMM到guest，进入VMX non-root mode，从VMCS加载guest state，VMLAUNCH用于初始化条目，VMRESUME用于后续条目
+  
+- VM exit：从guest到VMM，进入VMX root mode，将guest state保存到VMCS，从VMCS中加载VMM state
+  
+    <img src="Pictures/Operating_System/1560585886256.png" style="zoom:80%"   />
+
+
+* VMCS (Virtual Machine Control Structure)
+
+  * 管理VM entry和VM exit的数据结构
+  * VM entry从guest-state area加载处理器状态
+  * VM exit将处理器状态保存guest-state area和exit reason area，然后从host-state area加载处理器状态
+
+* VMCS的具体条目
+
+  ```
+  Guest-state area，Host-state area，存储processor state的字段
+  VM-execution control fields，在VMX non-root操作中控制处理器操作的字段
+  VM-exit control fields，控制VM exit的字段
+  VM-entry control fields，控制VM entry的字段
+  VM-exit information fields: 只读字段，用于接收关于VM exit的信息，这些信息描述VM exit的原因和性质
+  ```
+
+* VT-x的新指令
+  * VMXON, VMXOFF，开启/关闭VMX root mode
+  * VMLAUNCH，启动一个VM guest
+  * VMEXIT, VMRESUME，一组指令
+  * VMPTRST, VMPTRLD，读写VMCS指针
+  * VMREAD, VMWRITE, VMCLEAR，读写VMCS
+
+##### Memory Virtualization
+
+* Memory virtualization 概述
+
+  * VMM构造一个apge table，将guest address映射到host physical address
+  * 不同的host physical address用于存储这些VMM的内存位置的数据
+
+* 问题描述
+
+  * 现在有三种页表，GVA**->**GPA**->**HPA  (Guest virtual. Guest physical.
+    Host physical)
+  * 直接set CR3是没用的，因为VM以为的CR3地址是GPA，实际设置的CR3和HPA
+  * 三种解决方案
+    * shadow paging，影子页表
+    * direct paging (Para-virtualization)，直接映射
+    * new hardware，新的硬件支持
+
+* 方法一：shadow paging
+
+  * 核心思想，将两个页表合二为一
+    * VMM拦截guest OS并设置虚拟CR3
+    * VMM遍历GPT，构造一个对应的shadow page table
+    * 在shadow page table中，每个GPA都被转换成HPA
+    * 最后，VMM加载shadow page table的HPA
+    
+  * 如果guest OS修改了页表怎么办
+    * real hardware会使用新的页表映射，虚拟机监视器有一个单独的影子页表
+    * 目标：当guest OS修改页表时，VMM需要拦截，相应地更新影子页表
+    * 解决：
+      * 使用PTE中的读/写位将GPT的页面标记为只读
+      * 如果guest OS试图修改它们，硬件将触发page fault
+      * VMM处理的page fault，更新影子页面表并重启客户端
+    
+  * 如何有选择地允许/拒绝访问guest page table中kernel-only的页面?
+    * 硬件是不知道虚拟的user/kernel位的
+    * 解决：
+      * 生成两个影子页表，一个用于U，一个用于K
+      * 当guest os切换到U模式时，VMM必须调用set_ptp(current, 0)
+    
+    <img src="Pictures/Operating_System/1560586931967.png" style="zoom:50%"   />
+    
+    <img src="Pictures/Operating_System/1560588595664.png" style="zoom:40%"   />
+
+* 方法二：Direct Paging (Para-virtualization)
+  * 修改guest OS的实现
+    * 核心在于让guest OS知道了一点它其实不是真正的物理机
+    * 不需要GPA，只需要GVA和HPA；Guest OS直接管理它的HPA空间
+    * 使用hypercall让VMM更新页表
+    * 硬件CR3将指向guest page table
+  * VMM将检查所有页表操作（权限检查），guest page table对guest来说是只读的
+  * 优点：易于实现，架构更清晰；性能更好，guest可以把trap batch起来
+  * 缺点：虚拟机对guest OS不完全透明了；guest现在知道很多信息，比如HPA；可以使用这些信息触发rowhammer攻击
+
+* 方法三：Hardware Supported Memory Virtualization
+
+  * 英特尔EPT(扩展页表)，AMD的NPT(嵌套页表)
+
+    <img src="Pictures/Operating_System/1560588888843.png" style="zoom:45%"   />
+  
+
+##### Case Study：VMware
+
+* 给VM分配比 实际可用内存 更多的内存
+* 当内存耗尽时会发生什么
+  * strawman 稻草人，在VMM中使用LRU；回收刚刚分页的VMM页面；最好是random eviction
+* VMware ESX，reclaming paging
+  * 想法：欺骗OS返回内存到VMM
+  * ESX技巧：balloon driver
+
+* ESX，sharing pages across VM
+  * 许多虚拟机运行相同的操作系统和程序，比如带有Apache服务器的Linux机器
+  * 想法：对相同的物理页面使用一个机器页面
+  * 优化：定期扫描以找到相同的机器页面，copy-on-write消除冗余，使用由哈希键控的哈希表，允许基于页面内容快速查找
+
+------
+
+#### 第二十三讲 I/O Virtualization
+
+##### Review
+
+- CPU virtualization的不同实现方法
+  - trap & emulation
+  - instruction interpretation，指令解释，用软件的方式去emulate
+  - binary translation，二进制翻译，把它们翻译成其他指令
+  - para-virtualization，半虚拟化，在源码中替换掉它们
+  - new hardware，改变CPU
+- Memory virtualization的不同实现方法
+  - shadow paging，影子页表
+  - direct paging (Para-virtualization)，直接映射
+  - new hardware，新的硬件支持
+- VMCS，VM control structure，新CPU的重要的数据结构
+  - root模式运行在host，non-root模式运行在guest
+  - 层次结构，guest app，guest kernel，host kernel，中间那一层GK省略掉的体系结构也是存在的（google的Gvison架构）
+
+##### Case Study：KVM & QEMU
+
+- 这两个是用的最多的虚拟化技术
+
+- KVM / QEMU introduction
+
+  - KVM是作为linux的模块来运行的(/dev/KVM)，运行在kernel态，可以利用linux的功能，例如内存管理和进程调度；QEMU是运行在user态的
+
+  - 利用硬件虚拟化，可以trap & emulate所有特权指令，利用EPT在GVA、GPA、HPA之间进行地址转换
+
+  - IO虚拟化，利用QEMU来做更方便，可以用SR-IOV提高性能，可以用Virtio的半虚拟化技术
+
+  - 在KVM中，VM就是一个QEMU process
+
+  - QEMU可以分配内存，占用的内存空间是GPA，对QEMU来说它认为是连续的；GPA guest physical address
+
+    <img src="Pictures/Operating_System/1560598983899.png" style="zoom:50%"   />
+
+- KVM的基本控制流
+
+  - 用/dev/kvm操作硬件虚拟化，不同参数的ioctl
+  - CREATE_VM, CREATE_VCPU, RUN
+  - VM_launch，VM_enter是CPU指令，这里的CREATE_VM是软件定义的宏
+
+- 以host的视角来看QEMU
+
+  - host kernel把QEMU调度为一个常规进程
+
+  - host无法看到guest内部运行的进程
+
+  - 每个虚拟cpu都有一个vcpu线程，iothread是一个特殊的thread
+
+  - 一个专用的iothread运行一个select()事件循环来处理I/O，比如网络包和磁盘I/O完成
+
+    <img src="Pictures/Operating_System/1560599119945.png" style="zoom:55%"   />
+
+- 当运行`ioctl(KVM_RUN)`之后发生了什么
+
+  - kernel找到VMCS数据结构
+  
+  - 通过VMENTRY把VMCS加载到处理器
+  
+- 处理器从root mode切换到non-root mode
+  
+  - IP被更改为VMCS->IP，开始运行guest VM的代码
+  
+    <img src="Pictures/Operating_System/1560599376455.png" style="zoom:60%"   />
+  
+
+* KVM model的架构优势
+  * KVM很轻量级，提出以后很快就被linux接受了
+  * guest和user space管理程序的接近性
+    * 只有一个地址空间开关：guest↔host
+    * 更少的rescheduling
+  * 大规模Linux内核重用
+    * 调度，内存管理，I/O堆栈
+    * 电源管理，主机CPU热插拔
+  * 大规模的Linux用户代码重用
+    * 网络配置；处理虚拟机镜像
+    * 日志记录、跟踪、调试
+
+##### I/O Virtualization
+
+* Device Virtualization 的方法
+
+  * emulated，模拟
+  * para-virtualized，半虚拟化
+  * direct access（passthrough）
+  * hardware assisted IO virtualization
+
+* 方法一：Emulated device
+
+  * 用软件的方法来模拟IO；以前的两款popular的网卡，8139网卡，x1000；硬件在软件眼里就是“一组寄存器”，发不同的命令做不同的事情
+
+  * abstraction和virtualization的区别
+
+    如果我还有时间再看到这里，我记得去年的CSE里有一段讲过这个问题
+
+    <img src="Pictures/Operating_System/1560603378124.png" style="zoom:50%"/>
+
+  * Emulated device 的具体操作
+    * 在类中模拟设备，包括模拟寄存器、MMIO/programmed IO两种方法
+    * 转换 convert，形成中间表示
+  * case study，xen domain 0 (full-virtualization)
+    * 用QEMU进行device emulation
+      * 在domain-0中运行的用户级应用程序
+      * 在软件中实现NIC(如8139)
+      * 每个VM都运行自己的Qemu实例
+    * IO请求重定向
+      * 客户VM的I/O请求被发送到domain-0，然后domain-0发送给Qemu，最终，Qemu将使用domain-0的NIC驱动程序
+    * QEMU接受硬件底层的命令，然后通过syscall告诉host该做什么 (send syscall)
+    * Xen的结构比较复杂，有一个domain-0，相当于在做QEMU做的事情
+  * 优点：平台稳定性好，允许interposition，不需要特殊的硬件支持（隔离，多路复用有monitor实现）
+  * 缺点：可能会很慢，monitor或者host中需要驱动程序
+
+* 方法二：para-virtualization
+
+  * para-virtualization 概述
+
+    * Guest更高抽象级别上把request传递给monitor：monitor call可以发起请求的调用，guest和monitor共享buffer
+
+    * 优点：monitor的实现简单了很多，而且快
+    * 缺点：monitor需要提供guest-specfic的驱动程序，存在引导的问题 bootstrapping
+
+  * VirtIO: Unified Para-virtualized I/O 统一虚拟化IO
+
+    * 动机：:Linux至少支持8个虚拟化平台，每个平台都有自己的准虚拟化I/O设计接口
+
+    * VirtIO：能够为半虚拟化设备提供统一的I/O模式，已经被KVM和lguest采用
+
+      <img src="Pictures/Operating_System/1560603846011.png" style="zoom:50%"/>
+
+  * KVM 中的virtio：Virtio由一个框架和一组驱动程序组成
+
+    * 一个与管理程序hypervisor无关、与域domain无关、与总线bus无关的协议，用于传输缓冲区
+    * 用于将virtio附加到总线(如PCI)上的绑定层
+    * 特定于域的客户驱动程序(网络、存储等)
+    * 特定于hypervisor的host支持
+
+  * storage stack
+
+    <img src="Pictures/Operating_System/1560604018769.png" style="zoom:35%"/>
+
+  * Walkthrough，virtio-blk disk read request
+
+    ```
+    1. Guest fills in request descriptors
+    2. Guest writes to virtio-blk virqueue notify register
+    3. QEMU issues I/O request on behalf of guest
+    4. QEMU fills in request footer and injects completion interrupt
+    5. Guest receives interrupt and executes handler
+    6. Guest reads data from buffer
+    ```
+
+* 方法三：hardware assisted （这一段我真看不懂
+
+  * Directed I/O
+    * **概述：硬件直接允许guest，通过driver，绕过hypervisor，直接访问physical device；好处是绕过了一层抽象，速度更快，但是可能有安全性的问题**
+    * 由于仿真层的存在，基于软件的共享给每个I/O增加了开销
+      * 这种间接性还有一个额外的影响，即消除了物理设备中可用的硬件加速的使用
+    * 定向I/O增加了增强功能，以促进内存转换，并确保保护内存，使设备能够直接DMA到/形成主机内存
+      * 绕过VMM的I/O仿真层,提高vm的吞吐量
+  * Direct Access Device Virtualization
+    * 允许guest OS直接访问底层设备
+    * 直接用DMA访问host memory，会拿到其他的guest的东西
+    * IO MMU，为了安全性加的模块
+      - page table的数量和虚拟机数量是一样的
+      - 能不能用EPT代替IO MMU，GPA-HPA（为什么我记得不太一样的）但是可以
+    * 优点：快，简化monitor，需要的设备驱动程序很有限
+    * 缺点：安全需要硬件支持(IOMMU)；需要多路复用的硬件支持；硬件接口对客户可见；VM的迁移限制；根据定义，很难插入interposition
+
+  * Issues to Address 需要解决的问题
+
+    * I/O地址转换，如何将I/O地址转换为主机物理地址
+    * 中断的映射，如何将中断正确路由到guest VM
+    * 多路复用设备，如何在多个虚拟机之间对单个硬件设备进行多路复用
+    * 最重要的，提供强大的隔离，同时减少hypervisor的介入
+
+  * VT-d，intel针对directed IO开发的虚拟化技术
+
+    * 提供确保改进I/O资源隔离的功能，从而提高可靠性、安全性和可用性。
+    * 支持重映射I/O DMA传输和设备生成的中断。
+    * 提供灵活性来支持多种使用模型，这些模型可以运行未经修改的、特殊用途的或“虚拟化感知的”客户操作系统
+
+  * VT-d Feature: Interrupt Remapping
+
+    * 由I/O设备生成的中断请求必须由VMM控制
+    * 当中断发生时，VMM必须将中断呈现给客户机。这不是通过硬件实现的。
+    * VT-d中断映射体系结构通过重新定义中断消息格式来解决这个问题。
+    * 中断请求指定请求者id和中断id，并重新映射硬件，将这些请求转换为物理中断
+
+  * Directed IO的缺点
+
+    * Directed IO直接分配的一个问题是它的可伸缩性有限
+    * 一个物理设备只能分配给一个VM。例如，双端口NIC允许直接分配到两个vm。(每个VM一个端口)，考虑一下在不久的将来相当可观的服务器
+      * 4个物理CPU的，每个CPU 12个核，如果我们使用每个内核一个VM的规则，那么它将需要48个物理端口。
+
+  * SR-IOV，Single Root I/O Virtualization
+
+    * 单根I/O虚拟化(SR-IOV)是一种外围组件互连特殊兴趣组(PCI-SIG)规范。
+
+    * SR-IOV为设备提供了一种标准机制，以宣传它们能够在多个虚拟机之间同时共享。
+
+    * SR-IOV允许将PCI函数划分为许多虚拟接口，以便在虚拟环境中共享PCI Express (PCIe)设备的资源
+
+      <img src="Pictures/Operating_System/1560604859862.png" style="zoom:40%"/>
+
+##### Summary
+
+* virtualization techs
+
+  <img src="Pictures/Operating_System/1560604915168.png" style="zoom:70%"/>
+
+* 
+
+------
+
+#### 第二十四讲 Serverless
+
+* 写不动了实在写不动了
+
+* Serverless Computing – Function as a Service (FaaS)
+
+* servless 的优点
+
+  * event-driven：stateless，无状态
+  * auto-scale：为新请求实例化新的runtime，当请求完成时销毁runtime，实例之间的隔离
+  * easier dev-ops：应用程序开发人员关注应用程序逻辑，没有服务器管理
+  * fine-grained billing：低成本的短期应用，有限细粒度(例如AWS Lambda: 100ms)
+
+* Serveless computing 对比 microservices
+
+  <img src="Pictures/Operating_System/1560605203596.png" style="zoom:40%"/>
+
+* Service Providers
+
+  <img src="Pictures/Operating_System/1560605224128.png" style="zoom:50%"/>
+
+* A real-life example ：dragon quest
+  * 减少处理时间：几个小时-> 10秒
+  * 降低处理成本：1/20在前提下
+  * 减少基础设施和劳动力成本：消除与操作、维护和服务器替换相关的劳动
+
+* 一个任务是交给虚拟机做还是交给容器做好呢？速度和安全/隔离的tradeoff
+
+* Sandbox Technologies：Virutal machine
+
+  * 每个虚拟机都有自己的操作系统；强大的隔离；重量级；极其缓慢的启动
+
+* Sandbox Technologies：Container
+
+  * 所有容器共享OS；弱隔离；重量轻；更快的启动，数百毫秒
+
+* Sandbox Technologies – gVisor
+
+  * 用于容器的用户空间内核，具有更强的隔离性
+
+  * 哨兵处理大多数来自应用程序的系统调用
+
+  * Gofer处理I/O操作
+
+  * 岗哨和岗哨通过9P协议进行通信
+
+    <img src="Pictures/Operating_System/1560605482129.png" style="zoom:55%"/>
+
+* Sandbox Technologies – Kata Container
+
+  * 使用轻量级VM保护容器运行时
+
+* Sandbox Technologies – Firecracker
+
+  * microVM使用KVM，平稳快速启动(125ms)，受聘于AWS Lambda
+  * 只启动部分的vm功能
+
+* 启动速度和隔离的tradeoff
+
+  <img src="Pictures/Operating_System/1560605660333.png" style="zoom:65%"/>
+
+* Challenge : latency
+
+  * fast start-up and shut-down
+    * serverless functions are shot-lived. AWS Lambda默认最长执行时间15min （半年前还是5Min），总的来说function的执行时间一般在秒级、毫秒级，甚至更少。
+    * 对于传统Long-lived web server（动辄几个月的执行时间）可以忽略的启动和结束时间，在serverless场景中可能是不可接受的。
+    * 启动时间直接影响到用户体验，结束时间影响平台灵活性。
+  * fast communication
+    * request -> platform gateway 
+    * platform gateway -> function instance：gate way 和instance并不一定在一台机器/一个datacenter，尤其在burst的情况下，通信压力还是很大的
+    * function results -> result receiver
+    * function -> function (chained function)：因为function一般只做一些简单的工作，很多application是由一些function相互串联而成的，类似microservice架构。
+  * tail latency
+    * serverless应用中由于细粒度架构，使得各个环节的tail latency可能极大影响用户体验。
+    * tail latency可能使burst场景下满足SLA更困难。
+
+* ![1560605573195](C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1560605573195.png)
+
+* Challenge : Resource
+  * resource footprint
+    * 影响同样host上能hold的instance数量
+    * 影响启动时间等
+  * resource allocation/assignment speed
+    * 影响启动时间，同理deallocation速度影响结束时间
+    * 为了做到快速，资源可能事先分配好，在idle的时候是其他应用在使用，那么event trigger时需要很快速地把这部分资源使用权从别的应用程序那里拿过来。
+  * resource utilization
+    * 如果为了速度，过于激进地给Instance分配资源，不给别人用，在idle的时候utilization会非常低，不能接受	
+* Challenge : State handling
+  * 现实生活中的应用程序通常是有状态的
+  * 在链接函数之间传递的中间状态
+  * 通过外部存储(例如Amazon S3)：存储还需要快速、自动伸缩和细粒度

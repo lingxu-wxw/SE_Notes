@@ -103,12 +103,3 @@
 * 3. What are the differences between Tomasulo's algorithm and Scoreboarding ?
 * 4. Why dynamically managing the sense amplifier can reduce DRAM energy ?
 * 5. What is the memory wall ? What is the difference between the memory wall and the memory bandwidth wall ?
-
-
-
-
-
-
-
-
-
