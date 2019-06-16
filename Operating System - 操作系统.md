@@ -789,9 +789,36 @@ Fork：copyuvm
     * information sharing, computation speed-up, modularity, convenience
     * 信息共享, 计算加速, 模块化, 方便
 
-* IPC的两种模型：如上图，message passing 和 shared memory
+* **IPC的两种模型：如下图，message passing 和 shared memory**
 
   <img src="Pictures/Operating_System/1557209792779.png" style="zoom:40%"   />
+
+* 生产者消费者问题：
+
+  * 生产者流程生成消费者流程使用的信息
+  * 无边界缓冲区对缓冲区的大小没有实际的限制
+  * 有界缓冲区假设有一个固定的缓冲区大小
+
+  ```c++
+  Producer:
+  while (true) {   /* Produce an item */
+      while ((in = (in + 1) % BUFFER SIZE count) == out);
+             /* do nothing -- no free buffers */
+      buffer[in] = item;
+      in = (in + 1) % BUFFER SIZE;
+  }
+  ```
+
+  ```c++
+  Consumer:
+  while (true) {
+      while (in == out); // do nothing -- nothing to consume
+      // remove an item from the buffer
+      item = buffer[out];
+      out = (out + 1) % BUFFER SIZE;
+      return item;
+  }
+  ```
 
 * xv6中实现IPC的数据结构：struct pipe
 
@@ -799,28 +826,48 @@ Fork：copyuvm
 
 * IPC - Message Passing
 
-  * 不依赖共享变量的进程间交流方式，提供send和receive两种接口
+  * 不依赖共享变量的进程间交流方式，**提供send和receive两种接口**
   * physical comminication link：shared memory，hardware bus
   * logical communication link：logical properties
 
+* 关于IPC实现的一些问题
+
+  * Q：How are links established?
+  * Q：Can a link be associated with more than two processes?
+  * Q：How many links can be between every pair of communicating processes?
+  * Q：What is the capacity of a link?
+  * Q：Is the size of a message that the link can accommodate fixed or variable?
+  * Q：Is a link unidirectional or bi-directional?
+  * TODO：笔记也没记，这里先放着
+
 * Direct Communication
 
+  * **定义：即进程之间直接通信**
   * 接口：每个进程显示的调用send(P, message), receive(Q, message)
   * Communication link的实现细节：link是自动构建的；link和pair of process是一对一的；link可能是单向的unidirectional，但通常是双向的bidirectional
 
 * Indirect Communication
 
-  * 进程通过mailbox (port) 定位和接受message；每个maibox都有id，只有相互共享mailbox的进程才可以互相通信
+  * **定义：通过mailbox通信**
+  * 进程通过mailbox (port) 定位和接受message；每个maibox都有id，**只有相互共享mailbox的进程才可以互相通信**
   * 接口：每个进程通过mailbox中转通信，send(A, message), receive(A, message)
+  * 操作过程：
+    * create a new mailbox
+    * send and receive messages through mailbox
+    * destroy a mailbox
   * Communication link的实现细节：link仅当进程共享mailbox时才构建；link和pair of process是多对多的；link可以是单向的，也可以是双向的 
   * <Problem> P1/P2/P3共享mailbox A，P1 send，P2/P3 receive，谁收到？
     * 解决方法：link至多连接两个process；只允许同时一个process做receive；允许显示指定receiver
 
-* 同步/异步消息
+* 同步/异步消息 Synchronization & Asynchronous
   * 同步消息 synchronous：block sender直到返回，block receiver直到收到消息
   * 异步消息 asynchronous：sender和receiver都不做block
   
-* Buffering的实现有三种模式：Zero capacity (sender一直等待)，bounded capacity (当link被占满后sender等待)，unbounded capacity (无限长，sender不等待)
+* Buffering的实现有三种模式：
+
+  * Zero capacity (sender一直等待)，一次只能发一个消息
+  * bounded capacity (当link被占满后sender等待)，有限长度
+  * unbounded capacity (无限长，sender不等待)
 
 ##### LRPC - Lightweight Remote Procedure Call
 
@@ -829,16 +876,35 @@ Fork：copyuvm
   * 信号量 POSIX semaphores，FIFOS nmaed piped，共享内存 Shared memory segments，POSIX message queues
   * System V semaphore sets, System V message queues
   
-* Unix IPC的问题
-  * 比较重量级 heavyweight
-  * 通常会使用polling
+* **Unix IPC的问题**
+  
+  * **比较重量级 heavyweight**
+  * 传统系统中的IPC机制趋向于combine:
+      * notification: (告诉目标进程发生了什么事)
+      * scheduling: (更改目标或源的当前可运行状态)
+      * data transfer: (实际传输消息有效负载)
+  * **通常会使用polling**
+    * Unix没有轻量级的IPC机制
+      - 阻塞read()/recv()或select()/poll()
+      - signal是离upcall最近的东西，但是……
+      - Unix缺乏良好的向上调用/事件交付机制
+  
+* RPC，Remote Procedure Call
+
+  <img src="Pictures/Operating_System/1560680824896.png" style="zoom:45%"/>
 
 * Lightweight RPC Basic concepts
   * 简单的控制传输：client线程在server domain执行
+  
   * 简单的数据传输：共享参数栈，增加寄存器
+  
   * 简单的stub：highly optimized marshalling
+  
   * 并发性设计：避免共享数据结构
-  * 统计性结果：大多数message都比较短，几百byte的占到90%+
+  
+  * **统计性结果：大多数message都比较短，几百byte的占到90%+**
+  
+    <img src="Pictures/Operating_System/1560680571817.png" style="zoom:45%"/>
   
 * IPC之前设计高开销的地方
   * stub会复制大量数据
@@ -863,7 +929,7 @@ Fork：copyuvm
 
 ------
 
-第七讲 Exception
+#### 第七讲 Exception
 
 * Review
 
@@ -877,18 +943,23 @@ Fork：copyuvm
 
 ##### Exception
 
+* Exception table
+
+  <img src="Pictures/Operating_System/1560681063033.png" style="zoom:45%"   />
+
 * Intel CPU上的Exception簇
 
   <img src="Pictures/Operating_System/1557213531390.png" style="zoom:45%"   />
 
 * IDT / Trap Vector in xv6
 
-  * IDT是exception table的别称；有256个entry，每个entry都是handler；在处理相对应的interrupt时，需要给出 %cs 和 %eip
+  * **IDT是exception table的别称，跟trap vector也是一个东西**
+  * IDT有256个entry，每个entry都是handler；在处理相对应的interrupt时，需要给出 %cs 和 %eip
   * 可以通过 `int n` 调用System call
 
 * Exception Handler
 
-  * 处理器在栈上push return address的时候，可能是当前指令(page fault指令)，或者下一条指令(硬件中断)
+  * 处理器在栈上push return address的时候，**可能是当前指令(page fault指令)，或者下一条指令(硬件中断)**
 
   * 处理器还会在栈上push一些额外的处理器状态，当handler返回的时重启中断程序的必要内容，比如当前的condition code
 
@@ -902,15 +973,14 @@ Fork：copyuvm
 
   * 为什么一定要push到kernel stack？
 
-* 会触发user到kernel的几种事件 
+    * 安全性起见
+    * 因为exception handler运行在kernel环境下，所以要从user stack切换到kernel stack
+
+* **会触发user到kernel的几种事件** 
 
   * Device interrupt：来自外部的中断，输入引脚 NMI引脚上 (nonmaskable interrupt)，输入引脚 INTR
-
   * Software interrupt：中断指令的执行，INT
-
   * Program fault：程序错误，执行出现错误的情况，除零错误
-
-    <img src="Pictures/Operating_System/1558168902842.png" style="zoom:35%"   />
 
 * 硬件中断和软中断
 
@@ -923,7 +993,7 @@ Fork：copyuvm
     * 硬件中断处理程序要确保它能快速地完成任务, 这样程序执行时才不会等待较长时间, 称为上半部.
     * 软中断处理硬中断未完成的工作, 是一种推后执行的机制, 属于下半部.
 
-* Exception 发生的时候，有哪些必须满足的条件
+* Exception 发生的时候，handler应该怎么做，或者说有哪些必须满足的条件
 
   * 必须保存处理器的寄存器，用来恢复
   * 必须set成在kernel中执行
@@ -934,7 +1004,9 @@ Fork：copyuvm
 
 * kernel中的interrupt函数的返回
 
-  * iret指令：需要恢复上下文，从kernel切回user mode，继续执行用户程序
+  * t通过iret指令：需要恢复上下文，从kernel切回user mode，继续执行用户程序
+  
+    <img src="Pictures/Operating_System/1558168902842.png" style="zoom:35%"   />
 
 ------
 
@@ -946,61 +1018,86 @@ Fork：copyuvm
     * nonmaskable：一些关键的硬件故障
   * Exception 同步的，来自软件
     * Processor-detected
-      * Fault 故障，可纠正，可重新启动，如page fault
-      * Traps 陷阱，不需要重新执行，例如断点
-      * Aborts 中止，严重错误，进程通常会通过signal终止
+      * **Fault 故障，可纠正，可重新启动，如page fault**
+      * **Traps 陷阱，不需要重新执行，例如断点**
+      * **Aborts 中止，严重错误，进程通常会通过signal终止**
     * Programmed exception 软件中断
       * int (system call), int3 (breakpoint)
       * into (overflow), bounds (address check)
   
 * 一些术语
   * Vector, Interrupt vector, Trap number
-  * IRQ: Interrupt Request
+  * **IRQ: Interrupt Request**
   * Interrupt, trap, fault, exception
   * Software interrupt / system call
-  * IDT: Interrupt Descriptor Table 中断描述符表
+  * **IDT: Interrupt Descriptor Table 中断描述符表**
   * ISP: Interrupt Service Procedure 中断服务程序
 
 * 中断号有256个可能的值，Intel为 exception保留了前32个，剩下的可以用于自己的目的，例如处理device服务请求，或者处理system call
 
+  ```
+   0: divide-overflow fault
+   6: Undefined Opcode
+   7: Coprocessor Not Available
+  11: Segment-Not-Present fault
+  12: Stack fault
+  13: General Protection Exception
+  14: Page-Fault Exception
+  ```
+
 * Interrupt 概念
 
-  * 中断有点像system call，但设备可以在任何时候产生中断
-  * 主板上的硬件在device需要被 ”注意到“ 的时候，向cpu发乎信号，比如键盘信号；所以要对设备编程生成中断，并安排cpu 接受中断
+  * **中断有点像system call**
+    * **但设备可以在任何时候产生中断，syscall只能被软件调用到**
+  * 主板上的硬件在device需要被 ”注意到“ 的时候，向cpu发乎信号，比如键盘信号；
+  * 所以要对设备编程生成中断，并安排cpu 接受中断
 
 * Interrupt 执行的顺序
 
   * push FLAGS 寄存器
+
   * 清除 IF 和 TF，EFLAGS中的interrupt able flag和trap flag
+
   * push CS
+
   * push IP
+
   * 获取interrupt vector的内容，置上IP和CS，开始执行ISP
+
+    <img src="Pictures/Operating_System/1560682559037.png" style="zoom:45%"/>
 
 * Interrupt hardware
 
+  * **PIC，programmable interrupt controller** ，可编程中断控制器
+
+  * PCI，Peripheral Component Interconnect，外设部件互连标准
+
   * IO 设备有唯一的/共享的 IRQ，IRQ由特殊的硬件映射到interrupt vector，然后传递给CPU，这种硬件叫做PIC programmable interrupt controller
 
-    <img src="Pictures/Operating_System/1558170109870.png" style="zoom:35%"   />
+    <img src="Pictures/Operating_System/1558170109870.png" style="zoom:45%"/>
 
-* APIC，IO-APIC 和 LAPIC
+* **APIC，IO-APIC 和 LAPIC**
 
   * APIC，Advanced PIC，用于SMP系统 (对称多处理器，UMA架构)
     
     * 适用于所有现代系统，中断通过system bus路由到cpu
-  * LAPIC 和 前端 IO-APIC
+  * LAPIC 和 前端 frontend IO-APIC
     
     * device是连接到 IO-APIC的，IO-APIC通过bus和LAPIC相连
   * interrupt路由
     
     * 有一点像网络的实现，允许广播或者选择性的route 中断，能够分配中断处理负载，路由到最低优先级的进程，如果同等优先级就仲裁或round robin
     
-      <img src="Pictures/Operating_System/1558170439701.png" style="zoom:35%"   />
+      <img src="Pictures/Operating_System/1558170439701.png" style="zoom:45%"   />
 
-* 为设备分配IRQ 
+* 为设备分配IRQ, Assigning IRQs to Devices
 
   * IRQ的分配因硬件不同为不同，有的是hardwire硬连线，有的是物理设置，有的是可编程的，PCI总线就是在引导分配IRQ
   * 一些IRQ的设计是由架构决定的：IRQ0:间隔计时器，IRQ2: 8259A级联引脚
   * Linux设备驱动程序在设备打开时请求IRQ
+  
+* Some Details on IRQ
+
   * 一些硬件IRQ是预设定的
     * 系统定时器(IRQ0)，键盘控制器(IRQ1)，软盘控制器(IRQ6)，实时时钟(IRQ8)和数学协处理器(IRQ13)
   * 其他大部分IRQ是通过user决定的，可以通过硬件/跳线，也可以通过软件，如可安装的驱动程序和固件PNP
@@ -1008,7 +1105,13 @@ Fork：copyuvm
     * 调制解调器(IRQ5)，打印机(IRQ7)，声卡(IRQ9/IRQ10)，视频卡(IRQ11)和PS/2鼠标(IRQ12)，IRQ3和IRQ4通常用于串行端口，IRQ14和IRQ15用于IDE (primary和secondary)
   * interrupt vector中为IRQ所做的分配：32以下是不可屏蔽的 interrupt和exception，128 是system call，251-255用于IPI inter-processor interrupt 处理器间中断，IRQ的编号都是 IRQ# + 32
 
+* **整个中断所有模块的组合** 
+
+  <img src="Pictures/Operating_System/1560683177025.png" style="zoom:40%"   />
+
 * Interrupt Priority 中断优先级
+
+  * 当不同类型的中断(例如，software，NMI, INTR/exception)同时发生，优先级最高的先处理
 
   * NMI：Non Maskable Interrupt 不可屏蔽中断
 
@@ -1034,28 +1137,36 @@ Fork：copyuvm
   * 通常IO中断表示某项操作的结束，另一项要求应尽快发出
   * 大多数device是互不干扰彼此的数据结构的，没有屏蔽其他device的理由
 
-* Handle Nested Interrupt
+* Nested Interrupt
 
   * 尽快 unmask global interrupt
   * 只要reasonable，就re-enable来自该IRQ的中断；但这可能会导致重新进入相同的处理程序
   * 中断处理期间不启用 IRQ-specific的掩码
+  * **中断嵌套是基于优先级的**，是指中断系统正在执行一个中断服务时，有另一个优先级更高的中断提出中断请求，这时会暂时终止当前正在执行的级别较低的中断源的服务程序，去处理级别更高的中断源，待处理完毕，再返回到被中断了的中断服务程序继续执行，这个过程就是中断嵌套。
 
 * Nested Execution
 
   * 中断可以被中断
-    * 对于不同的不断，handler并不需要要重入reentrant；一小部分需要在禁用中断的情况下handle
+    * 对于不同的不断，handler并不需要要重入reentrant；
+    * 一小部分需要在禁用中断的情况下handle
   * 异常也可以被中断
     * 通过中断 (需要服务的设备)
   * 异常最多嵌套两层
-    * 异常表示编码错误，可以exception - page fault，两层肯定到kernel了，这时候的代码不应该有bug，否则就是一个triple fault
+    * 异常表示编码错误，但exception handler code是不能再有编码错误的，可以exception - page fault，两层肯定到kernel了，这时候的代码不应该有bug，否则就是一个triple fault
     * 当发生故障时，CPU调用exception handler。如果此时发生错误，则称为double fault，CPU将尝试使用另一个exception handler处理该错误。如果该调用也导致错误，则系统将因为triple fault 而 reboot
 
 * Interrupt Masking
 
   * mask的两种不同类型：global，selective
-    * global就是延迟所有interrupt，selective就是mask掉单个IRQ，因为通常来自同一类型的几个中断的干扰最常见
+    
+    * global就是延迟所有interrupt
+    * selective就是mask掉单个IRQ，因为通常来自同一类型的几个中断的干扰最常见
+    
+  * NMI，Non-Maskable Interrupt
 
-* 有关 interrupt 和 exception 的三个关键数据结构
+    
+
+* **有关 interrupt 和 exception 的三个关键数据结构**
 
   * GDT，The global descriptor table
     * 定义系统的内存段及其访问特权，CPU有义务强制执行这些特权
@@ -1067,11 +1178,13 @@ Fork：copyuvm
 * CPU 如何找到 GDT/IDT 存在哪里
 
   * 有两个专用的寄存器：GDTR和IDTR，两者都有相同的48位格式
-  
+
   * 内核必须在系统启动期间设置这些寄存器(set-and-forget)
-  
-  * 特权指令:LGDT和LIDT用于设置这些寄存器值；非特权指令:用于读取寄存器值的SGDT和SIDT
-  
+
+  * 特权指令:LGDT和LIDT用于设置这些寄存器值；
+
+  * 非特权指令:用于读取寄存器值的SGDT和SIDT
+
     <img src="Pictures/Operating_System/1558179202556.png" style="zoom:40%"   />
 
 * CPU 如何找到 TSS 存在哪里
@@ -1097,7 +1210,7 @@ Fork：copyuvm
 * Top Half 中做的事 ：Do it Now !
   * 只执行最小的公共函数：保存寄存器，unmask其他中断，最后撤销此次操作：恢复寄存器，返回到以前的上下文
   * 通常为了快，使用汇编写的；然后调用device driver中的合适的interrupt handler (用C写的)
-  * IRQ在上半部分通常是被屏蔽的
+  * **IRQ在上半部分通常是被屏蔽的**
   * 不要试图在top half中做太多工作，因为IRQ是被屏蔽的，让可能会让stack涨的太大；通常会在下半部分对request进行一个派对，并为延迟处理设置一个flag
 * Top Half 如何找到handler
   * 在现代的硬件设备中，多个IO设备可以共享一个IRQ，因此可以共享interrupt vector
@@ -1107,7 +1220,7 @@ Fork：copyuvm
 * Bottom Half : Do it Later !
   * 中断 (与异常相反) 不与特定instruction相关联，也不和process相关联
   * 当前运行的process，在中断发生的时候，和这个中断没有任何关系
-  * interrupt handler不能sleep ！
+  * **interrupt handler不能sleep ！**
 * interrupt handler不能sleep 所意味的事情
   * 不能 sleep 或 做任何可能导致sleep的事
   * 不能应用 current
@@ -1123,7 +1236,13 @@ Fork：copyuvm
   * 这些stack都会在boot的时候被kernel设置进IDT和TSS
 * Softirqs
   * 静态分配:在内核编译时指定
-  * 优先级从高到低：High-priority tasklets 高优先级微线程，Timer interrupts 定时器中断，Network transmission 网络传输，Network reception 网络接受，Block devices 块设备，Regular tasklets 正则微线程
+  * 优先级从高到低：
+    * High-priority tasklets 高优先级微线程，
+    * Timer interrupts 定时器中断，
+    * Network transmission 网络传输，
+    * Network reception 网络接受，
+    * Block devices 块设备，
+    * Regular tasklets 正则微线程
 * Softirqs 在什么时候运行
   * 在kernel 的一些行为之后：system call后，exception后，interrupt后 (上半部分，IRQs，定时器intr)，当scheduler运行ksoftirqs的时候
   * 软中断可以在多个CPU上同时执行，代码必须是可重入的
@@ -1150,7 +1269,7 @@ Fork：copyuvm
   
   * 总是在kernel mode运行，也没有user context
   
-    <img src="Pictures/Operating_System/1558247236987.png" style="zoom:60%"   />
+    <img src="Pictures/Operating_System/1558247236987.png" style="zoom:70%"   />
 
 * 为什么interrupt handler不能sleep：防止死锁出现
 
@@ -1558,16 +1677,17 @@ Fork：copyuvm
 * checkpoint
   * 关闭transaction，所有后续的文件系统操作都将进入另一个事务
   * 将事务刷新到磁盘(日志)，锁定缓冲区
-  * 将所有内容刷新到日志后，更新journal header block
+  * 将所有内容刷新到日志后，更新**journal header block**
   * 只有在缓冲区同步到磁盘之后，才能在日志中解开缓冲区的锁定（缓冲区中是新更新的log部分）
   * 在日志中释放空间（相当于打了一个checkpoint）
-* ext3 和 JFS 的对比
+* **ext3 和 JFS 的对比**
+  
   * ext3相对ext2的一个主要改变就是增加了log，ext2是以前类似于xv6的无日志文件系统
   * 两者在两个独立的层
     * /fs/ext3，只是添加了事务的文件系统；/fs/jdb，记录日志的stuff(JFS)
-  * ext3根据需要调用JFS：启动/停止事务，在unclean reboot（通常是crash发生了）之后请求日志恢复
-  * 做复合事务：具有多个更新的事务
-
+  * **ext3根据需要调用JFS**：启动/停止事务，在unclean reboot（通常是crash发生了）之后请求日志恢复
+* 做复合事务：具有多个更新的事务
+  
 * Ext3 Structures
   * 在内存中：write-back block cache，per-transaction info
   * 在磁盘中：fs，circular log
