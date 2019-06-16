@@ -5,7 +5,7 @@
 #### 第一讲 Introduction & 8 Important Problems in Modern Operating Systems
 
 * 操作系统是什么
-  * 定义：操作系统是管理硬件资源、控制程序运行、改善人机界面和为应用软件提供支持的一种系统软件；向上提供服务，向下管理资源
+  * 定义：操作系统是管理硬件资源、控制程序运行、改善人机界面和为应用软件提供支持的一种系统软件；**向上提供公共服务，向下管理各种资源**
     * OS对apps管理和隐藏资源，隐藏tedious/complex的底层细节，为apps提供执行环境
   * 广义定义：包括管理程序，操作系统，运行时环境
 
@@ -13,29 +13,44 @@
   * 硬件与应用蓬勃发展，在端和数据中心侧可能孕育新的操作系统
   * 传统操作系统如Linux进入架构稳定期，难以根本上适应新硬件与应用需求
 
-* 8 Important Problems of OS
+* **8 Important Problems of OS**
 
-  * Scale Up；Security & Trustworthy；Energy Efficiency；Mobility；
-  * Write Correct (Parallel) Code；Scale out；Non-Volatile Storage；Virtualization
+  * **Scale Up；**
+  * **Security & Trustworthy；**
+  * **Energy Efficiency；**
+  * **Mobility；**
+  * **Write Correct (Parallel) Code；**
+  * **Scale out；**
+  * **Non-Volatile Storage；**
+  * **Virtualization**
 
 * Issue 1 ：Scale Up (Performance Scalability) 纵向扩展
 
-  * Challenge 1：make software performance follow Moore's Law
+  * Challenge：make software performance follow Moore's Law
   * Andy-Bill’s Law：安迪指英特尔前CEO安迪·格鲁夫，比尔指微软前任CEO比尔·盖茨，这句话的意思是，硬件提高的性能，很快被软件消耗掉了。
   * Scalability 扩展性
     * 理论上应用在多核(N)上运行应该比单核快N倍
-    * 但实际上受限于Amdahl's Law (Lock，共享数据结构，共享硬件DRAM/NIC)
-  * Scale Up OS
+    * 但实际上受限于Amdahl's Law，没有达到完全理想的性能 (Lock，共享数据结构，共享硬件DRAM/NIC)
+  * Scale Up OS 的发展方向
+    * 核心：隐藏底层信息，为cpp提供运行环境
     * 对用户apps提供更好的抽象
     * 消除不可扩展的同步
     * 最小化共享数据结构
-    * 跨过memory wall
+    * 跨过memory wall：内存墙，指的是内存性能严重限制CPU性能发挥的现象。内存的性能指标主要有“带宽”(Bandwidth)和“等待时间”(Latency)。
 
 * Issue 2 ：Security & Trustworthy 安全问题
 
   * Meltdown和Spectre攻击：利用分支预测和乱序执行的漏洞
-  * KPTI (Kernel Page Table Isolation)，内核页表隔离来预防meltdown攻击
+
+    * Meltdown的思想：利用cache中存有的信息，访问 buf[key]，对buf[i] 依次比对，可以通过遍历的方法试出key
+    * 防御Meltdown的方法：原本user和kernel是共享页表的，现在分成两个页表提高隔离性，mapped in GPT & EPT
+    * KPTI (Kernel Page Table Isolation)，内核页表隔离来预防meltdown攻击
+
+    <img src="Pictures/Operating_System/1560664180721.png" style="zoom:35%"  />
+
   * Formal verification 形式化验证 (seL4)，针对Trustworthy问题
+
+  * Trustworthy 的定义：要让别人相信你是安全的
 
 * Issue 3 ：Power Efficiency 能源效率
 
@@ -56,9 +71,9 @@
 
   * Android操作系统的架构
 
-    <img src="Pictures/Operating_System/1554557978966.png" style="zoom:45%"  />
+    <img src="Pictures/Operating_System/1554557978966.png" style="zoom:60%"  />
 
-  * 移动端OS的特殊性
+  * 移动端OS的特殊性，跟PC中不一样的可能出现的问题
 
     * 更高的能源利用效率；更丰富的用户体验；更有限的资源；更严峻的安全问题 (更多的user data存在OS中)
 
@@ -67,6 +82,7 @@
   * Parallel Code的难点
     * 并发程序容易出现并发错误
     * 并发bug的特点：不确定性，难以复现/debug
+    * 并发bug的类型：data detection，违背atomicity，deadlock
   * 解决问题的方法
     * 并发错误检测：race detection, atomicity violation detection, deadlock bug detection
     * 并发程序测试：详尽的测试，不同的涵盖范围准则
@@ -103,6 +119,11 @@
     * 适应新的存储模型
     * 非易失性内存会改变OS的管理存储资源的方式
     * 提供更好的IO performance
+    
+  * 非易失性内存和普通内存(DRAM) 的比较
+
+    * 优点：空间大，断电有数据，内存版的磁盘
+    * 缺点：慢，比DRAM latency高大概十倍
 
 * Issue 8 ：Virtualization 虚拟化
 
@@ -117,11 +138,29 @@
     * 轻便：可以使用各种OS
     * 易于管理
 
-  * 虚拟化的方法
+  * 虚拟化的方法：process & OS 使用的硬件资源也要虚拟化
 
     <img src="Pictures/Operating_System/1554608224031.png" style="zoom:35%"  />
+    
+  * ISA是硬件软件的接口，例如MIPS指令集，理解为system级别的所有指令集 & syscall
 
-*  
+  * ABI理解为user级别的指令集 & syscall
+
+##### Summary
+
+* 操作系统的定义：操作系统是管理硬件资源、控制程序运行、改善人机界面和为应用软件提供支持的一种系统软件；**向上提供公共服务，向下管理各种资源**
+* **8 Important Problems of OS**
+  - **Scale Up；**
+  - **Security & Trustworthy；**
+  - **Energy Efficiency；**
+  - **Mobility；**
+  - **Write Correct (Parallel) Code；**
+  - **Scale out；**
+  - **Non-Volatile Storage；**
+  - **Virtualization**
+* Scale Up 和 Scale Out
+  * scale up的本质是放大和性能可伸缩性，处理器本身性能的提升
+  * scale out 的本质是处理器数量增加导致性能提升
 
 ------
 
@@ -134,15 +173,21 @@
     * 用户会希望操作系统方便使用，容易学，可靠，安全，还快
     * 系统开发者希望操作系统容易设计/实现，可靠，可扩展，容错，高效
 
-* Kernel 分类：Monolithic, Microkernel, Exokernel, Hybrid
+* **Kernel 分类：Monolithic, Microkernel, Exokernel, Hybrid**
 
-  * Monolithic 宏内核：OS在kernel space运行，在supervisor mode 运行 （Linux BSD)
+  * Monolithic 宏内核：OS在kernel space运行，在supervisor mode 运行 （Linux BSD)；
 
-  * Microkernel 微内核：low-level address space management, thread management, and inter-process communication (IPC)等技术，（Mach  L4 kernel）
+    * 运行在一个单独的地址空间，所有内核段都在一个地址空间运行
+    * 宏内核的优点：简单高效，技术成熟
+
+  * Microkernel 微内核：low-level address space management, thread management, and inter-process communication (IPC)等技术，（Mach  L4 kernel
+
+    * 微内核的优点：模块化程度高，一个服务失效不会影响另一个服务
+    * 功能划分为独立的进程process，process间通过IPC通信
 
   * Hybrid kernel 复合内核：Windows ，NT kernel
 
-    <img src="Pictures/Operating_System/1554882220939.png" style="zoom:45%"   />
+    <img src="Pictures/Operating_System/1554882220939.png" style="zoom:50%"   />
 
   * DOS：没有模块的划分，接口和实现没有很好的分离。DOS以后开始有一些Layered Approach，将OS分为若干level来实现
 
@@ -150,39 +195,101 @@
 
   * UNIX：UNIX OS包括System program和kernel部分
 
+    * UNIX system structure的结构如图所示
+    
     <img src="Pictures/Operating_System/1554882436070.png" style="zoom:40%"   />
+    
+    * UNIX的kernel定义：由系统调用接口之下和物理硬件之上的所有内容组成，提供文件系统、CPU调度、内存管理等操作系统功能；一个级别的大量函数
 
 * Microkernel 系统架构
+
+  * 本质：user模块间的通信
 
   * 思想：将尽可能多的功能从kernel态移到user态
 
   * 优势：易于扩展；易于将OS移植到其他体系结构；因为kernel代码更少，所以更可靠，更安全
 
-  * 缺点：kernel和user之间频繁通信的overhead
+  * 缺点：kernel和user之间频繁通信的overhead，会降低性能
 
-    <img src="Pictures/Operating_System/1554883036112.png" style="zoom:35%"   />
+    <img src="Pictures/Operating_System/1554883036112.png" style="zoom:40%"   />
 
-* 微内核相较于宏内核的改变
+##### Microkernel
 
+* 微内核相较于宏内核的改变，what does Mach do？
   * Task and thread management
+    * 任务(过程)分配单元
+    * 线程，执行单元
+    * 实现CPU调度：公开给应用程序，应用程序/环境可以实现它们自己的调度策略
   * Interprocess communication
+    * 通过端口的线程之间，Secured by capabilities
+
   * Memory object management
-    * 主要是virtual memory
+    * 主要是virtual memory；本质上的虚拟内存，通过IPC访问的持久存储
   * System call redirection
     * 通过trap来切换mode；
+    * 允许捕获系统调用并将控制转移到用户模式
+    * 本质上使应用程序能够修改/扩展系统调用的行为和功能，例如，启用环境的二进制模拟、跟踪和调试
   * Device support
   * User multiprocessing
   * Multicomputer support
-
 * L3 - > L4
+* Asynchronous IPCs 异步IPC
+  * 同步IPC的缺点
+    * 必须阻塞I/O操作；
+    * 强制应用程序使用多线程
+    * 多核的糟糕选择(如果IO在另一个核上执行，则不需要阻塞)
+  * 希望异步IPC做的事情
+    * 希望在Unix中类似于select()/poll()/epoll()
 
-* 暂时鸽一会
+##### Exokernel
 
-*  
+* **Exokernel微内核的核心观点是：只要内核还提供对系统资源的抽象，就不能实现性能的最大优化；**内核应该支持一个最小的、高度优化的原语集，而不是提供对系统资源的抽象。从这个观点上来说，IPC也是一个太高级的抽象因而不能达到最高的性能。Exokernel微内核的核心是支持一个高度优化的原语名叫保护控制转移(protected control transfer, PCT)。PCT是一个不带参数的跨地址空间的过程调用，其功能类似于一个硬件中断。在PCT的基础上，可以实现高级的IPC抽象如RPC。在MIPS R3000处理器上，一个基于PCT的RPC实现了仅10µs的开销，而在同一硬件上运行的Mach RPC为95µs。
+* Exokernel overview：让内核将机器的物理资源分配给多个应用程序，并且让每个程序决定如何使用这些资源。该程序可以链接到实现OS抽象的操作系统库(libOS)
+* Exokernel的libOS和传统不一样的地方
+  * **核心：传统的读硬件是需要经过kernel的，exkernel的lib可以跳过kernel直接访问hardware**
+  * 大多数程序都要与库链接，而不是直接与exokernel通信；库隐藏底层资源
+  * 应用程序可以选择最适合其需要的库，甚至可以构建自己的库；内核只确保请求的资源是空闲的，并且允许应用程序访问它。
+  * 优点：允许程序员实现自定义抽象，省略不必要的抽象，通常是为了提高性能
+* Exokernel chanllenge
+  * 内核有了新的角色：跟踪资源的所有权，确保资源保护，可以撤销资源访问
+  * **三种技术：Secure binding，Visible revocation，Abort protocol**
+    * 安全绑定，可见撤销，中止协议
+  * Secure binding：application可以安全的绑定到硬件资源并处理事件
+  * Visible revocation：回收资源，并删除对应的secure binding；通常revocation对app是不可见的，但在exokernel中对app 是的可见的；libOS需要维护resouce list
+  * Abort protocol：强行打破secure binding，即使app不响应不配合也没有关系，是revocation失败后的一种保险机制，效果是kernel break所有的secure binding并通知libOS
+* Exokernel 的评价
+  * 优点：允许programmer自行设计抽象接口（lib），省略不必要的代码，可以提升性能
+  * 缺点：
+    * 它使客户支持问题变得更加复杂，因为您不再知道您的每个客户正在运行哪个操作系统
+    * 由于app的需求非常广泛，所以接口若要满足所有app就需要预测所有可能的需求
+
+##### Summary
+
+* Microkernel
+
+  * 优点：易于扩展；易于将OS移植到其他体系结构；因为kernel代码更少，所以更可靠，更安全
+  * 缺点：kernel和user之间频繁通信的overhead，会降低性能
+
+* Exokernel和Microkernel的区别：
+
+  * Exokernel只分配功能，不提供底层硬件的抽象；Microkernel是提供底层抽象的
+  * Exokernel中kernel的作用：确认resource是否free，确认app是否有访问权限
+  * 三种技术：Secure binding，Visible revocation，Abort protocol
+
+  <img src="Pictures/Operating_System/1560666375758.png" style="zoom:55%"   />
+
+* 这张图引申出的question
+
+  * Q1: what are difference? Consider file system, page fault handler, device driver, cpu scheduling
+  * Q2: what is address space? Note that the kernel and apps share the same space
+  * Q3: which one has the best performance
+  * Q4: what is virtual machine’s architecture? Both Xen and KVM
 
 ------
 
 #### 第三讲 PC Programming & Booting
+
+##### PC Architecture
 
 * x86架构 (32-bit)
   * EIP随着指令增加；指令是不定长的；EIP会被call, ret, jmp, cond. jmp修改
@@ -212,6 +319,10 @@
 
 ##### x86中的EFLAGS寄存器  {
 
+* 作用：提供程序的状态，进行相应的控制
+  * 包含一组状态标志，系统标志和一个控制标志
+  * 初始化后 EFLAGS register的值为0x0000 0002
+
 ```
 ID: Identifiction Flag - 程序能够设置或清除这个标志指示了处理器对CPUID指令的支持
 VIP: Virtual Interrupt Pending - 该位置1以指示一个中断正在被挂起，当没有中断挂起时该位清零
@@ -225,21 +336,52 @@ IF: Interrupt Enable Flag - 该标志用于控制处理器对可屏蔽中断请�
 TF: Trap Flag - 将该位设置为1以允许单步调试模式，清零则禁用该模式
 ```
 
+```
+状态标志 status flag
+CF：标志无符号整数运算是否溢出
+PF：若结果最低字节包含偶数个1，则该位置为1
+IF：若结果为0，则置为1
+SF：标志有符号整型的最高有效位（0为正，1为负）
+OF：标志带符号整型运算的溢出状态
+DF：控制串指令，1表示串指令递增，0表示串指令递减
+IOPL：用于控制操作系统执行操作，不允许被应用程序修改
+```
+
 <img src="Pictures/Operating_System/1555892720464.png" style="zoom:55%"   />
 
  }
 
 ##### 控制寄存器 Control Register { 
 
-* CR0中含有控制处理器操作模式和状态的系统控制标志；CR1保留不用；CR2含有导致页错误的线性地址；CR3中含有页目录表物理内存基地址，因此该寄存器也被称为页目录基地址寄存器PDBR（Page-Directory Base address Register）
+* CR0中含有控制处理器操作模式和状态的系统控制标志；
 
-  <img src="Pictures/Operating_System/1555893043340.png" style="zoom:55%"   />
+* CR1保留不用；
+
+* CR2含有导致page fault的线性地址 linear address；
+
+* CR3中含有页目录表物理内存基地址，因此该寄存器也被称为页目录基地址寄存器PDBR（Page-Directory Base address Register）
+
+* CR4包含处理器扩展功能的标志位
+
+* CR8提供对任务优先级寄存器 (Task priority register)的读写，仅在64位下存在
+
+* 可以参考这一片博客 <https://blog.csdn.net/qq_37414405/article/details/84487591>
+
+  <img src="Pictures/Operating_System/1555893043340.png" style="zoom:60%"   />
 
  } 
 
+##### Memory
+
 ##### 内存管理寄存器 Memory-Management Register {
 
-* 段选择符：32位汇编中16位段寄存器(CS、DS、ES、SS、FS、GS)中不再存放段基址,而 是段描述符在段描述符表中的索引值,D3-D15位是索引值,D0-D1位是优先级(RPL)用于特权检查,D2位是描述符表引用指示位TI,TI=0指 示从全局描述表GDT中读取描述符，TI=1指示从局部描述符中LDT中读取描述符。这些信息总称段选择符(段选择子)
+* Memory-Management Registers
+
+  * GDTR (Global Descriptor Table Register)，全局描述符表寄存器，Base Address, Limit …
+  * IDTR (Interrupt Descriptor Table Register)，中断描述符表寄存器，Handler Address, Ring Level …
+  * TR (Task Register)，任务寄存器，TSS 
+
+* 段选择符 segment registers：32位汇编中16位段寄存器(CS、DS、ES、SS、FS、GS)中不再存放段基址,而 是段描述符在段描述符表中的索引值,D3-D15位是索引值,D0-D1位是优先级(RPL)用于特权检查,D2位是描述符表引用指示位TI,TI=0指 示从全局描述表GDT中读取描述符，TI=1指示从局部描述符中LDT中读取描述符。这些信息总称段选择符(段选择子)
 
   <img src="https://img-blog.csdn.net/20160806195439147?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQv/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" style="zoom:80%"   />
 
@@ -261,14 +403,20 @@ TF: Trap Flag - 将该位设置为1以允许单步调试模式，清零则禁用
   
   * 1MB以上被称为extended memory；640KB-1MB是一个内存空洞
   
-    <img src="Pictures/Operating_System/1555893901227.png" style="zoom:45%"   />
+    <img src="Pictures/Operating_System/1555893901227.png" style="zoom:45%"/>
 
  }
 
 * Memory-mapped IO
+  * I/O设备被放置在内存空间而不是I/O空间。从处理器的角度看，内存映射I/O后系统设备访问起来和内存一样
   * side effect是什么？？
-* TODO：IO的直接映射（Port映射）和MMIO哪个更好一点
-  * 
+* **IO的直接映射（Port映射）和MMIO的区别**
+  * 前者不占用CPU的物理地址空间，后者占有（这是对x86架构说的，一些架构，如IA64，port I/O占用物理地址空间），对它的访问可以使用CPU访问内存的指令进行，一个形象的比喻是把文件用mmap() 后，可以像访问内存一样访问文件、同样，MMIO是用访问内存一样的方式访问I/O资源，如设备上的内存。MMIO不能被cache（有特殊情况，如VGA）
+  * 前者是顺序访问。也就是说在一条I/O指令完成前，下一条指令不会执行。例如通过Port I/O对设备发起了操作，造成了设备寄存器状态变化，这个变化在下一条指令执行前生效。uncache的MMIO通过uncahce memory的特性保证顺序性。
+  * 使用方式不同：由于port I/O有独立的64K I/O地址空间，但CPU的地址线只有一套，所以必须区分地址属于物理地址空间还是I/O地址空间。
+  * 可以参考这篇博客 <https://www.cnblogs.com/idorax/p/7691334.html>
+
+##### Execution
 
 ##### xv6源码分析 bootasm.S, bootmain.c, entry.S {
 
@@ -295,12 +443,69 @@ ljmp    $(SEG_KCODE<<3), $start32
 ```
 
 * 在entry.S中，cr4打开PSE大页，cr3设置entrypgdir基地址，cr0置上PG位和WP位
-* TODO： 补充一下 实模式到保护模式，开启页表 前后的微操
 
- }
+* Boot loader的模式切换是从实模式切换到保护模式
+
+  * 寻址方式改变了，不再是16*CS+IP，地址空间从1MB变成16MB
+
+  * 可以使用paging和virtual memory
+
+  * 直接从磁盘读取了kernel
+
+  * 切换模式的代码
+
+    <img src="Pictures/Operating_System/1560668397051.png"/>
+
+* 从分段模式到分页模式：
+
+  <img src="Pictures/Operating_System/1560668381207.png"/>
+
+* Booting: enabling segment and paging
+  * Segment: set GDT & use long jmp (ljmp)
+  * Paging: temporary page table (entrypgdir) with kernel mapped at both 0x80100000 and 0x100000
+
+}
 
 * 仿真 PC Emulation：用于OS test和debug；能提高利用率
-*  
+
+##### Summary and Extension
+
+* EIP insturction pointer 和 PC 的区别
+
+  * EIP insturction pointer 是指针IP/EIP/RIP的下一条指令的地址，作用是指向执行
+  * PC指向正在执行的执行，IP指向下一条指令
+
+* CPU实模式
+
+  * 被特殊定义为20位地址内存可访问空间，2的20次幂 可访问内存空间；软件可通过这些地址直接访问BIOS和外围硬件
+  * 为了向下兼容，80286的x86处理器仍开机启动在实模式下
+  * 由于BIOS的映射作用，即BIOS占用了部分地址空间，真正能使用的物理地址在640K-924K之间
+  * 1M地址空间：16位段地址和16位段内偏移，物理地址（20位）
+  * 实模式的寻址方式：用分段寻址，16位基地址(ds) << 4 + 16位偏移(EA)
+
+* A20-Gate
+
+  * 高端内存HMA：对于可表示的最大地址 max = 0xffff << 4 + 0xffff (大于1M)，20根地址线不一定够用，这就需要第21根线HMA(并没有)，那个时候就用A20来解决了；后来为了向下兼容，要禁用地址，算这个的话实际地址是addr和1M求模
+
+  * 在保护模式下A20-gate被禁用，可访问的只有1M段
+  * 当发展到80286后，地址总线有24根，16M空间，因为向下兼容，实模式下仍然只用20根线，IBM用键盘控制器上剩余的输出线管理第21根地址线的有效性
+  * A20-gate，打开真正访问HMA，关闭采用取模方式，通过BIOS控制A20-gate
+
+* CPU保护模式
+
+  * 为了能够访问更高的内存，必须进入保护模式
+
+  * 优点：访问更高的地址，提供分段/分页两种寻址，提供内存的保护，硬件虚拟存储
+
+  * 寻址方式：
+
+    * GDTR：由于描述符表存放在内存中，GDTR存着段描述符表的首地址
+    * GDT：全局描述符，包含所有app都可使用的基本描述符
+    * LDT：存放的是局部的，不需要全局共享的描述符
+
+    <img src="Pictures/Operating_System/1560670082783.png" style="zoom:65%" />
+
+* 
 
 ------
 
@@ -308,9 +513,9 @@ ljmp    $(SEG_KCODE<<3), $start32
 
 * Core i7的内存结构
 
-  <img src="Pictures/Computer_Architecture/1554458469403.png" style="zoom:55%"   />
+  <img src="Pictures/Computer_Architecture/1554458469403.png" style="zoom:65%"   />
 
-* 页表项结构 PTE
+* 页表项结构 PTE：高20位是页索引号，低12位是PTE属性
 
   <img src="Pictures/Operating_System/1555921993835.png" style="zoom:45%"   />
 
@@ -335,14 +540,33 @@ PS: page size (0=4KB, 1=4MB) - 4MB: super page
 大页对data-intensive的workload更好，能减少TLB miss，降低地址翻译的平均时间；小页对CPU-intensive的workload更好，内存使用更精致
 ```
 
+* PSE：Page size Extension
+  * 开启PSE后，采用4M大页会减小TLB 中存储的page table的数目，会减少TLB miss的数目，提高address translateion的效率
 * PAE：Physical Address Extension
   * x86和x86-64处理器的一个特色，即如果操作系统提供适当支持，则可以在32位的系统中使用超过4G的内存
   * x86的处理器增加了额外的地址线以选择那些增加了的内存地址，所以支持的内存寻址大小从32bit增加到36bit。最大支持内存由4G增加到64G，32位的虚拟地址则没有变，所以一般的应用软件可以继续使用地址为32位的指令
   * 4种页表结构（32bit机器）：未启用PAE, 4 KB的页；未启用PAE, 4 MB的页；启用PAE, 4 KB的页；启用PAE, 2MB的页
+    * 32位机器是页表层次是 2 - 9 - 9 -12，有四个page directory
+    * 32位机器的另一种页表层次 10 - 10 - 12，只有一个page directory
 
 ##### xv6源码分析 main.c, vm.c {
 
+* 内存层次结构
+  
+  <img src="Pictures/Operating_System/1560671230455.png" style="zoom:65%"   />
+  
+* big picture of xv6 virtual addressing scheme
+  
+  ```
+  0x00000000:0x80000000 ：user addresses below KERNBASE
+  0x80000000:0x80100000 ：map low 1MB devices (for kernel) 
+  0x80100000:? ：kernel instructions/data 
+  ? :0x8E000000：224 MB of DRAM mapped here
+  0xFE000000:0x00000000：more memory-mapped devices
+  ```
+  
 * 调用顺序：
+  
   * (main.c) main() 
   * -> (vm.c) void kvmalloc() 
   * -> pde_t *setupkvm()，给kernel段申请页表，并做最基本的映射
@@ -350,6 +574,7 @@ PS: page size (0=4KB, 1=4MB) - 4MB: super page
     * -> pte_t *walkpgdir(pde_t *pgdir, const void *va, int alloc)，返回va处的PTE，如果alloc不为0就创建一个
   * -> void switchkvm()，通过lcr3切换到kernel页表
   * -> (proc.c) void userinit()，配置第一个用户进程
+  
 * 结构体kmap
   * 每个进程只有一个page table，加上CPU不运行任何process时使用的页表(kpgdir)
   * kernel在system call和interrupt期间会直接只用当前进程的页表
@@ -387,6 +612,9 @@ Fork：copyuvm
 
 * 逻辑地址 - 线性地址 - 物理地址的转换
 
+  * 线性地址就是虚拟地址
+  * TODO：逻辑地址和线性地址有什么区别？
+
   <img src="Pictures/Operating_System/1556339216237.png" style="zoom:45%"   />
 
   <img src="Pictures/Operating_System/1556339247367.png" style="zoom:45%"   />
@@ -398,13 +626,18 @@ Fork：copyuvm
 
 * 一些概念
 
-  * Process：设计进程的出发点：程序比处理器多；程序并不需要持续占用处理器；因此可以在不用的时候释放资源；进程是资源分配的最小单位，拥有一个地址空间和若干线程；包含program counter, stack, data section等数据块
+  * Process：
+
+    * 设计进程的出发点：程序比处理器多；程序并不需要持续占用处理器，因此可以在不用的时候释放资源；
+    * 进程是资源分配的最小单位，拥有一个地址空间和若干线程；
+    * 包含program counter, stack, data section等数据块
+    * 一个地址空间，多个线程
 
   * Thread：线程的抽象定义：停止活动并在稍后某个 时刻恢复活动所需要的最小状态，通常是一些程序寄存器；线程是程序运行的最小单位
 
   * Context：xv6中的数据结构，包含edi、esi、ebx、ebp、eip五个field
 
-  * Address spaces：地址空间，原则上和线程是独立的概念；可以在同一个地址空间从一个线程切换到另一个线程；也可以在不同地址空间切换
+  * Address spaces：**地址空间，原则上和线程是独立的概念；**可以在同一个地址空间从一个线程切换到另一个线程；也可以在不同地址空间切换
 
   * Process State：进程状态，一般有new，running，waiting，ready，terminated；xv6中为UNUSED, EMBRYO胚胎, SLEEPING, RUNNABLE, RUNNING, ZOMBIE
 
@@ -413,9 +646,17 @@ Fork：copyuvm
       <img src="Pictures/Operating_System/1556342655313.png" style="zoom:45%"   />
     
 
-* Process Control Block，PCB
+* **Process Control Block，PCB**
+
+  * 这个相当于是process的名牌
+
+  * 作用：是操作系统kernel中的一个数据结构，主要表示进程状态；使一个在多道程序环境下不能独立运行的程序，成为一个能独立运行的基本单位或与其他进程并发执行的进程
 
   * 每个process都会有一个PCB，内容包括Process state, Process counter, CPU registers, CPU scheduling information, Memory management information, Accounting information, I/O status information
+
+  * 主要功能是在中断的时候保存数据，以便调度回来之后还能继续使用
+
+    <img src="Pictures/Operating_System/1560673322762.png" style="zoom:45%"   />
 
   * xv6 中的进程数据结构
 
@@ -423,13 +664,13 @@ Fork：copyuvm
 
 * Context Switch 上下文切换
 
-  * 调用syscall触发中断 - save当前进程的PCB - reload目标进程的PCB - 继续执行
+  * **调用syscall触发中断 - save当前进程的PCB - reload目标进程的PCB - 继续执行**
 
   * 上下文切换需要保存的内容应该是存在进程对应的kernel stack中的
 
   * 上下文切换换栈的瞬间
 
-    <img src="Pictures/Operating_System/1556343241697.png" style="zoom:45%"   />
+    <img src="Pictures/Operating_System/1556343241697.png" style="zoom:50%"   />
 
 * Process Scheduling Queue 进程调度队列
 
@@ -437,30 +678,116 @@ Fork：copyuvm
   * Ready Queue：系统中所有等待执行的process
   * Device Queue：系统中所有等待IO设备的process
 
-* 两种Scheduler
-  * Long-term scheduler / job scheduler：调度即将进入ready queue的进程，完成时间在秒/分钟级别，决定了multiprogramming的程度
-  * Short-term scheduler / CPU scheduler：调度即将执行的进程，完成时间在微秒级别
+* 两种Schedulers
+  * Long-term scheduler / job scheduler：调度即将进入ready queue的进程，完成时间在秒/分钟级别，**决定了multiprogramming的程度 **degree of multiprogramming
+    * Long-term scheduler被调度不是很频繁，所以慢点也还好
+    * Long-term scheduler从缓存中选出等待执行的process加载进内存，进入ready queue
+* Short-term scheduler / CPU scheduler：调度即将执行的进程，完成时间在微秒级别
+    * Short-term scheduler会很频繁的被调度，所以一定要做的快
+    * Short-term scheduler从ready queue中选出一个process执行，并分配cpu资源给它
+  * Middle-term scheduler，将一些process从内存中暂时移出
   * scheduler对process的分类：IO-bound process和CPU-bound process
+  
+  <img src="Pictures/Operating_System/1560674491510.png" style="zoom:55%"   />
+  
+* Process creation
 
-* Process的创建：fork，一次执行两次返回；execute，一次执行没有返回；奇妙的机制
+  * fork，一次执行两次返回；execute，一次执行没有返回；奇妙的机制
+  * Resource sharing policies：分享所有的资源，共享父资源的子集，共享任何资源
+  * Execution：父进程和子进程并行执行，父进程等待子进程终止
 
-  <img src="Pictures/Operating_System/1556344453826.png" style="zoom:50%"   />
+  <img src="Pictures/Operating_System/1556344453826.png" style="zoom:50%"/>
 
-*  
+* Process Termination
+
+  * Process执行最后一条语句，并要求操作系统删除它(exit)
+    *  从子节点到父节点的输出数据(wait)
+    *  进程资源由操作系统分配
+  * 父进程可以终止子进程的执行(abort)
+    *  子元素已超出分配的资源
+    *  不再需要给孩子分配任务
 
 ------
 
 #### 第六讲 IPC 
 
+* Review Thread
+  
+  * 这张图中有三个stack，三个context，两个thread
+  
+  * scheduler不是thread，只是运行在内存中的一个context
+  
+  * thread的定义是可以被scheduler看到的
+  
+    <img src="Pictures/Operating_System/1560675794747.png" style="zoom:70%"/>
+  
 * Review Questions
   
-  * TODO
+  * Q: What is the difference between context and thread?
   
+  * A：thread比context更大一些，context只有`edi/esi/ebx/ebp/eip`五个寄存器，thread还有thread info这个结构
+  
+    <img src="Pictures/Operating_System/1560675248061.png" style="zoom:40%"/>
+  
+  * Q: What is the difference between a kernel thread and a user thread?
+  
+  * A：kernel thread 和 user thread 有多种对应方式
+  
+    * 1对n是使用user-level scheduler的技术，用户自己yield自己调度，没办法用多核
+  
+    * m对n是内核有一段代码可以动态作线程匹配
+  
+      <img src="Pictures/Operating_System/1560675494774.png" style="zoom:50%"/>
+  
+  * Q: Does every user-level thread has a kernel-level thread?
+  
+  * A：应该是对的，但反过来就不对了（参考问题2）
+  
+  * Q: Which one is selected by a scheduler? Context, thread or process?
+  
+  * A：scheduler看到的是thread
+  
+  * Q: The number of kernel stack equals to the number of which: context, thread or process?
+  
+  * A：kernel stack的数量等于context的数量；不是thread可以用schedule距离，scheduler就是一种不是thread的context
+  
+  * Q: Can a kernel thread has multiple contexts?
+  
+  * A：可以的，调度的过程其实就有一个thread穿过三个context的情况
+  
+  * Q: When all CPU cores are running in user-level, all the kernel stacks are empty?
+  
+  * A：不是的，kernel stack = context 数量 = kernel only stack + 对应user的stack
+  
+    * 以上面调度的图为例，shell的kernel stack不为空，schedule也不为空(需要保存调用函数的返回地址)，cat最后为空
+  
+  * Q：Context is a concept in kernel, because user cannot switch stack
+  
+  * A：不是的，也存在user-level scheduler；但如果仅在xv6中讨论这个问题的话，这句话是对的
+  
+  * Q: To fully utilize a multi-core CPU, which threading model should be used: user-level thread or kernel thread?
+  
+  * A：应该用kernel thread，一个kernel thread对应一个core，可以用满资源
+  
+  * Q: What is the difference between user-level threading and co-routine?
+  
+  * A：user-level threading是依赖于函数lib，协同例程是语言级的技术
+  
+    * 协同例程是一个能够按照伪并行方式独立地执行的程序单位。协同例程像一个由主程序激活的process，但和process不同，协同例程能够在任何一处，控制转移到另一个协同例程，而且当控制转移返回到原协同例程时，在其执行被挂起的地方恢复先前的执行。
+
 * Threading Model
 
   <img src="Pictures/Operating_System/1557209601573.png" style="zoom:35%"   />
 
-* Process cooperation的优点：information sharing, computation speed-up, modularity, convenience
+##### IPC
+
+* Cooperating process
+
+  * 独立进程不能影响或受另一个进程执行的影响
+  * 协作流程可以影响或受另一个流程执行的影响
+  * Process cooperation的优点：
+    * information sharing, computation speed-up, modularity, convenience
+    * 信息共享, 计算加速, 模块化, 方便
 
 * IPC的两种模型：如上图，message passing 和 shared memory
 
@@ -1147,6 +1474,10 @@ Fork：copyuvm
 * Durability：耐用性
 * 为什么 fs crash recovery比较困难
   * 这里举了一个文件系统crash的例子
+* Terms for properties of fs ops 一些术语
+  * durable/persistence，操作效果是可见的，a和b都是可见的
+  * atomic，所有操作步骤可见或不可见；要么a和b是可见的，要么不可见
+  * ordered，操作的顺序是保证的，如果b是可见的，那么a也是可见的
 
 ##### Sync Metadata Update + fsck
 
@@ -1526,9 +1857,9 @@ Fork：copyuvm
     <img src="Pictures/Operating_System/1560125994143.png" style="zoom:45%"   />
 
   * flash cell：是一个浮动栅晶体管，分为SLC和MLC
-    
+  
 * 浮栅上的电子数决定了阈值电压V，阈值电压表示逻辑位值(0或1)
-    
+  
 * SLC和MLC flash的区别：SLC一个cell存一个bit，性能好，耐久，容量小；MLC一个cell存两个bit，性能差，不耐久，容量大
   
 * 闪存盘的特点
@@ -2245,7 +2576,6 @@ readerFinish
     
     
   
-
 - lockset 方法的 challenge：
   - 问题一：初始化 (因为第一次共享变量初始化大概是没有锁的，memset)，那第一次判断就凉凉
   - 问题二：read-only shared variable (有些变量就是只写一次的，static const，其实后面就不会有问题了，没拿着锁也没事
@@ -2923,8 +3253,6 @@ readerFinish
   * tail latency
     * serverless应用中由于细粒度架构，使得各个环节的tail latency可能极大影响用户体验。
     * tail latency可能使burst场景下满足SLA更困难。
-
-* ![1560605573195](C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1560605573195.png)
 
 * Challenge : Resource
   * resource footprint
