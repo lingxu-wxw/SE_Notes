@@ -45,7 +45,7 @@
 
   * 用于层间连接的触点(Via)，Contact (Via) for inter-layer connection，黑色
 
-    <img src="C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1560734150833.png" style="zoom:35%"/>
+    <img src="Pictures/Computer_Architecture/1560734150833.png" style="zoom:35%"/>
 
 * 晶体管Gate宽度：Gate Length = 2λ，**feature size**
 
@@ -167,7 +167,7 @@
 
   * IA-32：Intel Architecture， 32 bit
     
-    <img src="C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1560734852731.png" style="zoom:40%"/>
+    <img src="Pictures/Computer_Architecture/1560734852731.png" style="zoom:40%"/>
     
     * Processor State：为下一条指令提供上下文而在指令末尾保存在处理器中的信息
       * PC, general register values, special register values等
@@ -299,7 +299,7 @@
 
   * **分类：front-end, back-end, retiring, bad speculation**
 
-    <img src="C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1560735956358.png" style="zoom:40%"/>
+    <img src="Pictures/Computer_Architecture/1560735956358.png" style="zoom:40%"/>
 
   * 前端表示处理器核心的第一部分，后端负责获取后面执行的操作
     * 分支预测：预测下一条执行指令的地址
@@ -604,7 +604,7 @@
 
   * 效果：4K-entry的BHT，2bits一个entry，80-90%的预测正确率
 
-    <img src="C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1560739329817.png" style="zoom:35%"/>
+    <img src="Pictures/Computer_Architecture/1560739329817.png" style="zoom:35%"/>
 
   * 2-bits Branch Prediction
 
@@ -815,14 +815,14 @@
     
     * 当L1 cache miss时，检查miss cache中有否有，如果有就把cache line加到L1 cache；否则就从L2 cache中获取，在L1 cache和miss cache中都存一份；L1 cache  移除某cache line时，miss cache中不移除
     
-      <img src="C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1560750354301.png" style="zoom:40%"/>
+      <img src="Pictures/Computer_Architecture/1560750354301.png" style="zoom:40%"/>
   * **Victim Caching**
     
     * 定义：修改replacement策略；比miss cache更好的地方：更小，更好的性能；即使是一两个single line也可能effective
     
     * 当L1 cache miss时，检查victim cache，如果有，就与L1 cache中的被移除cache line交换；否则就从L2 cache中获取
     
-      <img src="C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1560750379775.png" style="zoom:40%"/>
+      <img src="Pictures/Computer_Architecture/1560750379775.png" style="zoom:40%"/>
 
 * Cache Optimization #2 Prefetch
 
@@ -913,7 +913,7 @@
 
   * control bus由 row/col strobe(行频闪，列频闪)，clock，other signal组成
 
-    <img src="C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1560751077740.png" style="zoom:50%"/>
+    <img src="Pictures/Computer_Architecture/1560751077740.png" style="zoom:50%"/>
 
 * SRAM 和 DRAM 的对比
 
@@ -1034,7 +1034,7 @@
     * overlapping commands，支持多连接磁盘驱动的高利用率
     * command queueing，提高disk的吞吐量
     
-    <img src="C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1560753319484.png" style="zoom:40%"/>
+    <img src="Pictures/Computer_Architecture/1560753319484.png" style="zoom:40%"/>
 
 * ATA，Advanced Technology Attachment 高级技术附件
 
@@ -1081,7 +1081,7 @@
 
   * 分为Basic mirroring 和 Chain cluster mirroring，后者是错开来镜像的
 
-    <img src="C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1560753734917.png" style="zoom:40%"/>
+    <img src="Pictures/Computer_Architecture/1560753734917.png" style="zoom:40%"/>
 
 * RAID，Redundant Array of Inexpensive Drives，廉价驱动器的冗余阵列
 
@@ -1273,11 +1273,11 @@
   
 * CPI，Clock cycle Per Instruction，指令的平均时钟周期数
 
-  <img src="C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1560755146840.png" style="zoom:45%"/>
+  <img src="Pictures/Computer_Architecture/1560755146840.png" style="zoom:45%"/>
 
 * Memory performance analysis
 
-  <img src="C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1560755166044.png" style="zoom:45%"/>
+  <img src="Pictures/Computer_Architecture/1560755166044.png" style="zoom:45%"/>
 
 ##### Analytical Modeling
 
@@ -1293,7 +1293,7 @@
 
   * 影响BW的因素：cache miss 和 data prefetch
 
-    <img src="C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1560755776835.png" style="zoom:45%"/>
+    <img src="Pictures/Computer_Architecture/1560755776835.png" style="zoom:45%"/>
 
 * Little’s Law 在生产实践中的作用
 
@@ -1320,7 +1320,7 @@
     * 由于电压/频率水平有限
     * 不适用于服务器中的许多组件
 
-  ​	<img src="C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1560756325495.png" style="zoom:45%"/>
+  ​	<img src="Pictures/Computer_Architecture/1560756325495.png" style="zoom:45%"/>
 
 * Computer Power 计算机功率估计
 
@@ -1386,7 +1386,7 @@
   
     * 感觉也是采样模拟的优化，采样后就checkpoint一下
     
-    <img src="C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1560757102448.png" style="zoom:55%"/>
+    <img src="Pictures/Computer_Architecture/1560757102448.png" style="zoom:55%"/>
 
 ##### Workload Design
 
@@ -1566,7 +1566,7 @@
     
     * 但最新这个概念也很难定义，如果两个cpu同时写呢？如果时间很接近呢？
     
-    <img src="C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1560765269794.png" style="zoom:40%"/>
+    <img src="Pictures/Computer_Architecture/1560765269794.png" style="zoom:40%"/>
   
 * Cache Coherency 的精确定义
   * **定义1：program order**，单处理器的 “read after write”，如果之前写了新值n，之后的读就要读到这个新值
@@ -1632,7 +1632,7 @@
 
   * 处理器写入后，广播invalidation；下一次读取其他处理器将触发缓存未命中
   
-    <img src="C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1560766044742.png" style="zoom:45%"/>
+    <img src="Pictures/Computer_Architecture/1560766044742.png" style="zoom:45%"/>
   
 * Problem with write-through cache
 
@@ -1771,7 +1771,7 @@
 
   * Private L1 and L2，例子：AMD Athlon，Intel Pentium D
 
-    <img src="C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1560767443054.png" style="zoom:55%"/>
+    <img src="Pictures/Computer_Architecture/1560767443054.png" style="zoom:55%"/>
 
 * 一些多核设计的案例
 
@@ -2013,11 +2013,11 @@
 
   * SIMT Approach，multiple threads + scalar ops (single PC, multiple register file)
 
-    <img src="C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1560770180190.png" style="zoom:40%"/>
+    <img src="Pictures/Computer_Architecture/1560770180190.png" style="zoom:40%"/>
 
-    <img src="C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1560770120331.png" style="zoom:40%"/>
+    <img src="Pictures/Computer_Architecture/1560770120331.png" style="zoom:40%"/>
 
-    <img src="C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1560770126441.png" style="zoom:40%"/>
+    <img src="Pictures/Computer_Architecture/1560770126441.png" style="zoom:40%"/>
 
 * SIMT 和 SIMD 的区别
 
@@ -2062,7 +2062,7 @@
 
   * GPC，Graphics Processor Cluster
 
-    <img src="C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1560770305457.png" style="zoom:40%"/>
+    <img src="Pictures/Computer_Architecture/1560770305457.png" style="zoom:40%"/>
 
 * Warps
 
@@ -2108,7 +2108,7 @@
 
 * GPU Register File：通常大于L2/L1，而且还在不断扩大
 
-  <img src="C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1560770806123.png" style="zoom:40%"/>
+  <img src="Pictures/Computer_Architecture/1560770806123.png" style="zoom:40%"/>
 
 * Design Considerations
 
@@ -2387,6 +2387,7 @@
     
     * switch的分类：top-of-rack TOR, end-of-row ROW
   * 水平网络拓扑：Entrance facility，MDA，HDA，EDA
+    
     * MDA，main distribution area 主要分布区
     
   * HDA，horizontal distribution area 水平分布区
@@ -2579,8 +2580,7 @@
   - 硬件结构H在N个周期内包含B位的AVF可以表示为
     
       <img src="Pictures/Computer_Architecture/1560581532029.png" style="zoom:50%"/>
-    
-
+  
 - Discussion：SMT for fault tolerance
 
   - symmetric multithread，对称多线程
