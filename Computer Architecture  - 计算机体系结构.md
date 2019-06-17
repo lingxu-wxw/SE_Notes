@@ -565,19 +565,19 @@
 
 * 评价Pipeline的三个参数
 
-  - Instruction-level parallelism required to fully utilize 利用率
+  - Instruction-level parallelism required to fully utilize 为了填满流水线，每个cycle需要的指令个数
   - Instruction issued per cycle (IPC) 每一时钟周期执行指令数量
   - Simple operation latency 简单指令延迟
 
 * **不同Pipeline的性能评价，Classifying ILP Machines**
 
-  - **Simple Scalar Pipeline ：利用率 : 1/cycle ; IPC : 1 ; latency : 1**
+  - **Simple Scalar Pipeline ：为了填满流水线，每个cycle需要的指令个数 : 1/cycle ; IPC : 1 ; latency : 1**
 
-  - **Superscalar machine (n width) ：利用率 : n/cycle ; IPC : n ; latency : 1**
+  - **Superscalar machine (n width) ：为了填满流水线，每个cycle需要的指令个数 : n/cycle ; IPC : n ; latency : 1**
 
-  - **Superpipelined machine (degree m) ：利用率 : m/base cycle ; IPC : 1 (cycle time : 1/m) ; latency : m**
+  - **Superpipelined machine (degree m) ：为了填满流水线，每个cycle需要的指令个数 : m/base cycle ; IPC : 1 (cycle time : 1/m) ; latency : m**
 
-  - **VLIW machine ：利用率 : n/cycle ; IPC : n instr/cycle (1 VLIW/cycle) ; latency : 1**
+  - **VLIW machine ：为了填满流水线，每个cycle需要的指令个数 : n/cycle ; IPC : n instr/cycle (1 VLIW/cycle) ; latency : 1**
 
     <img src="Pictures/Computer_Architecture/1554430339007.png" style="zoom:35%"/>
 
