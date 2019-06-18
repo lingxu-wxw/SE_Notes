@@ -1,4 +1,4 @@
-### 计算机体系结构
+### **计算机体系结构**
 
 ------
 
@@ -22,9 +22,13 @@
 
 * 抽象层级：Application - Software system - Hardware system - Module - Gates - Circuits - Devices - Physics
 
-* 名词：Silicon Ingot 硅锭，Wafer 晶片,  Naked Die 裸模,  Packaged Die 组合模具
+* 名词：Silicon Ingot 硅锭，Wafer 晶片,  Naked Die 裸模,  Packaged Die 组合模具，Polysilicon 多晶硅
 
-* 半导体：N型（自由电子），P型（空穴）
+* 其他与物理设计相关的名词：
+
+  * transistor density 晶体管密度
+  * chip yield rate，芯片产出率
+  * 半导体：N型（自由电子），P型（空穴）
 
 * 晶体管结构 transistor structure：**nMOS晶体管在栅极为低电平时OFF，高电平时ON；pMOS晶体管在栅极低电平时ON，高电平时OFF**
 
@@ -56,6 +60,8 @@
 
 * 摩尔定律：当价格不变时，集成电路上可容纳的元器件的数目，约每隔18-24个月便会增加一倍，性能也将提升一倍
 
+  * 研发10-nm级别的处理器芯片可能面临的挑战：光刻，量子效应
+
 ##### Think “Big" in the 21st century
 
 ##### The server and data center industry
@@ -82,7 +88,7 @@
 
 * 数据中心TCO (Total Cost of Ownership) 总拥有成本：
 
-  CapEX (Capital Expenditure) 资本支出 + OpEx (Operational Expenditure) 运营支出
+  **CapEX (Capital Expenditure) 资本支出 + OpEx (Operational Expenditure) 运营支出**
 
 ##### Why energy is a big issue
 
@@ -169,6 +175,8 @@
     
     <img src="Pictures/Computer_Architecture/1560734852731.png" style="zoom:40%"/>
     
+    * GPR，general-purpose register，可以用作操作数，如整数和FP
+    * SPR，special-purpose register，特定的定义函数，如条件码、处理器状态、PC等
     * Processor State：为下一条指令提供上下文而在指令末尾保存在处理器中的信息
       * PC, general register values, special register values等
     * **Processor State 和 Processor Power State 是不同的**
@@ -204,6 +212,7 @@
 * compiler和assembler
 
   * compiler：将高级程序语言转换为汇编语言
+  
 * assembler：将每个汇编语言指令转换为硬件可理解的位模式(机器码)
   
 * **指令集是硬件软件直接的接口 interface between software and hardware**
@@ -221,6 +230,8 @@
     * 这是编译器在将高级语言中指定的算法映射到机器指令时所使用的ISA的子集
 
     * 指代那些对应用程序可见的指令集：data flow，ALU operations， control flow
+
+    * User ISA是操作GPR的(general purpose register)
 
       <img src="Pictures/Computer_Architecture/1554007424976.png" style="zoom:30%"/>
 
@@ -240,6 +251,8 @@
   * 允许在lower level做有效的实现
 
 * RISC-V，可以自由用于任何目的的RISC ISA；支持小型、快速、低功耗系统设计
+
+  * RISC-V也算是精简指令集，所以是不适用condition code的
 
 ##### ISA： Microarchitecture level design - simple pipeline implementation
 
@@ -267,6 +280,8 @@
   * 流水线：一种实现技术，其中多个指令在执行中重叠
 
   * 阶段：Instruction fetch -> Instruction decode and Register file Read -> Execute or Address calculation -> Memory access -> Write back
+
+  * **为什么太多pipeline stage会降低吞吐量：太多的latch(状态寄存器)会带来overhead**
 
     <img src="Pictures/Computer_Architecture/1554008258099.png" style="zoom:30%"/>
 
@@ -442,13 +457,13 @@
 ##### Dynamic Scheduling : Tomasulo's Algorithm
 
 * Tomasulo's Algorithm的要点
-  * 保留站 Reservation Station：一旦操作数可用，就fetch并buffer它；当所有操作数都存在时，启用关联的FU
+  * Reservation Station 保留站 ：一旦操作数可用，就fetch并buffer它；当所有操作数都存在时，启用关联的FU；
   
   * Load/Store Buffers：表现几乎和和RS差不多
   
-  * 公共数据总线 Common Data Bus：Data flow approach:，指令可以在操作数available的瞬间开始执行
+  * Common Data Bus 公共数据总线 ：Data flow approach:，指令可以在操作数available的瞬间开始执行
   
-  * 寄存器重命名 Register Renaming：指令中的寄存被tag/指向保留站的pointer代替
+  * **寄存器重命名 Register Renaming：指令中的寄存被tag/指向Reservation station的pointer代替**
   
     * 寄存器重命名排除了name dependence
     * structural hazard：多个RS可以竞争一个共享的FU
@@ -642,24 +657,29 @@
 
   * 作为循环队列(FIFO)管理的指令完成缓冲区：包含in flight的所有指令；保存完成和提交之间的结果
 
-  * ROB fields
+  * **存在ROB里的东西对程序员是不可见的**
+  
+  * **ROB和RS会影响处理器的并行化程度，并成为instruction window**
+  
+* ROB fields
     * Instruction type：指令类型（分支/访存/ALU）
-    * Destination：写寄存器号/内存地址
-    * Value：保存结果，直到指令提交
-
-  * 实际案例（含原始Tomasulo对比）
-
-    * ALU处理不含操作数的指令；Instr Q是指令队列；Reorder Buffer保证顺序commit，head是oldest；FP registers是commit，之前多了一个ROB，src表示即将写入的tag；IS/EX/WR的框实际应该还是有的
-
+  * Destination：写寄存器号/内存地址
+  
+* Value：保存结果，直到指令提交
+  
+* 实际案例（含原始Tomasulo对比）
+  
+  * ALU处理不含操作数的指令；Instr Q是指令队列；Reorder Buffer保证顺序commit，head是oldest；FP registers是commit，之前多了一个ROB，src表示即将写入的tag；IS/EX/WR的框实际应该还是有的
+  
       <img src="Pictures/Computer_Architecture/1554431843820.png" style="zoom:40%"/>
-
+  
       <img src="Pictures/Computer_Architecture/1554431905056.png" style="zoom:40%"/>
-
-  * 实际执行表格（IS/EX/WR)
+  
+* 实际执行表格（IS/EX/WR)
     * tag值全都填充后，下一周期开始执行
     * 如果没commit之前，register的src又改了，直接覆写（cycle 8）
     * 这里ADD/SUB周期为3，MUL周期12
-
+    
   | 指令         | IS          | EX      | WR      | CM             |
   | ------------ | ----------- | ------- | ------- | -------------- |
   | l1 ADD.D     | C1          | C2      | C5      | C6             |
@@ -676,12 +696,19 @@
 
 * VLIW 处理器 Very Long Instruction Word
 
+  * **VLIW不支持 out-of-order**
+
+  * **VLIW用的是精简指令集 reduced instruction set**
+
+  * **VLIW需要更多的GPR, general purpose register**
+
   * 固定数量的operations被format成一条大指令，通常是3条operations
+
   * 目的：高性能，低硬件复杂度
     * 减少multiple-issue的硬件 Less multiple-issue hardware
     * 简单的指令调度 Simpler instruction dispatch
     * 省去结构冒险的检查逻辑 No structural hazard checking logic
-  
+
     <img src="Pictures/Computer_Architecture/1554433810050.png" style="zoom:45%"/>
 
 * Compiler Support for VLIW Processor
@@ -701,6 +728,7 @@
 
 * EPIC 显示并行指令计算 Explicitly Parallel Instruction Computing
 
+  * **EPIC是个软件技术，是VLIW的具体实现，基于compiler，不是micro-architecture-level ILP design**
   * EPIC 是VLIW的进化，它吸收了超标量处理器的许多最佳思想
   * EPIC的哲学
     * 提供在编译时设计plan of execution(POE) 的能力
@@ -769,6 +797,8 @@
     * 32位地址的机器，cache block大小16 B (4 words)
 
       <img src="Pictures/Computer_Architecture/1554457889510.png" style="zoom:35%"/>
+      
+    * cache存储来自备份存储backing store的数据块(称为缓存块或缓存行)
 
   * Cache联结方式：direct mapped 直接映射；fully associative 全相联；set associative 组相联
 
@@ -818,7 +848,7 @@
       <img src="Pictures/Computer_Architecture/1560750354301.png" style="zoom:40%"/>
   * **Victim Caching**
     
-    * 定义：修改replacement策略；比miss cache更好的地方：更小，更好的性能；即使是一两个single line也可能effective
+    * 定义：在L1和L2 cache中的一个全相联cache，修改replacement策略；比miss cache更好的地方：更小，更好的性能；即使是一两个single line也可能effective
     
     * 当L1 cache miss时，检查victim cache，如果有，就与L1 cache中的被移除cache line交换；否则就从L2 cache中获取
     
@@ -869,20 +899,25 @@
     
   * **每个DRAM device包括一个/多个独立的bank**
 
-    * DRAM芯片描述为xN，其中N为输出引脚数;x4 DRAM(发音为“by 4”)表示DRAM至少有4个内存数组(在单个bank中)，列宽为4位(每列读取或写入传输4位数据)。
+    * DRAM芯片描述为xN，其中N为输出引脚数;
+    * x4 DRAM(发音为“by 4”)表示DRAM至少有4个内存数组(在单个bank中)，列宽为4位(每列读取或写入传输4位数据)。
 
   * **每个bank都由slaved memory arrays组成**
     
     * 描述了DRAM devices内部的一系列独立的memory array
     
-  * Channel：MC和DRAM module之间的path
-
   * 可以参考这篇博客 <https://blog.csdn.net/qq_39759656/article/details/81672895?tdsourcetag=s_pcqq_aiomsg>
 
     <img src="Pictures/Computer_Architecture/1554460977057.png" style="zoom:55%"/>
 
     <img src="Pictures/Computer_Architecture/1554461001305.png" style="zoom:50%"/>
 
+* Revisit the definition of memory system
+
+  * Channel：MC和DRAM module之间的path
+  
+    <img src="Pictures/Computer_Architecture/1560778072155.png" style="zoom:50%"/>
+  
 * **Parallelism in DRAM**
 
   * **rank是一组可单独寻址的DRAM device，允许DIMM-level级的独立操作**
@@ -900,7 +935,7 @@
 
     <img src="Pictures/Computer_Architecture/1554461316701.png" style="zoom:50%"/>
 
-* 1T1C DRAM Cell
+* **1T1C DRAM Cell**
 
   * T：transistor 晶体管，C：capacitor 电容
 
@@ -913,6 +948,10 @@
 
   * control bus由 row/col strobe(行频闪，列频闪)，clock，other signal组成
 
+  * 1T1C DRAM cell每次read之前都要充电 pre-charged 
+
+  * sense Amps的作用：读之前pre-charge，写之前refresh重新restore电荷，缓存之前的数据减少miss rate
+
     <img src="Pictures/Computer_Architecture/1560751077740.png" style="zoom:50%"/>
 
 * SRAM 和 DRAM 的对比
@@ -923,7 +962,14 @@
 * Example：DRAM Array Access
 
   * Row Access Strobe (RAS)，Column Access Strobe (CAS)
-  * 经典DRAM系统:数据总线的宽度等于列的大小。发送N位为xN DRAM，每周期一个
+
+  * **经典DRAM系统:数据总线的宽度等于列的大小。发送N位为xN DRAM，每周期一次**
+
+  * Ranks are selected by the MC.
+
+  * Banks can be accessed simultaneously.
+
+    <img src="Pictures/Computer_Architecture/1560776866460.png" style="zoom:50%"/>
 
 * Refresh Mechanism
 
@@ -933,8 +979,10 @@
 
   * Refresh操作可以在rank-level或bank-level进行 (per-rank refresh 和 per-bank refresh)
 
-  * 在per-rank refresh中，所有bank在刷新周期中都被锁定和不可访问
+  * **在per-rank refresh中，所有bank在刷新周期中都被锁定和不可访问**
 
+    * In per-rank refresh, all banks are locked and inaccessible during refresh cycle.
+    
     <img src="Pictures/Computer_Architecture/1554461894893.png" style="zoom:50%"/>
 
 * Cost of Accessing DRAM 访问DRAM的开销
@@ -949,13 +997,15 @@
 
     * Row Access Strobe (RAS)，Column Access Strobe (CAS)
 
-  * Double Data Rate (DDR) SDRAM：数据在时钟的两端传输
+  * **Double Data Rate (DDR) SDRAM：数据在时钟的两端传输**
 
     <img src="Pictures/Computer_Architecture/1554462086642.png" style="zoom:45%"/>
 
 * Memory Wall and Memory Bandwidth Wall
 
   * **内存墙，指的是内存性能严重限制CPU性能发挥的现象。内存的性能指标主要有“带宽”(Bandwidth)和“等待时间”(Latency)**
+    * 内存墙，频率容量都能提升，但延迟无法优化
+    * 内存带宽墙，可以通过MLP来解决
   * 由于CPU的主频已经不再无限提高了，我们现在撞上了内存的带宽墙
   * DRAM的容量每两年翻一番，但latency没怎么提升
   * Power wall：数据中心25-40%的power是提供给DRAM system
@@ -965,8 +1015,19 @@
 * Discussion : MLP of Graph Workload
 
   * MLP (Multi-Layer Perception) ：多层感知器，是一种前向结构的人工神经网络，映射一组输入向量到一组输出向量
+  
   * 内存带宽利用率受到高IPM (instruction per miss) 的限制
+  
   * 随着更多的CPU内核，内存利用率不断提高
+  
+  * MC：memory controller
+  
+    <img src="Pictures/Computer_Architecture/1560776909408.png" style="zoom:45%"/>
+  
+* Quiz Addition
+
+  * dual-channel 是双通道，和DIMM (dual in-line memory module) 双列直插式存储模块可能有关系
+  * DDR2，一个时钟周期传两个cache line，一个cache line 8个byte
 
 ##### Summary
 
@@ -1052,7 +1113,7 @@
   * SATA 和 SAS (Serial Attached SCSI) 的比较
     * SATA比较便宜，存储量大，功耗低，适用于PC和普通的存储
     
-    * SAS读写数据速率快，可靠性高，电缆长，适用于企业级的服务器系统
+    * SAS读写数据速率快，可靠性高，电缆长，稍微贵一点，适用于企业级的服务器系统
     
       <img src="Pictures/Computer_Architecture/1557726519630.png" style="zoom:50%"/>
 
@@ -1074,6 +1135,8 @@
   * stripe unit：固定大小的数据块
 
   * stripe size/depth：stripe unit的大小
+
+  * strip mining，翻译是露天开采？
 
     <img src="Pictures/Computer_Architecture/1557727054717.png" style="zoom:45%"/>
 
@@ -1279,7 +1342,9 @@
 
   <img src="Pictures/Computer_Architecture/1560755166044.png" style="zoom:45%"/>
 
-##### Analytical Modeling
+##### Analytical Modeling / Analytical Evaluation
+
+* **Analytic modeling 可以快速的估计出系统的运行状态**
 
 * Little’s Law，科特尔法则
 
@@ -1366,6 +1431,8 @@
 
   * 功能模拟与记录模拟想结合，以增加开发/评估时间为代价，实现比trace-driven更高的精度
 
+  * **Execution-Driven Simulation并不是很适合multicomputer**
+
   * Full system simulation：Trace-driven simulation and execution-driven simulation
 
     <img src="Pictures/Computer_Architecture/1557737652854.png" style="zoom:45%"/>
@@ -1409,11 +1476,19 @@
   * Workload Characterization 负载特性：
     * 了解各种benchmarks的行为
     * 使用各种硬件监视器和模拟器
+    
   * 主成分分析 Principal Component Analysis (PCA)：
     * 依赖成熟的统计数据分析技术，把一些可能相关的变量转换成少量不相关的主成分 **possibly correlated variables -> uncorrelated principal component**
     * 通过正交变换将一组可能存在相关性的变量转换为一组线性不相关的变量，转换后的这组变量叫主成分
+    
   * 聚类分析 Cluster analysis
+
+  * Workload reduction
+
+    <img src="Pictures/Computer_Architecture/1560787417472.png" style="zoom:60%"/>
+
   * **确定一个reduced (较少)但有代表性的workload**
+    
     * 这个是workload设计的核心
 
 * PCA，Principle Component Analysis，主成分分析的主要应用
@@ -1522,11 +1597,12 @@
 
   * Centralized Shared-Memory，UMA架构
     * 多个处理器共享相同的物理内存，上述的a/b类型
-    * 通常被称为 **SMPs (symmetric multiprocessors**，对称多处理器)，处理器对任何内存位置都具有相同的访问时间 (因为共享地址空间)
+    * 通常被称为 **SMPs (symmetric multiprocessors**，对称多处理器)，**处理器对任何内存位置都具有相同的访问时间 (因为共享地址空间)**
   * Distributed Shared-Memory (DSM)，NUMA架构
     * 物理上内存被处理器分离开，上述的c/d类型
     * 两个主要的优势：内存带宽是scalable的，只要继续加就可以；本地访问的延迟很低
     * 主要的缺点：通信比较复杂，node到node之间的延迟比较高
+      * **主要的通信方式并不是message passing**
   * 共享内存意味着地址空间也是共享的，SMP和DSM都是
 
 * 两种不同MIMD系统的比较，多处理器和多机(集群)
@@ -1536,7 +1612,7 @@
     * 处理器通过总线或者互联网络链接
     * 由许多处理器组成，2个以上，多的几十个
     * 同一个共享地址空间
-    * 通过load/store，隐式通信数据
+    * **通过load/store，隐式通信数据**
     * 线程级并行
   * **Multicomputers, Clusters，WSCs**
     * 松散耦合的体系结构
@@ -1557,11 +1633,15 @@
   * 私有数据在本地，只供一个处理器使用，共享数据在全局，由多个处理器同时使用
   * 共享数据有多个copy副本，分布在不同的缓存中，并由不同的处理器操作
   * 当不同的CPU看到相同内存位置的不同值的时候，就会出现cache  coherence的问题
-  * cache coherence的问题在 write-back 系统和 write-through 系统中都是存在的
+  * **cache coherence的问题在 write-back 系统和 write-through 系统中都是存在的**
 
 * 单处理器中的一致性问题 (Uniprocessors)
   * 即使是单处理器都可能出现问题
+  
   * Device可以通过DMA直接读取内存，而最新的数据可能还在write-back cache中，没有被flush到内存中去
+  
+    * 如果设计不当，DMA可能会读到stale(不新鲜)的数据
+  
   * **Memory 要做到读取内存地址X，应该返回任何处理器在地址X处写入的最新的值**
     
     * 但最新这个概念也很难定义，如果两个cpu同时写呢？如果时间很接近呢？
@@ -1577,11 +1657,11 @@
 * Cache Coherency 的正式定义
   
   * 一个coherent的共享内存系统应该是：读取内存地址X应该返回任何处理器在地址X处写入的最后一个值
-    
   * 对于每个位置，都可以构造一个在此位置的、所有操作的串行顺序，该顺序与执行的结果一致，并且 ( hypothetical serial order )
     * 任何特定处理器发出的内存操作都按照上述处理器发出的顺序执行
     * 每个读操作返回的值是最后一次按串行顺序写入该位置的值
   * 就像一个没有cache的共享内存系统，会强制保证顺序
+  * **有的时候cache-coherent system的read可以乱序（没有write的时候）**
   
 * Coherence 和 Consistency 的区别
   * Coherence 一致性，强调读出值的异同
@@ -1609,10 +1689,14 @@
 
   <img src="Pictures/Computer_Architecture/1557887533547.png" style="zoom:40%"/>
 
-  * 具有本地缓存的多个处理器被放置在共享总线上
+  * 具有local cache的多个processor被放置在shared bus上
   * 所有写操作都将在总线上以事务的形式显示到内存中
   * 所有事务都以相同的顺序对所有处理器可见
   * 每个处理器不断地“窥探”总线 (snoops)
+  * Enhanced cache：现在接收来自双方(processor/bus)的请求
+  * cache可以看作有两个controller
+    * processor-side controller
+    * **bus-side controller - snooper**
 
 * Snooping Protocol
 
@@ -1651,6 +1735,15 @@
     * Bus Read (BusRd)
     * Bus Read Exclusive (BusRdX): ensures write propagation
     * Bus Write Back (BusWB)
+  * **在cache/memory被访问时，MSI write-back protocol都会flush data**
+  * MSI用write-back 而不用write-through的原因
+    * write through大多数情况都很占用内存带宽，write back只有在其他核读到的时候才更新一下，更加高效
+  
+* A 4-state (MESI) Write-Back Invalidation protocol
+
+  * 这是MSI协议的扩展；MESI协议是基于Invalidate的高速缓存一致性协议，并且是支持回写高速缓存的最常用协议之一
+  * Four States：
+    * M: Modified，E: Exclusive-Clean，S: Shared，I: Invalid
 
 ##### Summary
 
@@ -1728,6 +1821,7 @@
     * 一个processor socket就是一个chip
   * CMP 和 multicore processor 似乎是两回事
     * multicore processor主要有前面讲过的shared-memory multiprocessor，MIMD
+  * CMP 似乎没有 “asymmetric” 对称不对称的概念
   
 * **CMP 和 SMT的比较**
   
@@ -1775,6 +1869,8 @@
 
 * 一些多核设计的案例
 
+  * 图中显示，**multicore在 server/mobile/embedded (嵌入式) 都挺合适的**
+
   <img src="Pictures/Computer_Architecture/1557901667782.png" style="zoom:35%"/>
 
   <img src="Pictures/Computer_Architecture/1557901680819.png" style="zoom:35%"/>
@@ -1793,7 +1889,12 @@
   * Multiple domains in terms of power management，电源管理的多个领域
   * Partitioning resources between threads/cores，在线程/内核之间对资源进行分区
   * On-die interconnect，on-die 互联
+  * **通常来讲，multicore不是很关心throughput computing**
   
+* **多核 multicore 会竞争的资源：**
+
+  * **LLC，power budget，memory controller，bus，不竞争TLB**
+
 * Core 的概念：core不是独立的processor，而是与其他core共享资源的更大的片上系统的一部分
 
 ##### Design Space Exploration
@@ -1919,7 +2020,7 @@
   * 我可以理解成向量指令是把若干条数据操作一起做吗
 * Vector Instruction，向量指令
   * 定义：向量指令对一系列数据项进行操作
-  * 向量指令的一系列优势
+  * **向量指令的一系列优势**
     * 减少获取指令需要的带宽，单个vector指令指定了大量的工作
     * 在检查硬件的时候data hazard会比较少，同一个vector中的独立运算
     * 内存访问的延迟会均摊，vector指令有自己的内存访问模式
@@ -1934,7 +2035,9 @@
 
   * vector processor通常是由vector units 和 ordinary pipelined scalar units组成的
 
-  * Vector Register，内存中固定大小的bank来装一个vector，通常包含64-128个 FP/浮点元素，需要确定最大向量长度 (MVL) 
+  * Vector Register，内存中固定大小的bank来装一个vector，通常包含64-128个 FP/浮点元素，需要确定最大向量长度 **(MVL)  maximum vector length**
+
+    * MVL的大小是由processor的架构决定的
 
   * Vector Register file，是指8-32 个vector register
 
@@ -1964,13 +2067,18 @@
 
   * VMIPS的FU，consume one element per cycle，执行时间大概和vector length差不多
 
+    * **Vector instruction可以在single deeply pipelined FUs上被处理**
+
   * Pipelined multi-lane vector execution：
 
     `T vector = T scalar + (vector length/lane number) - 1`
 
-* Vector Chaining
+* **Vector Chaining**
+  
   * Chaining 就是vector版本的register bypassing
-  * Convoy  就是指可以一起执行的vector 指令，整个convoy中没有结构冒险，没有数据冒险
+    * 允许向量操作符的单个元素可用时立即启动向量操作符
+  * Convoy  就是指可以一起执行的vector 指令
+    * 整个convoy中没有结构冒险，没有数据冒险
 * Vector Length Register (VLR)
   * vector的长度不一定就恰好的是64怎么办呢
   * 控制任何向量运算的长度，不能大于最大值 maximum vector length (MVL)
@@ -2058,7 +2166,11 @@
 
   * **SM，streaming multiprocessors**
 
+    * SM是一个统一的图形和计算引擎，SM执行CUDA thread block
+
   * **SP，steaming processor**
+
+    * 单个CUDA thread的标量ALU，SP core是SIMD lane
 
   * GPC，Graphics Processor Cluster
 
@@ -2085,7 +2197,8 @@
 
 * Branch Divergence 分支分散
 
-  * warp的所有线程通常都以相同的方式执行，但也可能因control flow而分叉
+  * **warp的所有线程通常都以相同的方式执行**，但也可能因control flow而分叉
+    * 所以至少active thread的执行流都是一样的
   * Warp divergence：分支指令可能会导致一些线程跳转，而另一些线程会在经线中掉落
   * 分叉的warp会有一些inactive thread lane，Diverging paths execute serially 发散路径串行执行
 
@@ -2096,6 +2209,10 @@
 * Dynamic Warp Formation
 
   * 通过组合PC值相同的线程，从准备好的线程池中形成新的warp
+
+  * **Dynamic warp formation可能会导致warp乱序执行**
+
+    <img src="Pictures/Computer_Architecture/1560781058132.png" style="zoom:45%"/>
 
 * Resource Limit
 
@@ -2119,7 +2236,7 @@
   * 缺点：功耗高，硅片面积大等。
   * 优化方法：缩小寄存器文件大小，或使用新的存储技术
 
-##### Summay
+##### Summary
 
 * Throughput computing and data-level parallelism
 * Vector processor and vector instruction
