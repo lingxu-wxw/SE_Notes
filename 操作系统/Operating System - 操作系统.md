@@ -1,4 +1,4 @@
-#### 操作系统
+### 操作系统
 
 ------
 
@@ -161,8 +161,13 @@
 * Scale Up 和 Scale Out
   * scale up的本质是放大和性能可伸缩性，处理器本身性能的提升
   * scale out 的本质是处理器数量增加导致性能提升
+*  
+
+
 
 ------
+
+
 
 #### 第二讲 OS Structures
 
@@ -285,7 +290,13 @@
   * Q3: which one has the best performance
   * Q4: what is virtual machine’s architecture? Both Xen and KVM
 
+*  
+
+
+
 ------
+
+
 
 #### 第三讲 PC Programming & Booting
 
@@ -505,9 +516,13 @@ ljmp    $(SEG_KCODE<<3), $start32
 
     <img src="Pictures/Operating_System/1560670082783.png" style="zoom:65%" />
 
-* 
+*  
+
+
 
 ------
+
+
 
 #### 第四讲 Memory init：xv6 & VM
 
@@ -606,7 +621,13 @@ Fork：copyuvm
 
  }
 
+*  
+
+
+
 ------
+
+
 
 #### 第五讲 Process
 
@@ -671,6 +692,10 @@ Fork：copyuvm
   * 上下文切换换栈的瞬间
 
     <img src="Pictures/Operating_System/1556343241697.png" style="zoom:50%"   />
+    
+    <img src="Pictures/Operating_System/1560864580737.png" style="zoom:70%"   />
+    
+  * It pushes the registers to stack, switch the stack and pop the trapframe to the registers, then use ret to recover the eip.
 
 * Process Scheduling Queue 进程调度队列
 
@@ -682,6 +707,7 @@ Fork：copyuvm
   * Long-term scheduler / job scheduler：调度即将进入ready queue的进程，完成时间在秒/分钟级别，**决定了multiprogramming的程度 **degree of multiprogramming
     * Long-term scheduler被调度不是很频繁，所以慢点也还好
     * Long-term scheduler从缓存中选出等待执行的process加载进内存，进入ready queue
+  
 * Short-term scheduler / CPU scheduler：调度即将执行的进程，完成时间在微秒级别
     * Short-term scheduler会很频繁的被调度，所以一定要做的快
     * Short-term scheduler从ready queue中选出一个process执行，并分配cpu资源给它
@@ -698,6 +724,11 @@ Fork：copyuvm
 
   <img src="Pictures/Operating_System/1556344453826.png" style="zoom:50%"/>
 
+  * 如果process有两个thread，调用fork，线程的数据存在task_struct
+    * 如果想要新process有一个thread，duplicate the task_struct of the thread which is executing fork(), and duplicate the memory in cow way
+    * 如果想要新process有两个thread，duplicate all task_structs which has same memory space (mm_struct) and keep their relationship, and duplicate the memory in cow way
+    * Linux用的是前面一种方法
+
 * Process Termination
 
   * Process执行最后一条语句，并要求操作系统删除它(exit)
@@ -706,8 +737,14 @@ Fork：copyuvm
   * 父进程可以终止子进程的执行(abort)
     *  子元素已超出分配的资源
     *  不再需要给孩子分配任务
+  
+*   
+
+
 
 ------
+
+
 
 #### 第六讲 IPC 
 
@@ -780,6 +817,35 @@ Fork：copyuvm
   <img src="Pictures/Operating_System/1557209601573.png" style="zoom:35%"   />
 
 ##### IPC
+
+* IPC有哪些实现方法
+
+  * pipe, FIFO, message queue, semaphore, shared memory
+
+  ```
+  Pipe：通常指无名管道，是UNIX系统IPC最古老的形式
+    - 它是半双工的（即数据只能在一个方向上流动），具有固定的读端和写端
+    - 它只能用于具有亲缘关系的进程之间的通信（也是父子进程或者兄弟进程之间）
+  FIFO：也称为明管道，是一种文件类型
+    - FIFO可以在无关的进程之间交换数据，与无名管道不同
+    - FIFO有路径名与之相关联，它以一种特殊设备文件形式存在于文件系统中
+  Message queue：是消息的链列表，存放在内核中，一个消息队列由一个标识符（即队列ID）来标识
+    - 消息队列是面向记录的，其中的消息具有特定的格式以及特定的优先级
+    - 消息队列独立于发送与接收进程。进程终止时，消息队列及其内容并不会被删除
+    - 消息队列可以实现消息的随机查询,消息不一定要以先进先出的次序读取,也可以按消息的类型读取
+  Semaphore：信号量用于实现进程间的互斥与同步，而不是用于存储进程间通信数据
+    - 信号量用于进程间同步，若要在进程间传递数据需要结合共享内存
+    - 信号量基于操作系统的 PV 操作，程序对信号量的操作都是原子操作
+  Shared memory：指两个或多个进程共享一个给定的存储区
+    - 共享内存是最快的一种 IPC，因为进程是直接对内存进行存取
+    - 因为多个进程可以同时操作，所以需要进行同步
+  ```
+
+* IPC 的 lock design
+
+  * shared memory + lock design
+  * file lock
+  * lock server + signal
 
 * Cooperating process
 
@@ -925,9 +991,13 @@ Fork：copyuvm
 
   <img src="Pictures/Operating_System/1557212448931.png" style="zoom:45%"   />
 
-*  
+*   
+
+
 
 ------
+
+
 
 #### 第七讲 Exception
 
@@ -1007,10 +1077,16 @@ Fork：copyuvm
   * t通过iret指令：需要恢复上下文，从kernel切回user mode，继续执行用户程序
   
     <img src="Pictures/Operating_System/1558168902842.png" style="zoom:35%"   />
+  
+*  
+
+
 
 ------
 
-### 第八讲 Interrupt
+
+
+#### 第八讲 Interrupt
 
 * Intel 中的不同术语
   * Interrupt 异步的，设备生成
@@ -1212,15 +1288,18 @@ Fork：copyuvm
   * 通常为了快，使用汇编写的；然后调用device driver中的合适的interrupt handler (用C写的)
   * **IRQ在上半部分通常是被屏蔽的**
   * 不要试图在top half中做太多工作，因为IRQ是被屏蔽的，让可能会让stack涨的太大；通常会在下半部分对request进行一个派对，并为延迟处理设置一个flag
+  
 * Top Half 如何找到handler
   * 在现代的硬件设备中，多个IO设备可以共享一个IRQ，因此可以共享interrupt vector
   * 多个ISR可以和一个vector相关联
   * Each device's ISR for that IRQ is called
   * Device determines whether IRQ is for it
+  
 * Bottom Half : Do it Later !
   * 中断 (与异常相反) 不与特定instruction相关联，也不和process相关联
   * 当前运行的process，在中断发生的时候，和这个中断没有任何关系
   * **interrupt handler不能sleep ！**
+  
 * interrupt handler不能sleep 所意味的事情
   * 不能 sleep 或 做任何可能导致sleep的事
   * 不能应用 current
@@ -1228,12 +1307,14 @@ Fork：copyuvm
   * 不能调用schedule
   * 不能执行down的信号量操作，但可以使用up
   * 不能和user space进行数据通信，比如copy_to_user, copy_from_user
+  
 * Interrupt stack
   * 中断发生时使用的stack是哪一个
     * exception，当前process的kernel stack
     * interrupt，hard IRQ stack，1 per processor
     * softirqs：soft IRQ stack，1 per processor
   * 这些stack都会在boot的时候被kernel设置进IDT和TSS
+  
 * Softirqs
   * 静态分配:在内核编译时指定
   * 优先级从高到低：
@@ -1243,6 +1324,7 @@ Fork：copyuvm
     * Network reception 网络接受，
     * Block devices 块设备，
     * Regular tasklets 正则微线程
+  
 * Softirqs 在什么时候运行
   * 在kernel 的一些行为之后：system call后，exception后，interrupt后 (上半部分，IRQs，定时器intr)，当scheduler运行ksoftirqs的时候
   * 软中断可以在多个CPU上同时执行，代码必须是可重入的
@@ -1258,6 +1340,7 @@ Fork：copyuvm
   * tasklets可以在多个cpu上同时运行，同一个tasklet只能在一个cpu上运行
   * tasklets的问题
     * 比较难get right，要谨慎提防sleep，比系统中的其他task有更高的优先级，如果编码不好会产生无法控制的延迟，正在进行是否要消除tasklet的讨论
+  
 * Work Queue
   * 始终在kernel stack运行，是由scheduler调度的
   * softirqs和tasklets运行在中断上下文，work queue在伪进程上下文
@@ -1265,6 +1348,7 @@ Fork：copyuvm
   * 因为这是一个伪流程上下文所以可以sleep
     * work queue可以被多个device共享，因此sleep会延迟队列中的其他工作
   * work queue是kernel-only的，没有user mode跟它相关联，所以不要尝试把数据复制到user space
+  
 * Kernel threads
   
   * 总是在kernel mode运行，也没有user context
@@ -1274,10 +1358,18 @@ Fork：copyuvm
 * 为什么interrupt handler不能sleep：防止死锁出现
 
   <img src="Pictures/Operating_System/1558247436538.png" style="zoom:70%"   />
+  
+*  
+
+
 
 ------
 
-### 第九讲 System call
+
+
+#### 第九讲 System call
+
+##### System calls
 
 * 部分system call 列表
 
@@ -1287,31 +1379,38 @@ Fork：copyuvm
 
   * Linux可以使用ptrace 和strace来跟踪syscall，每次执行syscall时都会打印输出，包括参数和返回代码
 
+  * 使用ptrace()系统调用：也用于调试器(断点、单步等)
+
+  * 使用“strace”命令(man strace获取信息)
+
+  * 可以使用“ltrace”命令跟踪库调用
+
     <img src="Pictures/Operating_System/1558248471000.png" style="zoom:45%"   />
 
-*  调用syscall的方法
-  * 从代码角度来看：application层通过library层，调用lib函数；application层直接写汇编 “int 0x80”
-  * 从机器角度来看：int 0x80；SYSENTER；SYSCALL
-  
+##### Make a sytem call
+
+*  **调用syscall的方法**
+  * **从代码角度来看：application层通过library层，调用lib函数；application层直接写汇编 “int 0x80”**
+  * **从机器角度来看：int 0x80；SYSENTER；SYSCALL**
 * 库函数和syscall 的返回代码
   
   * 库调用在出错时返回-1，并在全局变量errno中放置特定的错误代码，系统调用返回特定的负值来指示 %eax 中存放的错误
-  
-* 传递syscall的参数
+* 传递syscall需要的参数
   * 第一个参数总是 syscall #
   * Linux允许最多6个附加参数，ebx，ecx，edx，esi，edi，ebp
   * 需要更多参数的syscall会把剩下的参数打包在一个struct中，并将该struct的指针作为第六个参数传递
   * Problem，必须要验证指针的合法性，可能是invalid的，如果NULL就会导致OS崩溃
-  
 * 如何验证user指针的合法性
   * 做一次彻底的检查cost太大了，要完全检查指针是否处于调用进程的所有有效区域之内
   * 解决方法是做一个不完全的检查：Linux对地址指针做一个简单的检查，并且只确定指针变量是否在用户内存的最大可能范围内(在用户空间里就可以了)，即使指针值通过此检查，特定值仍然可能无效
   * 在内核代码中取消对无效指针的引用通常会被解释为内核bug，并在控制台上生成Oops消息，然后杀死出错的进程。Linux做了一些非常复杂的事情来避免这种情况
 
 
-* 处理user pointer带来的fault
+* handle user pointer带来的fault
 
-  * 内核必须要用一段奇怪的代码 (paranoid) 来访问用户指针，比如 copy_from_user ，kernel知道哪些地址会抛出无效的内存访问异常
+  * **内核必须要用一段奇怪的代码 (paranoid) 来访问用户指针，比如 copy_from_user** ，kernel知道哪些地址会抛出无效的内存访问异常
+
+    * 可以理解为kernel有点被害妄想（不过这是应该的
 
   * 当page fault的时候，kernel的page fault handler会检查出错的eip
 
@@ -1331,20 +1430,22 @@ Fork：copyuvm
 
 * System call的执行流
 
-  * 找到IDT中对应的第n个描述符
-  * 检查%cs中的CPL是否 <= DPL，DPL是描述符中的特权级别，0是kernel，3是user
-  * 将%esp和%ss保存在cpu内置的寄存器中，仅当目标段选择器的PL < CPL时才这样做
-  * 从task segment descriptor加载%ss和%esp (TSS结构)
-  * 按照%ss，%esp，%eflags，%cs，%eip的顺序，push到kernel stack上
-  * 清除%eflags的一些位，IF和TF吧
-  * 将%cs和%eip设为描述符中的值
+  ```
+  - 找到IDT中对应的第n个描述符
+  - 检查%cs中的CPL是否 <= DPL，DPL是描述符中的特权级别，0是kernel，3是user
+  - 将%esp和%ss保存在cpu内置的寄存器中，仅当目标段选择器的PL < CPL时才这样做
+  - 从task segment descriptor加载%ss和%esp (TSS结构)
+  - 按照%ss，%esp，%eflags，%cs，%eip的顺序，push到kernel stack上
+  - 清除%eflags的一些位，IF和TF吧
+  - 将%cs和%eip设为描述符中的值
+  ```
 
 ##### VDSO 
 
 ##### Virtual Dynamic Shared Object 虚拟动态共享对象
 
 * VDSO的动机
-  * syscall造成的延迟不能忽略 (negligible)，比如说在syscall gettimeoftoday中，一点延迟的影响就特别大
+  * **syscall造成的延迟不能忽略 (negligible)**，比如说在syscall gettimeoftoday中，一点延迟的影响就特别大
   * 如何降低syscall的延迟？大部分的时间都用来save/restore上下文，如果没有mode switch，就不需要save/restore状态了
 * gettimeofday的具体实现
   * 函数由kernel定义，在编译过程中作为kernel代码的一部分
@@ -1360,7 +1461,7 @@ Fork：copyuvm
 
 * FLEX-SC的动机
 
-  * 如何进一步降低syscall的延迟？延迟的来源主要在于state switch，要save/restore和check privilege，还有一些cache pollution
+  * **如何进一步降低syscall的延迟？**延迟的来源主要在于state switch，要save/restore和check privilege，还有一些cache pollution
 
 * Flexible System Call
 
@@ -1374,23 +1475,71 @@ Fork：copyuvm
 
     <img src="Pictures/Operating_System/1558253754026.png" style="zoom:40%"   />
 
+
+##### Summary
+
+* system call 和 function call 的却别
+
+  * system call 麻烦的多，要trap、switch mode
+  * 还有State saving/restoring, changing stack, checking address
+
+* “Int 0x80”是不够的
+
+  * 新指令可以降低延迟：SYSENTER/SYSEXIT 和 SYSCALL/SYSRET
+  * vDSO用于减少trap
+  * FlexSC可以进一步减少multi-core造成的trap
+
+* cross-mode calls：ProxOS
+
+  * 两个vm，一个可信，另一个不可信
+
+  * 将不受信任的syscall重定向到不受信任的vm
+
+  * mode switch的开销可能会很高!
+
+  * 还可以尝试一下 nested virtualization
+
+    <img src="Pictures/Operating_System/1560837967085.png" style="zoom:50%"   />
+
+* 针对 cross-mode call的优化
+
+  * 使用共享内存(如FlexSC)
+    * Make synchronous calls to asynchronous ones
+    * 需要更改应用程序逻辑
+  * 给world-call添加一条新指令
+    * world只是一种mode(包括VM、内核/用户等)
+    * 保护protection与管理managing分离
+      * Configure by software (managing)
+      * Check by hardware (protection)
+
 *  
+
+
 
 ------
 
-### 第十讲 IO
+
+
+#### 第十讲 I/O
+
+##### I/O
 
 * 为什么需要 IO 子系统
   * device的种类特别多，每一种都不同，我们需要为他们设计标准化的设备接口
   * device都是 unreliable 的，会产生媒体错误和传输错误，我们要想办法让他们可靠
   * device都是 unpredictable 的，有的时候还比较 slow，我们要有合适的办法去管理他们
+  
 * IO 子系统的设计目标
   * 为不同种类的device提供统一的接口
   * 提供IO硬加的抽象层，用于管理和硬件的交互，隐藏硬件和操作的具体细节
 
-* 三种类型的Device Interface
+* **三种类型的Device Interface**
 
-  * Character devices；Block devices；Network devices
+  * Character devices
+
+  * Block devices
+
+  * Network devices
 
     <img src="Pictures/Operating_System/1558272791435.png" style="zoom:40%"   />
 
@@ -1400,7 +1549,7 @@ Fork：copyuvm
   * 顺序访问，每次一个字符；经常使用开放的文件接口
   * IO command：get()，put()
 
-* xv6 中的IO指令：inb(port)，outb(port, data)
+  * xv6 中的IO指令：inb(port)，outb(port, data)
 
 * Block Device 块设备
 
@@ -1412,7 +1561,7 @@ Fork：copyuvm
   * 比如：以太网，无线，蓝牙
   * 不同于block/character device，network device是有自己的接口的，不需要用文件接口；它提供特殊的网络接口，支持各种网络协议，可以收发网络数据包
 
-* user 如何处理device带来的timing问题
+* user 如何处理device带来的timing问题，How Does User Deal with Timing?
 
   * Blocking IO：Wait
 
@@ -1426,11 +1575,13 @@ Fork：copyuvm
 
     * read/write都会访问用户缓冲区的指针然后立即返回，稍后内核将填充缓冲区/接受数据，然后通知user
 
-  * 同步和异步IO
+* 同步和异步IO，Synchronous and Asynchronous I/O
 
-    <img src="Pictures/Operating_System/1558273730595.png" style="zoom:40%"   />
-
+  <img src="Pictures/Operating_System/1558273730595.png" style="zoom:40%"   />
+  
 * DMA transfer的步骤
+
+  <img src="Pictures/Operating_System/1560838449074.png" style="zoom:50%"   />
 
 * DMA响应、DMA传输、DMA结束4个步骤
 
@@ -1440,34 +1591,61 @@ Fork：copyuvm
   * 结束：当完成规定的成批数据传送后，DMA控制器即释放总线控制权，并向I/O接口发出结束信号。当I/O接口收到结束信号后，一方面停 止I/O设备的工作，另一方面向CPU提出中断请求，使CPU从不介入的状态解脱，并执行一段检查本次DMA传输操作正确性的代码。最后，带着本次操作结果及状态继续执行原来的程序。
   * 由此可见，**DMA传输方式无需CPU直接控制传输，也没有中断处理方式那样保留现场和恢复现场的过程**，通过硬件为RAM与I/O设备开辟一条直接传送数据的通路，使CPU的效率大为提高。
 
-* IO设备通知 (notifying) OS的方式
+* IO Device通知 (notifying) OS的方式
   * OS必须要被notify的情况：IO设备完成操作或出现错误
-  * 两种notify method：polling，interrupt-driven
+  * **两种notify method：**
+    * **polling**
+    * **interrupt-driven**
   * polling轮询：IO设备将完成/错误的信息放入device-specific的状态寄存器中，OS定期检查状态寄存器
     * 优点：低开销
     * 缺点：如有不频繁或者不可预测的IO操作，可能要浪费很多轮询周期
-  * Interrupt-driven 中断驱动：优点：能很好地处理不可预知的事件；缺点：中断的开销相对较高
+  
+* Interrupt-driven 中断驱动：
+
+  * 优点：能很好地处理不可预知的事件；
+  * 缺点：中断的开销相对较高
   * 有的设备融合了polling和interrupt，高带宽网络对第一个传入的包interrupt，之后就一直polling，知道hardware为空
+
+* A kernel I/O structure
+
+  <img src="Pictures/Operating_System/1560838555547.png" style="zoom:50%"   />
+
 * Device Driver
   * 定义：内核中与device直接交互的device-specific的代码
     * 支持标准的内部接口
     * 相同的kernel IO系统可以轻松地与不同的device driver交互
     * 使用 ioctl() syscall，支持特定于device的特殊配置
 
-* IDE 端口
+* Life cycle of an I/O request
 
-  * 端口 0x1F0-0x1F7
+  <img src="Pictures/Operating_System/1560838610824.png" style="zoom:70%"   />
+
+* Xv6 disk driver design & Implementation
+
+  * 设计概述：支持IDE驱动程序
+  * 使用I/O instruction而不是MMIO
+  * 异步I/O模型
+    * 使用一个简单的I/O请求队列
+    * 使用中断来通知可用的数据
+
+* IDE specification
+
+  * Xv6使用的是相对较旧的IDE规范，并不是PCI negotiate
+  * IDE 端口：端口 0x1F0-0x1F7
     * 0x1f0: write/read port
     * 0x1f2: number of sectors 
     * 0x1f3-0x1f5: sector number
     * 0x1f6: diskno and sector number
     * 0x1f7: command registers, status bit
-
   * 端口 0x3F6 interrupt control line   
 
-*  
+*   
+
+
 
 ------
+
+
 
 #### 第十一讲 File System：xv6 ~ ext4
 
@@ -1475,16 +1653,25 @@ Fork：copyuvm
   * 现实中存在的问题：OS可能挂载了不同底层文件系统的多个分区，如果进程针对不同的文件系统还要提供不同的API的话就很麻烦
   * Linux使用虚拟文件系统接口（VFS)，向进程暴露POSIX的api，将请求转发到低层文件系统特定的驱动程序；windows的也差不多
   * 文件系统有ext2-4，NTFS，FAT32等
-* xv6 FS design
-  * xv6的文件系统实现了最低限度的Unix fs interface，包括`superblock，inode，dentry`
-  * 缺点：设计不是很注重文件系统的layout，没有磁盘调度，cache策略是write-through，简化了磁盘数据一致性的麻烦，但性能不好
-  * xv6的block size是512 byte
 
+##### xv6 File system
+
+* xv6 FS design
+  
+  * xv6的文件系统实现了最低限度的Unix fs interface，**包括superblock，inode，dentry**
+  * 缺点：
+  * 设计不是很注重文件系统的layout
+    * 没有磁盘调度
+    * cache策略是write-through，虽然简化了磁盘数据一致性的麻烦，但性能不好
+  * xv6的block size是512 byte
+  
 * xv6 FS disk layout
+
+  * 这个就跟CSE lab的一样
 
   * block 0是不用的，block 1是superblock，block 2之后分别是inode，bitmap，data block和log block
 
-    <img src="Pictures/Operating_System/1560002634798.png" style="zoom:45%"   />
+    <img src="Pictures/Operating_System/1560002634798.png" style="zoom:50%"   />
 
 * 概述：Free-space list bit vector
 
@@ -1510,16 +1697,36 @@ Fork：copyuvm
   * 目录 directory，是特殊的文件，包含多个dirent结构
 
     * dirent是目录内的文件，field有 inode-num和filename
+  
+* **xv6使用日志记录所有数据，然后将它们写入磁盘上的实际位置**
 
-##### EXT File system
+  ```
+  在xv6中创建一个有两个block的新文件，要考虑日志
+  brief process：journal data/meta，journal commit，home data/meta，journal complete
+  
+  basic module：
+  i. Write to inode table block.
+  ii. Write to inode bitmap block.
+  iii. Write to block bitmap block 
+  iv. Write to the data block of the parent directory. 
+  v. Write to the two data blocks.
+  
+  total process
+  i. Step 1-5:  Write all the data/metadata to journal.
+  ii. Step 6:  Write to journal to mark this transaction as “committed”.
+  iii. Step 7-11:  Write all the data/metadata to their “should-be-places”.
+  iv. Step 12: Write to journal to mark this transaction as “completed”
+  ```
+
+##### Ext 2 File system
 
 * inode 的优点
   * 优化了有很多小文件的文件系统的性能：每个inode都可以直接指向48KB的数，4MB文件只需要一个layer
   * 更快的文件访问：metadata的局部性更好，随机访问的时间会更少，因为都放在一起，不需要遍历FAT那样的链式结构
   * 更容易的自由空间管理：bitmap可以缓存在内存中，以便快速访问；inode和date space可以分开处理
 
-* ext file system 概况
-  * Ext文件系统是使用inode的：inode是数据块的imbalaneced tree，针对小文件很多这个常见情况进行了优化
+* ext file system 概况 (这应该是ext1)
+  * **Ext文件系统是使用inode的**：inode是数据块的imbalaneced tree，针对小文件很多这个常见情况进行了优化
   * 问题：ext的locality较差：inode与它们对应的数据离得很远，这将导致长时间的磁盘搜索
   * 问题：ext容易出现碎片，ext为新数据选择第一个可用块，并不尝试保持文件块的连续
 
@@ -1527,7 +1734,7 @@ Fork：copyuvm
 
   * FFS的主要贡献：又花了spinning disk的性能
   * 发现：进程倾向于访问相同目录中的文件，有空间局部性
-  * 关键思想：将directory groups和它的文件都放在cylinder group中，这个设计引入到了ext2中，称为block group
+  * **关键思想：将directory groups和它的文件都放在cylinder group中，这个设计引入到了ext2中，称为block group**
 
 * block group
 
@@ -1539,7 +1746,7 @@ Fork：copyuvm
 
     <img src="Pictures/Operating_System/1560003578547.png" style="zoom:45%"   />
 
-* ext2的分配策略：ext2尝试将相关文件和目录保存在同一个block group中
+* **ext2的分配策略：ext2尝试将相关文件和目录保存在同一个block group中**
 
 * ext2的优点和缺点
   * 优点：ext2支持所有其他ext的特性，甚至还能做的很好，因为在空间局部性上做的很ok
@@ -1548,6 +1755,8 @@ Fork：copyuvm
 * 数据块寻址的文件大小上限
 
   <img src="Pictures/Operating_System/1560003810728.png" style="zoom:40%"   />
+
+##### Ext 4 file system
 
 * Extent 概述
 
@@ -1578,25 +1787,38 @@ Fork：copyuvm
   * b树是一种平衡树，它为磁盘上的存储进行了优化，项目以块的顺序存储
 
 * ext4的优点和缺点
-  * ext4的两个改变：使用extent，目录存储用b树
+  * **ext4的两个改变：使用extent，目录存储用b树**
   * 优点：ext4(和NTFS)支持所有基本的文件系统功能，改进了ext3 block group的性能，extent和b树目录文件性能很好
   * 缺点：下一代文件系统有更好的特性，写时复制语义 copy-on-write semantics (btrfs和ZFS)
   
-* 
+*  
+
+
 
 ------
+
+
 
 #### 第十二讲 Crash Consistency
 
 ##### File System Durability & Crash Recovery
 
 * Durability：耐用性
+
 * 为什么 fs crash recovery比较困难
+  
   * 这里举了一个文件系统crash的例子
+  
 * Terms for properties of fs ops 一些术语
   * durable/persistence，操作效果是可见的，a和b都是可见的
   * atomic，所有操作步骤可见或不可见；要么a和b是可见的，要么不可见
   * ordered，操作的顺序是保证的，如果b是可见的，那么a也是可见的
+  
+* ##### crash consistency 的三种常用技术
+
+  * **journaling**
+  * **soft-update**
+  * **synchronous meta-data update + fsck**
 
 ##### Sync Metadata Update + fsck
 
@@ -1643,11 +1865,19 @@ Fork：copyuvm
 
 
 * Barrier: Flush the Disk
-  * 磁盘的write buffer，磁盘将通知OS写入完成时，可能只是简单地放在write buffer里，数据没有在磁盘上，不durable，不ordered
+  
+  * write buffer可能导致的crash consistency问题
+  
+    * 磁盘的write buffer，磁盘将通知OS写入完成时，可能只是简单地放在write buffer里，数据没有在磁盘上，不durable，不ordered
+    * write buffer可以改变数据实际放在disk的顺序，从而打乱操作系统维护的顺序
   * 一种方案是禁用buffer，另一种方案是flush，强制将数据写入磁盘媒体
-*  
+*   
+
+
 
 ------
+
+
 
 #### 第十三讲 Journaling and ext3
 
@@ -1657,6 +1887,8 @@ Fork：copyuvm
   * 日志(ext 3/4)、xv6-rev6和以下版本：在进行实际的元数据更新之前先写log，崩溃后，从日志中恢复
   * 软更新soft update(在FFS上修改FreeBSD fs)
 
+##### Journaling file system
+
 * JFS：Journaling FS
   * 主要功能：加速崩溃后的恢复时间；大磁盘上的fsck可能非常慢，“消除崩溃后文件系统恢复时间非常长”
   * 使用JFS，只需在崩溃后从最后一个checkpoint重新阅读日志
@@ -1664,29 +1896,35 @@ Fork：copyuvm
 * JFS 和 log-structured file system，LFS 论文读过
   * LFS只包含一个日志，所有内容都append到末尾
   * LFS指定了数据如何存储在磁盘上，JFS没有规定数据如何存储在磁盘上（是指layout吗）
+    * 大概意思就是LFS有将log、data都存在一起，每次update都append在后面，不断往后写像一个圈一样的机制，这叫“规定了数据如何存储”，而JFS没有这样的机制
 * JFS的工作原理
-  * 原理一：每一次disk update都看做是一个事务(原子更新)
-    * 将新数据写入磁盘(日志)；在update commit之前，更新都不是最终的
-  * 原理二：每一次block write的commit都是原子的（通过log保证）
-    * 提交块是磁盘上的一个数据块；不一定要刷新到磁盘!
-
+  * **原理一：每一次disk update都看做是一个事务(原子更新)**
+    * 将新数据写入磁盘(日志)；
+    * 在update commit之前，更新都不是最终的
+  * **原理二：每一次block write的commit都是原子的（通过log保证）**
+  * 提交块是磁盘上的一个数据块；
+    * 不一定要flush到磁盘!
+  
 * 如何从日志中获取数据呢
   * commit之后，新的数据就会出现在日志中
     * 它需要被写回磁盘上的home location（先写log再写data）
     * 在将数据重新同步到磁盘之前，无法回收该日志空间（保证原子性）
-* checkpoint
+* checkpoint，finish a commit
   * 关闭transaction，所有后续的文件系统操作都将进入另一个事务
   * 将事务刷新到磁盘(日志)，锁定缓冲区
   * 将所有内容刷新到日志后，更新**journal header block**
   * 只有在缓冲区同步到磁盘之后，才能在日志中解开缓冲区的锁定（缓冲区中是新更新的log部分）
   * 在日志中释放空间（相当于打了一个checkpoint）
+
+##### Ext 3 file system
+
 * **ext3 和 JFS 的对比**
   
   * ext3相对ext2的一个主要改变就是增加了log，ext2是以前类似于xv6的无日志文件系统
-  * 两者在两个独立的层
+  * 两者在两个独立的层 two separate layers
     * /fs/ext3，只是添加了事务的文件系统；/fs/jdb，记录日志的stuff(JFS)
   * **ext3根据需要调用JFS**：启动/停止事务，在unclean reboot（通常是crash发生了）之后请求日志恢复
-* 做复合事务：具有多个更新的事务
+  * 做复合事务compound transactions：具有多个更新的事务
   
 * Ext3 Structures
   * 在内存中：write-back block cache，per-transaction info
@@ -1694,22 +1932,26 @@ Fork：copyuvm
 
 * ext3的log中有什么
   * log superblock，记录starting offset and starting seq 
-  * descriptor blocks
+  * descriptor blocks：magic，seq，block
   * data block
   * commit block
   * 大概的结构就是：|super: offset+seq #|... |Descriptor 4|...blocks...|Commit 4| |Descriptor 5|... 
 
-* ext3 如果实现比较好的性能
+* ext3 提升性能的两种方式
 
-  * 方法一：批处理，每隔几秒提交一次，而不是在每次系统调用之后，因此每个事务都包含许多系统调用
+  * **方法一：批处理 batching**，每隔几秒提交一次，而不是在每次系统调用之后，因此每个事务都包含许多系统调用
   * 解释一：为什么批处理有助于性能?
     * 将固定事务成本分摊到多个事务中，包括描述符和data block
     * “写吸收” write absorbtion，批处理中的许多系统调用其实修改的都是相同的块，批处理就一起写了，省了一部分写(i-node、bitmap、dirent)
     * 更好的并发性，等待前一个系统调用完成了再继续做别的事，这样的情况会少一点
-  * 方法二：Ext3允许并发事务和系统调用
+  * **方法二：Ext3允许并发事务和系统调用**
     * 和批处理有一点细微的区别
-    * 可能同时有多个事务状态：有些已经完全提交到磁盘日志中，有些人日志写入才做了一部分，还比如有的刚刚接收新系统调用的“open”
+    * 可能同时有多个事务状态：
+      * 有些已经完全提交到磁盘日志中
+      * 有些讲对 log 的写入作为 commit 的一部分
+      * 还比如有的刚刚接收新系统调用的 “open”
     * ext3每隔几秒提交一次当前事务 (或者用fsync())
+  * 方法三：还使checkpointing procedure异步，减少latency
 
 * 一个事务完全提交到disk的整个过程
 
@@ -1735,30 +1977,34 @@ Fork：copyuvm
 * ext3 log体系有没有可能出现因乱序导致的脏读或者更新没读到呢？
   * 看ppt的意思好像是会的
   * 比较重要的一点，commit顺序必须与系统调用读/写状态的顺序一致，不然问题很大（如果顺序不对），Ext3牺牲了一些性能来获得正确性（也没办法吧？）
-*  ext3 log体系允不允许 其他事务T2写T1事务要写的block？
+  
+*  ext3 log体系允不允许 其他事务T2写T1事务要写的block？这样安全吗？
   * ext3 allows T2 to start before T1 finishes committing -- 允许有一定程序的交错
     * T1: |-syscalls-|-commitWrites-|
     * T2:            |-syscalls-|-commitWrites-|
   * 好像有点危险，可能会破坏原子性
   * 解决方案：当T1关闭时，ext3向T1提供block cache的私有副本，T1从缓存的这个快照提交，使用copy-on-write是有效的；当T1提交时，副本允许T2中的系统调用继续进行（？？？）
   * 要点：正确性需要崩溃后+恢复状态，就好像syscalls是按原子顺序执行的一样，Ext3使用各种技巧来允许一些并发
-
+  
 * ext3 log体系什么时候可以重用之前事务使用的log space呢
   * 重用是肯定要有的，因为ext3是circular的
   * 一旦在日志中释放了T1之前的所有事务，并且T1缓存的块都被写到磁盘上的FS中，T1的部分就可以重用（这是一个check条件吧）；好像是有一个指针在维护当前最新的可以被重用的block在哪的
+  
 * ext3 log体系如何应对syscall的时候已经没有足够的空间的呢
   * 场景：假设我们把syscall的block添加到T2事务，到一半的时候，意识到T2不适合放在磁盘上（太大了之类的），我们不能提交T2，因为系统调用还没有完成；我们也不能退出这个系统，无法撤消系统扫描，T2中的其他系统调用程序可能已经阅读了它的修改（问题很大
   * 解决方法：reservation 预留
   * syscall提前声明一下它要用多少log space，不够就算了，panic掉返回一点信息
-
+  
 * ext3的性能测试案例
   * 测试1：在一个目录中创建100个小文件，xv6需要超过10秒(每个系统调用需要很多磁盘写操作)
   * 测试2：重复修改缓存中相同的direntry、inode、bitmap，因为批处理写吸收的存在好像问题不大
   * 测试3：然后提交几个元数据块和100个文件块
+  
 * ext3 crash了以后怎么recovery
   * 第一步，找到日志的开头——第一个non-free的描述符，可能可以根据日志“superblock”中的offset和seq#找
   * 第二步，找到日志的末尾，扫描到坏magic或没有出现预期的seq号，返回到上次提交记录
   * 第三步，replay第一步和第二步框定的所有块通过最后一个完整的事务（就是被crash整崩的那个）
+  
 * Durability of ext3
   * 综述，ext3不像xv6那样立即耐久稳定，
     * creat()返回 -> 可能数据还不在磁盘上，这时候crash事务就被撤销
@@ -1766,22 +2012,46 @@ Fork：copyuvm
     * 如果在每次系统调用之后都提交ext3，它的性能是否会很好?
       * 会log更多的块，但没有写吸收了
       * 每个系统调用均摊10毫秒，而不是0毫秒
-* Ordered Mode vs Journaled Mode
+  
+* ext 3：Ordered Mode vs Journaled Mode
+  
+  * 这两种都是ext3的模式，所以ext3和 JFS有一种包含关系
   * Journal file content比较慢，每个数据块写两次，写log，写data
+    
     * 那不这样做会更好吗？并没有；log肯定要先写，如果先更新metadata，crash可能会让文件指向带有其他人数据的块
-  * 简单来说，journal mode的写顺序应该是：log meta，log data，home meta，不知道什么时候home data **（这个可能写错了，等我之后看笔记check一下）**
+  * **journal mode的写顺序应该是：journal data，journal meta，journal commit，home data，home meta**
   * ext3 ordered mode
-    * 不要将file content写入日志
-  * 简单来说，ordered mode 的写顺序是log meta，home meta，不知道什么时候home data，log data省略了
+    
+    * 不要将file content写入日志，就是省掉了jou
+  * **ordered mode的写顺序应该是：home data，journal meta，journal commit，home meta**
   * 这样当然也是可能带来一些问题的
-    * 问题：rmdir, re-use block for write() to some file, crash before rmdir or write committed
+    * 问题：
+    
+      * rmdir, re-use block for write() to some file, crash before rmdir or write committed
+    
+      * rmdir, commit, re-use block in file, ordered file write, commit, 
+    
+        crash, replay rmdir 
+    
+    * 分析：我觉得这两个本质上是一样的，都是rmdir再reuse再crash，基于ordered mode的写入顺序，在crash的时候会出现这样的情况 (这里说的data/meta都是reuse的内容)：“newfile home data”还在内存中，要等home meta后再慢慢写，“journal meta/commit”已经写入磁盘，可能“home meta”进行了一部分，crash之后发现journal commit了但journal meta没有删除就会判断这里有问题，会重做journal meta，但home data已经丢了也不会重做，这时候的目录可能只有“.”和“..”
+    
     * 解决：re-use 超危险，一定要syscall commit 以后才行，别还没commit就自说自话开始reuse了
-* checksum
-  * ext4相对于ext3的一点优化
+  
+* **ext3提供了write-back mode , ordered mode , journal mode三种模式**
+
+
+  * journal mode：在把数据写入磁盘的对应位置前，会把所有data/meta记录在journal中；提供最高级别的data-consistency，但很浪费设备带宽，在大多数情况下，是3种mode中性能最差的
+
+    * 但journal mode在使用机械盘(mechanical hard disks)的时候性能会提升；在有大量随机的小文件disk-write时，journal mode将它们都记录在log后，相当于把workload转换成了一个大的顺序写，这种情况下性能优化会比带宽浪费更明显
+  * ordered mode：只在journal中记录meta，但强制要求home data要在journal meta之前完成；保证data和meta之间的一致性，在大多数情况下，性能比journal-mode好
+  * write-back mode：只在journal中记录meta，并不在data和meta的写之间做任何约束；只能保证meta的一致性，在大多数情况下性能最好
+
+* ext4 和 ext3 比较
+  * checksum
   * 问题：在编写提交块之前，事务的日志块必须位于磁盘上，ext3在启动提交块写入之前等待磁盘显示“done”；为了提高性能，磁盘通常有write caches和re-order writes
   * 解决：提交块包含所有数据块的校验和
+  
 * xv6 和 ext3 比较
-  * 咦这个还没比过吗
   * ext3修复了xv6日志的许多性能问题
     * 一次只有一个事务，现在可以并发
     * 同步写入磁盘日志，但是5秒窗口
@@ -1796,12 +2066,17 @@ Fork：copyuvm
   * 动态增长的image size，snapshot，de-duplication
   * 这些特性可以显著地简化VM部署、备份等任务
   * 虚拟磁盘在主要的云基础设施中得到了广泛的应用，例如OpenStack
+*  
+
+
 
 ------
 
+
+
 #### 第十四讲 FS：FAT32 & NTFS
 
-##### FAT File system
+##### FAT File system (FAT-16, FAT-32, exFAT)
 
 * cluster 和 sector
 
@@ -1856,20 +2131,28 @@ Fork：copyuvm
 
 * ExFAT 的 file name search
   
-* 首先按照hash搜索名称，通过比较哈希值来搜索目录中的每条记录；当找到匹配项时，将对文件名进行比较，以确保在发生冲突时找到了正确的文件
   
+  * 首先按照hash搜索名称，通过比较哈希值来搜索目录中的每条记录；当找到匹配项时，将对文件名进行比较，以确保在发生冲突时找到了正确的文件
+  
+* FAT-32 相对于 FAT-16 的改进
+
+
+  * 同FAT16相比FAT32最大的优点是可以支持的磁盘大小达到2TB（2047GB），但是不能支持小于512MB的分区
+  * 由于采用了更小的簇，FAT32文件系统可以更有效率地保存信息。如两个分区大小都为2GB，一个分区采用了FAT16文件系统，另一个分区采用了FAT32文件系统。采用FAT16的分区的簇大小为32KB，而FAT32分区的簇只有4KB的大小
+  * FAT32文件系统可以重新定位根目录和使用FAT的备份副本。另外FAT32分区的启动记录被包含在一个含有关键数据的结构中，减少了计算机系统崩溃的可能性
+
 * FAT的优点和缺点
   * FAT的优点：
     * 目录和文件的层次树 Hierarchical tree
     * 可变长度的文件
     * 基本文件和目录元数据
   * FAT的缺点：
-    * FAT32最多支持2TB磁盘（还好吧？不过FAT是u盘用的多）
+    * FAT32最多支持2TB磁盘
     * 定位free chunk需要扫描整个FAT（这个太坑了
     * 容易出现内部和外部碎片，大文件的时候
     * 因为链式结构，读需要大量的随机搜索
 
-##### NTFS
+##### NTFS (New Technology File System)
 
 * NTFS Cluster
   * cluster：smallest allocated disk space to hold file，跟上面FAT一样的定义
@@ -1927,8 +2210,9 @@ Fork：copyuvm
 
 ##### MBR & MOUNT
 
-* Master Boot Record：MBR
-  * 我印象中是一个磁盘分区的时候要用到的东西
+* **Master Boot Record：MBR**
+  
+  * 印象中是一个磁盘分区的时候要用到的东西
   
   <img src="Pictures/Operating_System/1560081984823.png" style="zoom:40%"   />
   
@@ -1943,8 +2227,14 @@ Fork：copyuvm
 * 为什么要“安全地弹出”一个设备?
   * 刷新缓存到该设备的写入
   * 干净地卸载该设备上的文件系统
+  
+*  
+
+
 
 ------
+
+
 
 #### 第十五讲 File System Flash FS
 
@@ -1969,7 +2259,7 @@ Fork：copyuvm
 
 * 定义：flash file system
 
-  * Flash文件系统是为在闪存设备上存储文件而设计的；传统的文件系统不能在flash文件系统上使用吗
+  * Flash文件系统是为在闪存设备上存储文件而设计的；传统的文件系统不能在flash文件系统上使用
 
 * 闪存盘和普通磁盘的区别
   * flash disk organization：A chip (e.g. 1GB) => blocks (e.g. 512KB) =>    pages (e.g. 4KB) => cells（有点像体系结构那个）
@@ -1978,18 +2268,22 @@ Fork：copyuvm
 
   * flash cell：是一个浮动栅晶体管，分为SLC和MLC
   
-* 浮栅上的电子数决定了阈值电压V，阈值电压表示逻辑位值(0或1)
+    * NAND flash cell
+    * 浮栅上的电子数决定了阈值电压V，阈值电压表示逻辑位值(0或1)
   
-* SLC和MLC flash的区别：SLC一个cell存一个bit，性能好，耐久，容量小；MLC一个cell存两个bit，性能差，不耐久，容量大
+* SLC和MLC flash的区别：
+  
+  * SLC一个cell存一个bit，性能好，耐久，容量小；
+  * MLC一个cell存两个bit，性能差，不耐久，容量大
   
 * 闪存盘的特点
 
-  * 不对称的读写，以及擦除erase特性
+  * **不对称的读写和擦除**
     * 读/写的unit是page，8-16KB
     * erase的unit的block，4-8MB
-  * 物理限制，每次write都要erase一块block，erase-before-write的限制，以及每个block可以被erase的次数应该是有限的
-  * 随机存取 random access：优化磁盘文件系统，尽可能避免磁盘查找；Flash设备没有机械盘那个寻道时间
-  * wear leaving，当一个块被反复erase时，闪存设备就会磨损；所以写的block要设计的比较均匀
+  * **物理限制，每次write都要erase一块block**，erase-before-write的限制，以及每个block可以被erase的次数应该是有限的
+  * **随机存取 random access**：优化磁盘文件系统，尽可能避免磁盘查找；Flash设备没有机械盘那个寻道时间
+  * **wear leaving**，当一个块被反复erase时，闪存设备就会磨损；所以写的block要设计的比较均匀
   * Heterogeneous cells：指MLC和SLC两种cell
 
 * 用flash进行file storage 需要注意什么
@@ -2008,9 +2302,9 @@ Fork：copyuvm
 
   <img src="Pictures/Operating_System/1560126923254.png" style="zoom:45%"   />
 
-  * flash manager：管理不同的cell
-  * performance manager：利用I/O特性，实现高性能、高容量
-  * wear manager：保证合理的使用寿命，均匀分布erase
+  * **flash manager：管理不同的cell**
+  * **performance manager：利用I/O特性，实现高性能、高容量**
+  * **wear manager：保证合理的使用寿命，均匀分布erase**
 
 * 架构：flash manager
 
@@ -2069,7 +2363,10 @@ Fork：copyuvm
 
 * LFS 概述
 
-  * key idea：buffer内存中的所有写操作(包括元数据)，将这些segment按顺序写入磁盘，将磁盘视为循环缓冲区，陈旧的数据不会被覆盖（而是替换）
+  * **key idea：buffer中的所有东西都写入内存(包括元数据)**
+
+    * **将这些segment按顺序写入磁盘**
+    * **将磁盘视为循环缓冲区 circular buffer，陈旧的数据不会被覆盖（而是替换）**
 
   * 优点：所有的写操作都是大的、连续的
 
@@ -2118,7 +2415,7 @@ Fork：copyuvm
 * LFS 总结
   * 这是一个很奇怪的设计，跟传统的文件系统结构都不太一样，不能很好地映射目录层次的关系，不是很清晰；但现在LFS被广泛接受了
   * 回顾一下SSD磁盘对file system的要求，要实现wear leveling，写最好分散一点；要定期进行垃圾收集，防止写放大；LFS看起来是SSD的理想文件系统
-  * write amplification 和 write absorbtion
+  * **辨析，write amplification 和 write absorbtion**
     * write absorbtion 是 ext3的批处理特性
     * write amplification体系结构里提过，写入放大（WA）是闪存和固态硬盘之间相关联的一个属性，因为闪存必须先删除才能改写，在执行这些操作的时候，移动（或重写）用户数 据和元数据(metadata)不止一次。这些多次的操作，不但增加了写入数据量，减少了SSD的使用寿命，而且还吃光了闪存的带宽（间接地影响了随机写 入性能）
 
@@ -2127,8 +2424,14 @@ Fork：copyuvm
   * 更新后的数据被写入磁盘上的空空间，而不是覆盖原始数据，防止数据损坏，提高顺序写性能
   * 由LFS开创，现在用于ZFS和btrfs；btrfs可能是Linux中的下一个默认文件系统
   * 另外，默认情况下，LFS保存数据的旧副本，旧版本的文件可能有用，例如:意外删除文件
+  
+*  
+
+
 
 ------
+
+
 
 #### 第十六讲 File System GFS
 
@@ -2149,8 +2452,8 @@ Fork：copyuvm
 - GFS的设计假设 design assumption
 
   - 硬件很容易坏掉；文件的容量都很大
-  - 两种类型的读操作：large streaming reads, small random reads，大型流读取，小型随机读取
-  - 一种类型的写操作：large sequential writes (大型顺序写入，但是有很高的并发度，因此更重要的是bandwidth)
+  - **两种类型的读操作：large streaming reads, small random reads**，大型流读取，小型随机读取
+  - **一种类型的写操作：large sequential writes** (大型顺序写入，但是有很高的并发度，因此更重要的是bandwidth)
   - 保证来自多个client的并发写中的原子性
   - 高持续带宽比低延迟更有价值
 
@@ -2217,7 +2520,7 @@ Fork：copyuvm
   - 优点：client和master通信次数会变少；减少master上存储的metadata数量；由于客户机很可能对给定块执行许多操作，因此保持到chunkserver的持久TCP连接可以减少网络开销
   - chunk和master之间会有heartbeat
 
-- Single master 采用这种设计的原因是什么？
+- **Why Single master 采用这种设计的原因是什么？**
 
   - 可以在master上有global knowledge，因为就一个
   - master不会成为瓶颈，client不会在master这里做读写操作，只是问chunk的location
@@ -2268,12 +2571,20 @@ Fork：copyuvm
   注意:如果其中一个块服务器上的写操作失败，则通知客户机并重试写操作。
   ```
 
-- master operation，职能范围：
+  <img src="Pictures/Operating_System/1560856352840.png" style="zoom:60%"/>
 
-  - replica placement;
-  - creation, re-replication, rebalancing; 
-  - garbage collection; 
-  - stale replica detection
+  <img src="Pictures/Operating_System/1560856360271.png" style="zoom:60%"/>
+
+  <img src="Pictures/Operating_System/1560856371590.png" style="zoom:60%"/>
+
+  <img src="Pictures/Operating_System/1560856377882.png" style="zoom:60%"/>
+
+- **master operation，职能范围：**
+
+  - **replica placement;**
+  - **creation, re-replication, rebalancing;** 
+  - **garbage collection;** 
+  - **stale replica detection**
 
 - Fault tolerance 和 diagnose 诊断
 
@@ -2300,13 +2611,13 @@ Fork：copyuvm
   - 吞吐量很高：
     - 最小化master干涉操作，chunkserver本身发送和接收客户机数据
 
-##### Intro to NFS
+##### Intro to NFS (Network File System)
 
 * 如何访问远端的文件
 
   * ftp，telnet等，都是很明确的访问远程资源的用户定向连接
   * 我们希望这个过程具有更高的透明度，允许用户像访问本地资源一样的访问远程资源
-  * NAS，network attached storage
+  * NAS，Network Attached Storage，这个具体去看体系结构里写的吧
 
 * file service typrs
 
@@ -2343,25 +2654,33 @@ Fork：copyuvm
 * 应对repeat access的方法：cache
   
   * data在很多地方都有replica：server buffer cache，client buffer cache，client disk
+  
 * 实现cache的若干种策略
   * write-through：将数据缓存在客户机上，但将修改发送到服务器
   * delayed writes，write-behind/write-back：数据在本地缓存(注意一致性——其他数据不会看到更新)，定期(立即)更新远程文件，一次批量写入比多次少量写入更有效
   * read-ahead，prefetch：在需要数据之前请求数据块，在实际需要的时候最小化等待
   * write on close，承认我们有会话语义
   * centralized control，跟踪谁在每个节点上打开和缓存了什么，有状态文件系统，signaling traffic
-* NFS，network file system 的设计目标
+  
+* **NFS，network file system 的设计目标**
+  
   * 任何机器都可以是client或server
-  * 必须支持diskless工作站
-  * 必须支持异构系统，因为会有不同的HW, OS，底层文件系统
-  * 访问透明性
+  * 必须支持diskless的工作站
+  * 必须支持异构系统 Heterogeneous system ，因为会有不同的HW, OS，底层文件系统
+  * 访问透明性 Access transparency
   * 从failure中恢复：无状态，UDP，客户端重试
-  * 高性能，使用cache和prefetch
-
-* NFS一些问题的解决
+* 高性能，使用cache和prefetch
+  
+* NFS protocol
   * mount，Request access to exported directory tree
+  
+  <img src="Pictures/Operating_System/1560857039207.png" style="zoom:55%"   />
+  
   * access，Access files and directories (read, mkdir, …)
-
-* NFS的性能
+  
+    <img src="Pictures/Operating_System/1560857115744.png" style="zoom:55%"   />
+  
+* NFS Performance
   * 通常比本地慢一点，也正常吧
   * 通过在client上cache来改进
     * 目标:减少远程操作的数量
@@ -2373,7 +2692,27 @@ Fork：copyuvm
     * cache是通过buffer cache“自动”进行的
     * 所有NFS写操作都是直接写到磁盘的，write through
 
-* NFS的问题
+* NFS Validation
+
+  * 如何来保证一致性呢？如何保证自己拿到的内容是新的
+  * 尝试通过validation来解决不一致
+    * 保存文件的timestamp
+    * 当文件打开或服务器contact新内容时
+      * 比较上次修改时间
+      * 如果remote是最近的，则使缓存的数据invalid
+  * 总是在一段时间后使数据invalid
+    * 比如说，打开文件(3秒)，目录(30秒)
+  * 如果想要修改数据块
+    * 标记为dirty，然后在文件关闭时刷新
+
+* Improving Read Performance
+
+  * 以big block的方式传输数据：默认是8KB
+  * read-ahead
+    * 优化顺序文件访问
+    * 在应用程序请求磁盘块之前，发送读磁盘块的请求
+
+* NFS Problem
 
   * 文件的一致性
   * NFS假设了时钟是同步的
@@ -2381,10 +2720,14 @@ Fork：copyuvm
   * lock不能工作，因为无状态，可以添加单独的锁管理器(有状态的)
   * 没有打开文件的引用计数，就可以删除自己/别人打开的文件
   * 假设有全局UID空间
+  
+*  
 
-  * 怎么看起来问题很多的样子....
+
 
 ------
+
+
 
 #### 第十七讲 Scalable locking
 
@@ -2396,11 +2739,9 @@ Fork：copyuvm
 
   - LLC，最末级缓存
 
-    <img src="Pictures/Operating_System/1560151830992.png" style="zoom:35%"   /><img src="Pictures/Operating_System/1560151846751.png" style="zoom:40%"   />
-
+    <img src="Pictures/Operating_System/1560151830992.png" style="zoom:35%"   />
   
-
-  
+    <img src="Pictures/Operating_System/1560151846751.png" style="zoom:40%"   />
 
 - 三种内存模型：共享cache，共享mem，私有mem
 
@@ -2497,9 +2838,16 @@ function unlock(mcs_lock lock, mcs_node my_node){
 }
 ```
 
-* 
+*  为什么pthread_cond_signal要带锁？
+   *  It can sleep and release the lock in an atomic way.
+   *  It can avoid losing wake up message.
+*   
+
+
 
 ------
+
+
 
 #### 第十八讲 Synchronization Constructs 
 
@@ -2558,9 +2906,24 @@ readerFinish
 
 ##### Lock-free Synchronization
 
-* 使用无锁的“乐观”同步，不受约束地执行临界区，并在最后检查是不是只剩自己一个（？？？）
+* 使用无锁的“乐观”同步，
+  * 不受约束地执行临界区，并在最后检查是不是只剩自己一个
+  * 如果是这样,继续下去；如果不回滚并重试
+* lock-free synchronization的工作原理
+  * copy：为了重试，写下我们需要的任何状态
+  * do the work：执行计算
+  * Atomically “test and commit” or retry
+    * 将保存的假设与world的实际状态进行比较
+    * 如果不一样，撤消工作，重新开始新的状态
+    * 如果先决条件仍然成立，提交结果并继续
+* CAS：一条read-modify-write的原子指令
+* 
+
+
 
 ------
+
+
 
 #### 第十九讲 Bug survey
 
@@ -2618,7 +2981,6 @@ readerFinish
   * 不重用已分配的内存
   * 在内核模式下使用用户指针之前，请检查它们
   * 记得释放锁
-
 * 在 JOS 中没有说明的规则
   * kernel mode禁用interrupt
   * 只有env 1可以访问磁盘
@@ -2628,8 +2990,13 @@ readerFinish
   * 要将错误消息传播给用户应用程序(例如，资源不足)
   * 派生程序用的时候要应该打开文件描述符0、1和2
   * 用户指针用在kernel之前，要通过一次TRUP
+*  
+
+
 
 ------
+
+
 
 #### 第二十讲 Lock Race & Dead Lock
 
@@ -2650,10 +3017,10 @@ readerFinish
 
 ##### Data race 
 
-- data race的定义：
-  - 针对一个共享变量，同时两个或两个以上的操作
-  - 至少有一个是写操作
-  - 线程没有使用显示的机制来阻止访问的同时进行
+- **data race的定义：**
+  - **针对一个共享变量，同时两个或两个以上的操作**
+  - **至少有一个是写操作**
+  - **线程没有使用显示的机制来阻止访问的同时进行**
 - data race detector：主要有两种策略
   - Happens-before based
   - Lockset based
@@ -2672,7 +3039,7 @@ readerFinish
 - Happy-before情况下，data race 的定义
   - 针对相同内存位置，同时两个或两个以上的操作
   - 至少有一个是写操作
-  - 这两件事与另一件事都没有happen-before的关系
+  - **这两件事与另一件事都没有happen-before的关系**
 - Happy-before策略的评价
   - 优点：被它找到的data race一定是真的
   - 缺点：
@@ -2684,7 +3051,7 @@ readerFinish
 * lockset-based情况下，data race 的定义
   * 针对相同内存位置，同时两个或两个以上的操作
   * 至少有一个是写操作
-  * 没有锁可以保护对相同数据的所有访问
+  * **没有锁可以保护对相同数据的所有访问**
 
 - lockset的算法
 
@@ -2692,9 +3059,9 @@ readerFinish
 
     <img src="Pictures/Operating_System/1558580468315.png" style="zoom:50%"   />
   
-    <img src="Pictures/Operating_System/1558580911188.png" style="zoom:35%"   /><img src="Pictures/Operating_System/1560253273041.png" style="zoom:35%"   />
+    <img src="Pictures/Operating_System/1558580911188.png" style="zoom:45%"   />
     
-    
+    <img src="Pictures/Operating_System/1560253273041.png" style="zoom:35%"   />
   
 - lockset 方法的 challenge：
   - 问题一：初始化 (因为第一次共享变量初始化大概是没有锁的，memset)，那第一次判断就凉凉
@@ -2741,8 +3108,13 @@ readerFinish
 
 * Dimmunix - Teaser
   * 通常是很难处理死锁的；dimmunix是一个用于开发死锁免疫的工具，当死锁的症状第一次出现的时候，Dimmunix自动捕获它的signature，然后避免输入相同的pattern
+*  
+
+
 
 ------
+
+
 
 #### 第二十一讲 Introduction to Virtualization
 
@@ -2763,8 +3135,8 @@ readerFinish
     * 具体一点就是，压缩 Compression，加密 Encryption，profiling 分析，translation 翻译
     * side-channel
 * 为什么一定要用虚拟化技术，不用OS？
-  - VMM是在hardware interface操作的，硬件接口通常比软件接口更小，定义的更好
-  - OS提供的抽象太多了，状态比较多，迁移会比较麻烦，用的software interface
+  - **VMM是在hardware interface操作的，硬件接口通常比软件接口更小，定义的更好**
+  - **OS提供的抽象太多了，状态比较多，迁移会比较麻烦，用的software interface**
   - hypervisor和microkernel有一些相似性
   - VMM的缺点，semantic gap 语义鸿沟，VMM不知道guest在做什么；OS会知道guest在做什么(software interface)/(process，pipe，thread，file system)等，知道data和metadata，VMM是不知道这些东西的
 
@@ -2898,30 +3270,34 @@ readerFinish
 
     <img src="Pictures/Operating_System/1560261182465.png" style="zoom:55%"   />
 
-* 
+*  
+
+
 
 ------
 
+
+
 #### 第二十二讲 Virtualization：CPU and Memory
 
-* Review
+##### Review
 
-  * OS的不同架构
+* OS的不同架构
 
-    <img src="Pictures/Operating_System/1560584050320.png" style="zoom:35%"   />
+  <img src="Pictures/Operating_System/1560584050320.png" style="zoom:35%"   />
 
-  * VMM的不同架构
+* VMM的不同架构
 
-    * type1和type2的区别在于有没有host OS，type 1没有host os
-      - Linux KVM和QEMU都是type2
-      - Xen是只有一个VMM的，是type1
-      - 平时常用的应该是有host OS的那个type
-    
-  * QEMU是一个用户态的应用程序，对于host OS来说，QEMU就是一个普通的应用程序就是进程，QEMU负责读取vm镜像，按照每条指令的顺序执行；QEMU就像是个解释执行器，python解释我们自己写的脚本，QEMU解释的是二进制解释器
+  * type1和type2的区别在于有没有host OS，type 1没有host os
+    - Linux KVM和QEMU都是type2
+    - Xen是只有一个VMM的，是type1
+    - 平时常用的应该是有host OS的那个type
   
-    <img src="Pictures/Operating_System/1560584078191.png" style="zoom:40%"   />
-  
-  * 虚拟化的三个层次，API，ABI，ISA
+* QEMU是一个用户态的应用程序，对于host OS来说，QEMU就是一个普通的应用程序就是进程，QEMU负责读取vm镜像，按照每条指令的顺序执行；QEMU就像是个解释执行器，python解释我们自己写的脚本，QEMU解释的是二进制解释器
+
+  <img src="Pictures/Operating_System/1560584078191.png" style="zoom:40%"   />
+
+* 虚拟化的三个层次，API，ABI，ISA
 
 ##### CPU Virtualization
 
@@ -2939,11 +3315,12 @@ readerFinish
   * 比如，popf指令在kernel和user mode的意义不同，popf从堆栈中取出一个单词并放入flags寄存器，该寄存器中的一个标志是中断启用标志(IF)；在system kevek，IF标志由popf更新，在user level，IF标志没有更新，CPU悄悄地把IF的更新删除了
   * 有17条不能trap&emulate的指令：SGDT, SIDT, SLDT, SMSW, PUSHF, POPF, LAR,
     LSL, VERR, VERW, POP, PUSH, CALL, JMP, INT n, RET, STR, MOV
-* 解决：如何处理这17条指令
-  * instruction interpretation，指令解释，用软件的方式去emulate
-  * binary translation，二进制翻译，把它们翻译成其他指令
-  * para-virtualization，半虚拟化，在源码中替换掉它们
-  * new hardware，改变CPU
+* **解决：如何处理这17条指令**
+  
+  * **instruction interpretation，指令解释，用软件的方式去emulate**
+  * **binary translation，二进制翻译，把它们翻译成其他指令**
+  * **para-virtualization，半虚拟化，在源码中替换掉它们**
+  * **new hardware，改变CPU**
 * 方法一：instruction interpretation
   * 使用内存模拟所有系统状态，例如在通用寄存器中使用数组GPR[8]；没有guest指令直接在硬件上执行
   * 优点：很容易实现，复杂度很低
@@ -2979,28 +3356,32 @@ readerFinish
 
   - VM entry：从VMM到guest，进入VMX non-root mode，从VMCS加载guest state，VMLAUNCH用于初始化条目，VMRESUME用于后续条目
   
-- VM exit：从guest到VMM，进入VMX root mode，将guest state保存到VMCS，从VMCS中加载VMM state
+- **VM exit：从guest到VMM，进入VMX root mode，将guest state保存到VMCS，从VMCS中加载VMM state**
   
     <img src="Pictures/Operating_System/1560585886256.png" style="zoom:80%"   />
-
-
-* VMCS (Virtual Machine Control Structure)
+    
+    - 普通的访存指令触发EPT violation后会VM exit，之后会被再次执行
+    - CPUID指令会VM exit，并且不会被再次执行
+    - 使用EPT的时候修改guest CR3的值不会触发VM exit
+    
+- **VMCS (Virtual Machine Control Structure)**
 
   * 管理VM entry和VM exit的数据结构
   * VM entry从guest-state area加载处理器状态
-  * VM exit将处理器状态保存guest-state area和exit reason area，然后从host-state area加载处理器状态
+  * **VM exit将处理器状态保存guest-state area和exit reason area，然后从host-state area加载处理器状态**
 
-* VMCS的具体条目
+- VMCS的具体条目
 
   ```
-  Guest-state area，Host-state area，存储processor state的字段
+  Guest-state area
+  Host-state area，存储processor state的字段
   VM-execution control fields，在VMX non-root操作中控制处理器操作的字段
   VM-exit control fields，控制VM exit的字段
   VM-entry control fields，控制VM entry的字段
   VM-exit information fields: 只读字段，用于接收关于VM exit的信息，这些信息描述VM exit的原因和性质
   ```
 
-* VT-x的新指令
+- VT-x的新指令
   * VMXON, VMXOFF，开启/关闭VMX root mode
   * VMLAUNCH，启动一个VM guest
   * VMEXIT, VMRESUME，一组指令
@@ -3019,10 +3400,10 @@ readerFinish
   * 现在有三种页表，GVA**->**GPA**->**HPA  (Guest virtual. Guest physical.
     Host physical)
   * 直接set CR3是没用的，因为VM以为的CR3地址是GPA，实际设置的CR3和HPA
-  * 三种解决方案
-    * shadow paging，影子页表
-    * direct paging (Para-virtualization)，直接映射
-    * new hardware，新的硬件支持
+  * **三种解决方案**
+    * **shadow paging，影子页表**
+    * **direct paging (Para-virtualization)，直接映射**
+    * **new hardware，新的硬件支持**
 
 * 方法一：shadow paging
 
@@ -3062,8 +3443,15 @@ readerFinish
 
 * 方法三：Hardware Supported Memory Virtualization
 
-  * 英特尔EPT(扩展页表)，AMD的NPT(嵌套页表)
+  * **英特尔EPT(扩展页表)，AMD的NPT(嵌套页表)**
 
+  * 这使得减少shadow page table带来的开销成为可能
+  
+    * 之前shadow page table适合host OS共享一个CR3的，为了保证内存访问的正确性，每当create/update/delete页表时，都要同步SPT和GPT；EPT的技术保证，如果正确配置了EPT 第二级转化表，任何valid/invalid的内存访问都会被限制在相应的VM范围内
+    * 一个guest process一个EPT，可以被TLB加速
+    * n级page table，m级EPT，访问内存最多需要access memory page (n-1)(m-1) 次
+    * 在事务大量访存导致TLB miss很多的时候，shadow page table的性能说不定会比EPT更好
+    
     <img src="Pictures/Operating_System/1560588888843.png" style="zoom:45%"   />
   
 
@@ -3075,11 +3463,13 @@ readerFinish
 * VMware ESX，reclaming paging
   * 想法：欺骗OS返回内存到VMM
   * ESX技巧：balloon driver
-
 * ESX，sharing pages across VM
   * 许多虚拟机运行相同的操作系统和程序，比如带有Apache服务器的Linux机器
   * 想法：对相同的物理页面使用一个机器页面
   * 优化：定期扫描以找到相同的机器页面，copy-on-write消除冗余，使用由哈希键控的哈希表，允许基于页面内容快速查找
+*  
+
+
 
 ------
 
@@ -3131,7 +3521,7 @@ readerFinish
 
   - host无法看到guest内部运行的进程
 
-  - 每个虚拟cpu都有一个vcpu线程，iothread是一个特殊的thread
+  - **每个虚拟cpu都有一个vcpu线程，iothread是一个特殊的thread**
 
   - 一个专用的iothread运行一个select()事件循环来处理I/O，比如网络包和磁盘I/O完成
 
@@ -3164,12 +3554,12 @@ readerFinish
 
 ##### I/O Virtualization
 
-* Device Virtualization 的方法
+* **Device Virtualization 的方法**
 
-  * emulated，模拟
-  * para-virtualized，半虚拟化
-  * direct access（passthrough）
-  * hardware assisted IO virtualization
+  * **emulated，模拟**
+  * **para-virtualized，半虚拟化**
+  * **direct access（passthrough）**
+  * **hardware assisted IO virtualization**
 
 * 方法一：Emulated device
 
@@ -3205,9 +3595,9 @@ readerFinish
     * 优点：monitor的实现简单了很多，而且快
     * 缺点：monitor需要提供guest-specfic的驱动程序，存在引导的问题 bootstrapping
 
-  * VirtIO: Unified Para-virtualized I/O 统一虚拟化IO
+  * **VirtIO: Unified Para-virtualized I/O 统一虚拟化IO**
 
-    * 动机：:Linux至少支持8个虚拟化平台，每个平台都有自己的准虚拟化I/O设计接口
+    * 动机：Linux至少支持8个虚拟化平台，每个平台都有自己的准虚拟化I/O设计接口
 
     * VirtIO：能够为半虚拟化设备提供统一的I/O模式，已经被KVM和lguest采用
 
@@ -3235,9 +3625,10 @@ readerFinish
     6. Guest reads data from buffer
     ```
 
-* 方法三：hardware assisted （这一段我真看不懂
+* 方法三：hardware assisted 
 
-  * Directed I/O
+  * **Directed I/O**
+    
     * **概述：硬件直接允许guest，通过driver，绕过hypervisor，直接访问physical device；好处是绕过了一层抽象，速度更快，但是可能有安全性的问题**
     * 由于仿真层的存在，基于软件的共享给每个I/O增加了开销
       * 这种间接性还有一个额外的影响，即消除了物理设备中可用的硬件加速的使用
@@ -3250,43 +3641,56 @@ readerFinish
       - page table的数量和虚拟机数量是一样的
       - 能不能用EPT代替IO MMU，GPA-HPA（为什么我记得不太一样的）但是可以
     * 优点：快，简化monitor，需要的设备驱动程序很有限
-    * 缺点：安全需要硬件支持(IOMMU)；需要多路复用的硬件支持；硬件接口对客户可见；VM的迁移限制；根据定义，很难插入interposition
-
-  * Issues to Address 需要解决的问题
-
+  * 缺点：安全需要硬件支持(IOMMU)；需要多路复用的硬件支持；硬件接口对客户可见；VM的迁移限制；根据定义，很难插入interposition
+  
+* Issues to Address 需要解决的问题
+  
     * I/O地址转换，如何将I/O地址转换为主机物理地址
     * 中断的映射，如何将中断正确路由到guest VM
     * 多路复用设备，如何在多个虚拟机之间对单个硬件设备进行多路复用
-    * 最重要的，提供强大的隔离，同时减少hypervisor的介入
-
-  * VT-d，intel针对directed IO开发的虚拟化技术
-
+  * 最重要的，提供强大的隔离，同时减少hypervisor的介入
+  
+* **VT-d，intel针对directed IO开发的虚拟化技术**
+  
     * 提供确保改进I/O资源隔离的功能，从而提高可靠性、安全性和可用性。
     * 支持重映射I/O DMA传输和设备生成的中断。
-    * 提供灵活性来支持多种使用模型，这些模型可以运行未经修改的、特殊用途的或“虚拟化感知的”客户操作系统
-
-  * VT-d Feature: Interrupt Remapping
-
+  * 提供灵活性来支持多种使用模型，这些模型可以运行未经修改的、特殊用途的或“虚拟化感知的”客户操作系统
+  
+* VT-d Feature: Interrupt Remapping
+  
     * 由I/O设备生成的中断请求必须由VMM控制
     * 当中断发生时，VMM必须将中断呈现给客户机。这不是通过硬件实现的。
     * VT-d中断映射体系结构通过重新定义中断消息格式来解决这个问题。
-    * 中断请求指定请求者id和中断id，并重新映射硬件，将这些请求转换为物理中断
-
-  * Directed IO的缺点
-
+  * 中断请求指定请求者id和中断id，并重新映射硬件，将这些请求转换为物理中断
+  
+* Directed IO的缺点
+  
     * Directed IO直接分配的一个问题是它的可伸缩性有限
     * 一个物理设备只能分配给一个VM。例如，双端口NIC允许直接分配到两个vm。(每个VM一个端口)，考虑一下在不久的将来相当可观的服务器
-      * 4个物理CPU的，每个CPU 12个核，如果我们使用每个内核一个VM的规则，那么它将需要48个物理端口。
-
-  * SR-IOV，Single Root I/O Virtualization
-
-    * 单根I/O虚拟化(SR-IOV)是一种外围组件互连特殊兴趣组(PCI-SIG)规范。
-
-    * SR-IOV为设备提供了一种标准机制，以宣传它们能够在多个虚拟机之间同时共享。
-
-    * SR-IOV允许将PCI函数划分为许多虚拟接口，以便在虚拟环境中共享PCI Express (PCIe)设备的资源
-
+    * 4个物理CPU的，每个CPU 12个核，如果我们使用每个内核一个VM的规则，那么它将需要48个物理端口。
+  
+* **SR-IOV，Single Root I/O Virtualization**
+  
+  * 单根I/O虚拟化(SR-IOV)是一种外围组件互连特殊兴趣组(PCI-SIG)规范。
+  
+  * SR-IOV为设备提供了一种标准机制，以宣传它们能够在多个虚拟机之间同时共享。
+  
+  * SR-IOV允许将PCI函数划分为许多虚拟接口，以便在虚拟环境中共享PCI Express (PCIe)设备的资源
+  
       <img src="Pictures/Operating_System/1560604859862.png" style="zoom:40%"/>
+
+* **辨析四个概念：SR-IOV, Virtio, VT-d, Direct I/O**
+  * SR-IOV, hardware assisted
+    * Single Root I/O Virtualization, 单根IO虚拟化
+    * 一种虚拟化相关的硬件技术，它使设备能够呈现为多个设备
+  * Virtio, para-virtualization
+    * Unified Para-virtualized, I/O 统一虚拟化IO
+    * 一种标准或模式，定义guest device driver(特别是网络设备和磁盘)如何与hypervisor协作
+  * VT-d, hardware assisted
+    * intel针对directed IO开发的虚拟化技术
+    * 英特尔的设备虚拟化解决方案
+  * Direct I/O, hardware assisted
+    * 直接将device分配给特定虚拟机的技术，使其他环境无法使用该device(即使在host mode下)
 
 ##### Summary
 
@@ -3294,13 +3698,15 @@ readerFinish
 
   <img src="Pictures/Operating_System/1560604915168.png" style="zoom:70%"/>
 
-* 
+*  
+
+
 
 ------
 
-#### 第二十四讲 Serverless
 
-* 写不动了实在写不动了
+
+#### 第二十四讲 Serverless
 
 * Serverless Computing – Function as a Service (FaaS)
 
