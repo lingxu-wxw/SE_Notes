@@ -12,17 +12,17 @@
 
 - 逻辑电平：将连续变量映射到离散的二进制变量。两个门第一个是驱动源，第二个是接收端，驱动源的输出连接到接收端的输入；由于噪声或部件错误，接收端输入电压存在禁止区域；NMH和NML是噪声容限
 
-  ![1546348914888](Pictures/Digital_Component_Design/1546348914888.png)
+  ![1546348914888](http://ww2.sinaimg.cn/large/006tNc79ly1g4bbns90j8j30fq0a2tc2.jpg)
 
 - 直流电压传输特性：一种选择逻辑电平的合理方法是选择在传输特征曲线斜率dv(Y)/dv(A) = -1的位置，这两个位置成为单位增益点。在单位增益点选择逻辑电平可以最大化噪声容限
 
 - 静态约束：对于给定的有效逻辑输入，每个电路元件应该能产生有效的逻辑输出
 
-- ![1546349316440](Pictures/Digital_Component_Design/1546349316440.png)
+- ![1546349316440](http://ww1.sinaimg.cn/large/006tNc79ly1g4bd8tidbpj30or05dgn1.jpg)
 
 - nMOS和pMOS
 
-  ![1546349433795](Pictures/Digital_Component_Design/1546349433795.png)
+  ![1546349433795](http://ww2.sinaimg.cn/large/006tNc79ly1g4bd98x20xj30ha09wgms.jpg)
 
 - nMOS晶体管能很好的导通低电平，但导通高电平的能力较弱；pMOS晶体管导通高电平的能力较好，但导通低电平的能力较弱。所以，nMOS晶体管在栅极为低电平时OFF，高电平时ON，pMOS晶体管在栅极低电平时ON，高电平时OFF
 
@@ -32,7 +32,7 @@
 
   以非门为例。A=0时P1导通，N1截止，所以Y连到电源两端，输出Y=1
 
-  ![1546349786498](Pictures/Digital_Component_Design/1546349786498.png) ![1546349805310](Pictures/Digital_Component_Design/1546349805310.png)
+  ![1546349786498](http://ww2.sinaimg.cn/large/006tNc79ly1g4b9hjekqhj306p05474b.jpg) ![1546349805310](http://ww3.sinaimg.cn/large/006tNc79ly1g4bd962ripj308h059t8v.jpg)
 
 - 浮空状态：如果上拉网络和下拉网络同时截止，那么输出既不连接到电源，也不连接到地，电压不确定
 
@@ -42,7 +42,7 @@
 
 - 静态功耗和动态功耗：静态功耗正比与漏电流IDD和电压VDD，动态功耗正比于电容C、电压VDD和电容电压切换的频率f
 
-  ![1546350339074](Pictures/Digital_Component_Design/1546350339074.png)![1546350348394](Pictures/Digital_Component_Design/1546350348394.png)
+  ![1546350339074](http://ww4.sinaimg.cn/large/006tNc79ly1g4ba9897t0j305h01it8j.jpg)![1546350348394](http://ww2.sinaimg.cn/large/006tNc79ly1g4batn0u8cj304h01et8i.jpg)
 
 * 
 
@@ -57,37 +57,37 @@
   - **每个电路元件是组合电路**
   - **每个电路节点或是一个电路输入，或是连接到外部电路的一个输出端**
   - **电路不包含回路**
-  - ![1547044058092](Pictures/Digital_Component_Design/1547044058092.png)
+  - ![1547044058092](http://ww4.sinaimg.cn/large/006tNc79ly1g4b9h8psbkj30ni0f60vx.jpg)
 
 - 布尔表达式：与或式和或与式
 
 - 德摩根定理：一个与非门等效于一个带逆变器输入的或门
 
-- 推气泡法来分析电路  ![1546350987263](Pictures/Digital_Component_Design/1546350987263.png)
+- 推气泡法来分析电路  ![1546350987263](http://ww4.sinaimg.cn/large/006tNc79ly1g4bd8r1s3mj309h09mwex.jpg)
 
-- 非法值和浮空值/高Z态：竞争，三态缓冲器（图为低电平使能有效）![1546351136772](Pictures/Digital_Component_Design/1546351136772.png)
+- 非法值和浮空值/高Z态：竞争，三态缓冲器（图为低电平使能有效）![1546351136772](http://ww2.sinaimg.cn/large/006tNc79ly1g4bd98f513j30ai075jri.jpg)
 
-- 卡诺图  ![1546351355124](Pictures/Digital_Component_Design/1546351355124.png)
+- 卡诺图  ![1546351355124](http://ww1.sinaimg.cn/large/006tNc79ly1g4b9hm8agwj30dc0653yt.jpg)
 
 - 做题流程：应用场景 -> 真值表 -> 卡诺图化简 -> 电路原理图
 
-- 多路复用器：多路复用器可以用于实现各种门逻辑和查找表![1546351519496](Pictures/Digital_Component_Design/1546351519496.png)
+- 多路复用器：多路复用器可以用于实现各种门逻辑和查找表![1546351519496](http://ww3.sinaimg.cn/large/006tNc79ly1g4bat5b3v3j30nz0cxdh8.jpg)
 
-- ![1546352002208](Pictures/Digital_Component_Design/1546352002208.png)
+- ![1546352002208](http://ww4.sinaimg.cn/large/006tNc79ly1g4babm04cgj30no05dt9d.jpg)
 
 - 译码器：译码器的输出成为独热，因为在给定时间恰好只有一个输出为高电平
 
-  ![1546352145225](Pictures/Digital_Component_Design/1546352145225.png)
+  ![1546352145225](http://ww2.sinaimg.cn/large/006tNc79ly1g4b9hlpzslj306t08awep.jpg)
 
 - 传播延迟和最小延迟：传播延迟tpd是当输入改变直到所有输出达到最终值所经历的最长时间，最小延迟tcd是当一个输入发生变化直到任何一个输出开始改变的最短时间
 
 - 关键路径和最短路径
 
-  ![1546352416508](Pictures/Digital_Component_Design/1546352416508.png)
+  ![1546352416508](http://ww1.sinaimg.cn/large/006tNc79ly1g4ba9tf7efj309a06ojrl.jpg)
 
 - 毛刺和冒险：一个输入信号的改变导致多个输出信号的改变，能够通过在卡诺图中增加多余蕴含项来盖住这些边缘以避免毛刺
 
-  ![1546352544021](Pictures/Digital_Component_Design/1546352544021.png)
+  ![1546352544021](http://ww3.sinaimg.cn/large/006tNc79ly1g4baady6w7j30ic06vdgh.jpg)
 
 * 
 
@@ -97,19 +97,19 @@
 
 - 双稳态：存储器件的基本模块是一个双稳态元件，该元件有两个稳定状态
 
-  ![1546352754411](Pictures/Digital_Component_Design/1546352754411.png)
+  ![1546352754411](http://ww4.sinaimg.cn/large/006tNc79ly1g4bd96zwauj309u05umxf.jpg)
 
 - SR锁存器：与交叉耦合反相器类似，可以设置S和复位R。但SR同时有效时输出不确定，Q和非Q同时为0
 
-  ![1546352852621](Pictures/Digital_Component_Design/1546352852621.png)![1546352861922](Pictures/Digital_Component_Design/1546352861922.png)![1546352869292](Pictures/Digital_Component_Design/1546352869292.png)
+  ![1546352852621](http://ww2.sinaimg.cn/large/006tNc79ly1g4bd9c648sj306w04ymx8.jpg)![1546352861922](http://ww4.sinaimg.cn/large/006tNc79ly1g4b9i1nm93j307p04o0su.jpg)![1546352869292](http://ww1.sinaimg.cn/large/006tNc79ly1g4b9hktxgkj306q03tdfr.jpg)
 
 - D锁存器：避免了S和R同时有效的奇怪情况
 
-  ![1546352982631](Pictures/Digital_Component_Design/1546352982631.png)
+  ![1546352982631](http://ww2.sinaimg.cn/large/006tNc79ly1g4ban211igj30ma053t9b.jpg)
 
 - D触发器：在时钟上升沿将D复制到Q，在其他时间保持原来的状态
 
-  ![1546353027504](Pictures/Digital_Component_Design/1546353027504.png)
+  ![1546353027504](http://ww1.sinaimg.cn/large/006tNc79ly1g4b9h7p6ssj30f706wjrx.jpg)
 
 - 逻辑电路与晶体管
 
@@ -123,13 +123,13 @@
 
 - D锁存器和D触发器的区别
 
-  ![1546353537296](Pictures/Digital_Component_Design/1546353537296.png)
+  ![1546353537296](http://ww1.sinaimg.cn/large/006tNc79ly1g4bd94mxoxj30qx07qdgh.jpg)
 
 - 带使能和带复位的D触发器
 
-  ![1546353690169](Pictures/Digital_Component_Design/1546353690169.png)
+  ![1546353690169](http://ww1.sinaimg.cn/large/006tNc79ly1g4bd9cn5psj30fy084js4.jpg)
 
-  ![1546353700385](Pictures/Digital_Component_Design/1546353700385.png)
+  ![1546353700385](http://ww3.sinaimg.cn/large/006tNc79ly1g4bd8s053pj30gk05p0t5.jpg)
 
 - **同步时序电路需要满足以下条件**
 
@@ -137,15 +137,15 @@
   - **至少有一个电路元件是寄存器，不能有单独的锁存器**
   - **所有寄存器都接受同一个时钟信号（没有延迟）**
   - **每个环路至少包含一个寄存器**
-  - ![1547044146372](Pictures/Digital_Component_Design/1547044146372.png)
+  - ![1547044146372](http://ww4.sinaimg.cn/large/006tNc79ly1g4ba9rxabmj30nl0h4q6k.jpg)
 
 - 非同步的时序电路称为异步电路
 
 - 有限状态机：Moore型有限状态机和Mealy型有限状态机
 
-  ![1546434918788](Pictures/Digital_Component_Design/1546434918788.png)
+  ![1546434918788](http://ww4.sinaimg.cn/large/006tNc79ly1g4bd8txi96j30an07laal.jpg)
 
-  ![1546434941784](Pictures/Digital_Component_Design/1546434941784.png)
+  ![1546434941784](http://ww2.sinaimg.cn/large/006tNc79ly1g4b9h40qarj30dq04eglw.jpg)
 
 - 由电路图导出状态机
 
@@ -187,7 +187,7 @@
 
   - 公式：Q=CV=∫Idt，E=1/2CV^2，Xc=1/2πfc
   - 通高频阻低频，通交流隔直流
-  - 低通滤波器![1546762358421](Pictures/Digital_Component_Design/1546762358421.png)
+  - 低通滤波器![1546762358421](http://ww1.sinaimg.cn/large/006tNc79ly1g4b9hkbyf1j30dx06q74g.jpg)
 
 - 电感
 
@@ -197,39 +197,39 @@
 
   - 高通滤波器
 
-    ![1546762652615](Pictures/Digital_Component_Design/1546762652615.png)
+    ![1546762652615](http://ww2.sinaimg.cn/large/006tNc79ly1g4ba97ccacj306905v3yj.jpg)
 
 - 晶体二极管
 
-  - ![1546764574470](Pictures/Digital_Component_Design/1546764574470.png)
+  - ![1546764574470](http://ww3.sinaimg.cn/large/006tNc79ly1g4b9hbw1hnj30h90atdgl.jpg)
 - 晶体三极管
   - 发射结面积小于集电结面积
   - 由三极管可构成共射、共基、共集三种放大电路
     - 共射放大电路：电压放大倍数大，输出电压和输入电压反向，电流放大倍数大，输入电阻和输出电阻大小适中，多用于多级放大器的中间级
     - 共集放大电路：电压放大倍数总小于1接近1，输出电压与输入电压同相，电流放大倍数大，可以放大电流和功率，输入电阻大，输出电阻小，多用于多级放大电路的输入级、隔离级和输出级
     - 共基放大电路：电压放大倍数大，输出电压和输入电压同相，电流放大倍数总小于1，不能放大电流，输入电阻小，输出电阻大小适中，频率响应特性好，常用于宽带和高频放大电路
-    - ![1546764479120](Pictures/Digital_Component_Design/1546764479120.png)
+    - ![1546764479120](http://ww2.sinaimg.cn/large/006tNc79ly1g4bd94bzptj30nb0fe0v0.jpg)
   - Uce一般取反向击穿电压UBRCEO的1/2-2/3
-  - ![1546764606158](Pictures/Digital_Component_Design/1546764606158.png)
+  - ![1546764606158](http://ww3.sinaimg.cn/large/006tNc79ly1g4bd97zf8ej30pi0bfgmw.jpg)
 
 - 场效应管
   - 是多数载流子导电，只有一种极性的载流子，所以称为单极型晶体管；三极管被称为双极型晶体管
   - 最大优点是输入端电流几乎为0，具有极高的输入电阻，能满足高内阻的微弱信号源对放大器输入阻抗的要求
   - 体积小，重量轻，噪声低，耗电省，热稳定性好，制造工艺简单，容易集成化
-  - ![1546765138008](Pictures/Digital_Component_Design/1546765138008.png)
-  - ![1546767593903](Pictures/Digital_Component_Design/1546767593903.png)
-  - ![1546765353001](Pictures/Digital_Component_Design/1546765353001.png)
+  - ![1546765138008](http://ww1.sinaimg.cn/large/006tNc79ly1g4babobf4xj30ot0aoq47.jpg)
+  - ![1546767593903](http://ww1.sinaimg.cn/large/006tNc79ly1g4ba9uck7zj30l906fdgk.jpg)
+  - ![1546765353001](http://ww4.sinaimg.cn/large/006tNc79ly1g4b9h9mkmuj30d007gdgh.jpg)
   - 公式1：id = Ido(Ugs/Ugsth -1 )^2 对于N沟道增强型MOS
     - Ido是Ugs=2Ugsth时的id值，Ugsth为开启电压
   - 公式2：低频跨导gm = δid/δUgs 当Ugs=常数
-  - ![1546765683398](Pictures/Digital_Component_Design/1546765683398.png)
-  - ![1546765692669](Pictures/Digital_Component_Design/1546765692669.png)
+  - ![1546765683398](http://ww1.sinaimg.cn/large/006tNc79ly1g4b9hleu2wj30p10e9acm.jpg)
+  - ![1546765692669](http://ww2.sinaimg.cn/large/006tNc79ly1g4bd99dtd7j30ox0f8acv.jpg)
 - 运算放大器
   - **Vout = （V+ - V-）*A （A≥100000，趋向于无穷大）**
   - 虚短和虚断
     - 运放两个输入端的电压差非常接近于0，但两者之间没有短路
     - 流入运放两个输入端的电流通常可以视为0，但并非断开
-  - ![1546766336247](Pictures/Digital_Component_Design/1546766336247.png)
+  - ![1546766336247](http://ww1.sinaimg.cn/large/006tNc79ly1g4baaefswpj30ia0hen0k.jpg)
 - 三态门
   - 指输出既可以是一般逻辑电路的正常高电平或者低电平，又可以是保持特有的高阻抗Z状态，处于高阻抗状态输出电阻很大，相当于开路，没有任何逻辑控制功能
   - 三态门都有一个EN控制使能端来控制门电路的通断。当EN有效时，三态电路呈现正常的0或1输出，当EN无效时，三态电路给出高阻态输出
@@ -253,7 +253,7 @@
 
   - 基于冯诺依曼结构的改进
 
-    ![1546773122880](Pictures/Digital_Component_Design/1546773122880.png)
+    ![1546773122880](http://ww1.sinaimg.cn/large/006tNc79ly1g4bat7wkr3j30le091412.jpg)
 
   - 完全不同的结构：数据流计算机，推理机，神经网络计算机
 
@@ -264,7 +264,7 @@
 
 - 噪声容限
 
-  - 逻辑电平是将连续变量映射到离散的二进制变量。两个门第一个是驱动源，第二个是接收端，驱动源的输出连接到接收端的输入；由于噪声或部件错误，接收端输入电压存在禁止区域；NMH和NML是噪声容限![1546348914888](Pictures/Digital_Component_Design/1546348914888.png)
+  - 逻辑电平是将连续变量映射到离散的二进制变量。两个门第一个是驱动源，第二个是接收端，驱动源的输出连接到接收端的输入；由于噪声或部件错误，接收端输入电压存在禁止区域；NMH和NML是噪声容限![1546348914888](http://ww1.sinaimg.cn/large/006tNc79ly1g4bd97gj43j30fq0a2q41.jpg)
 
 - CMOS和TTL
   - TTL是Transistor-Transistor Logic的缩写，主要由BJT（Bipolar Junction Transistor 即双极结型晶体管），晶体三极管和电阻构成，具有速度快的特点。
@@ -331,7 +331,7 @@
 
   - 总线：用于互联各功能部件（每条总线上的东西速度最好差不多）
 
-    ![1546772937710](Pictures/Digital_Component_Design/1546772937710.png)
+    ![1546772937710](http://ww4.sinaimg.cn/large/006tNc79ly1g4bab8x31tj30nd0etabe.jpg)
 
     - 优势：具有高度的灵活性，允许将模块插入总线以形成各种配置。从而节省器件，体积小，价格便宜
     - 高速设备和慢速设备连在一条总线上会导致利用率不高，因此会有层级结构
@@ -423,23 +423,23 @@
   - 每片晶圆的晶片数 = (π*晶圆半径^2)/晶片面积 - (π *晶圆直径)/(根号(2 *晶片面积)
 
     - 晶圆直径300mm，晶片1.5cm
-    - ![1546774710234](Pictures/Digital_Component_Design/1546774710234.png)
+    - ![1546774710234](http://ww2.sinaimg.cn/large/006tNc79ly1g4bd8rnb72j30jm05o74s.jpg)
 
   - 晶片的成品率
 
-    ![1546774768040](Pictures/Digital_Component_Design/1546774768040.png)
+    ![1546774768040](http://ww1.sinaimg.cn/large/006tNc79ly1g4b9hmooaej30o902rjro.jpg)
 
 - Amdahl定律
 
   - 定义：通过使用某种较快的执行方式所获得的性能提高，受限于可使用这种较快执行方式的时间所占的比例
 
-  - 加速比：![1546775297989](Pictures/Digital_Component_Design/1546775297989.png)
+  - 加速比：![1546775297989](http://ww4.sinaimg.cn/large/006tNc79ly1g4bd95muvjj30js02dq3i.jpg)
 
   - 新的执行时间
 
-    ![1546775368275](Pictures/Digital_Component_Design/1546775368275.png)
+    ![1546775368275](http://ww1.sinaimg.cn/large/006tNc79ly1g4b9hjvrtej30ow05ajsf.jpg)
 
-    ![1546775393440](Pictures/Digital_Component_Design/1546775393440.png)
+    ![1546775393440](http://ww4.sinaimg.cn/large/006tNc79ly1g4ba9ts8kkj30n003waao.jpg)
 
 * 
 
@@ -485,7 +485,7 @@
 
 - 大端法和小端法：0x12345678
 
-  ![1545869820869](Pictures/Digital_Component_Design/1545869820869.png)
+  ![1545869820869](http://ww3.sinaimg.cn/large/006tNc79ly1g4b9h14hwsj30lw070wgc.jpg)
 
   x86、ARM是小端，MIPS、Power PC是大端
 
@@ -520,17 +520,17 @@
 
 - 一些RISC与CISC微处理器的特征
 
-  ![1546776454113](Pictures/Digital_Component_Design/1546776454113.png)
+  ![1546776454113](http://ww3.sinaimg.cn/large/006tNc79ly1g4b9guozq8j30r40fwjtl.jpg)
 
 - RISC和CISC的现状：近年来两者的争端已经减少许多，原因在于两种技术已经逐渐融合。芯片集成度和硬件速度的增大使得RISC系统也越来越复杂，CISC设计也增加了通用寄存器数量、更强调指令流水线设计。80x86就是一个非常成功的融合系统结构
 
 - 过程/函数/子程序的机器语言级实现过程
 
-  - ![1546777798752](Pictures/Digital_Component_Design/1546777798752.png)
+  - ![1546777798752](http://ww2.sinaimg.cn/large/006tNc79ly1g4baaguab2j30nl0ihn1l.jpg)
 
 - MIPS的寄存器
 
-  - ![1546777720245](Pictures/Digital_Component_Design/1546777720245.png)
+  - ![1546777720245](http://ww3.sinaimg.cn/large/006tNc79ly1g4bd95527rj30rw0gxjuo.jpg)
 
 * 
 
@@ -540,49 +540,49 @@
 
 - MIPS部分指令编码
 
-  ![1546778771345](Pictures/Digital_Component_Design/1546778771345.png)
+  ![1546778771345](http://ww3.sinaimg.cn/large/006tNc79ly1g4batq69mwj30s20gdq72.jpg)
 
-  ![1546778782520](Pictures/Digital_Component_Design/1546778782520.png)
+  ![1546778782520](http://ww2.sinaimg.cn/large/006tNc79ly1g4ba97scqjj30sb0fsdjg.jpg)
 
 - MIPS寄存器集
 
-  ![1546778200780](Pictures/Digital_Component_Design/1546778200780.png)
+  ![1546778200780](http://ww4.sinaimg.cn/large/006tNc79ly1g4bd8siui4j30mh068t9o.jpg)
 
 - R类型指令
 
-  ![1546778247098](Pictures/Digital_Component_Design/1546778247098.png)
+  ![1546778247098](http://ww4.sinaimg.cn/large/006tNc79ly1g4b9gyc444j30mi0acad2.jpg)
 
 - I类型指令
 
-  ![1546778262981](Pictures/Digital_Component_Design/1546778262981.png)
+  ![1546778262981](http://ww2.sinaimg.cn/large/006tNc79ly1g4ba96w3usj30me077wg9.jpg)
 
 - J类型指令
 
-  ![1546778284520](Pictures/Digital_Component_Design/1546778284520.png)
+  ![1546778284520](http://ww1.sinaimg.cn/large/006tNc79ly1g4b9h0a0h0j30mq058jsc.jpg)
 
 - 函数调用时的栈
 
-  ![1546778431777](Pictures/Digital_Component_Design/1546778431777.png)
+  ![1546778431777](http://ww1.sinaimg.cn/large/006tNc79ly1g4bd96iqiuj30f009y751.jpg)
 
 - 寻址方式
 
-  ![1546778502080](Pictures/Digital_Component_Design/1546778502080.png)
+  ![1546778502080](http://ww1.sinaimg.cn/large/006tNc79ly1g4bd9bqhmdj30mg09wtax.jpg)
 
 - MIPS和x86的主要差异
 
-  ![1546778560952](Pictures/Digital_Component_Design/1546778560952.png)
+  ![1546778560952](http://ww2.sinaimg.cn/large/006tNc79ly1g4baadhsbsj30m306gjse.jpg)
 
 - 真值表
 
-  ![1546778622482](Pictures/Digital_Component_Design/1546778622482.png)
+  ![1546778622482](http://ww4.sinaimg.cn/large/006tNc79ly1g4b9h3ics3j30m7069dgn.jpg)
 
-![1546779013545](Pictures/Digital_Component_Design/1546779013545.png)
+![1546779013545](http://ww3.sinaimg.cn/large/006tNc79ly1g4bd8t5m8lj315y0hrgse.jpg)
 
 - 单周期CPU
 
-  ![1546778828222](Pictures/Digital_Component_Design/1546778828222.png)
+  ![1546778828222](http://ww2.sinaimg.cn/large/006tNc79ly1g4baad4mp0j30s20g8gop.jpg)
 
 - 流水线CPU
 
-  ![1546778858073](Pictures/Digital_Component_Design/1546778858073.png)
+  ![1546778858073](http://ww4.sinaimg.cn/large/006tNc79ly1g4ba9swpo2j30sk0hidka.jpg)
 

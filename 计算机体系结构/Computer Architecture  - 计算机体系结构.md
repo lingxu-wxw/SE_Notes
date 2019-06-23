@@ -32,7 +32,7 @@
 
 * 晶体管结构 transistor structure：**nMOS晶体管在栅极为低电平时OFF，高电平时ON；pMOS晶体管在栅极低电平时ON，高电平时OFF**
 
-  <img src="Pictures/Computer_Architecture/1553873703370.png" style="zoom:20%"/>
+  <img src="http://ww4.sinaimg.cn/large/006tNc79ly1g4b9gs0pzjj30sb0gwq61.jpg" style="zoom:20%"/>
 
 * N/P晶体管
 
@@ -49,14 +49,14 @@
 
   * 用于层间连接的触点(Via)，Contact (Via) for inter-layer connection，黑色
 
-    <img src="Pictures/Computer_Architecture/1560734150833.png" style="zoom:35%"/>
+    <img src="http://ww1.sinaimg.cn/large/006tNc79ly1g4bczl39b0j30iw092gn0.jpg" style="zoom:35%"/>
 
 * 晶体管Gate宽度：Gate Length = 2λ，**feature size**
 
   * 最低过程维度(The minimum process dimension)就是feature size= 2λ
   * feature size反映transistor channel(gate)的典型长度
 
-  <img src="Pictures/Computer_Architecture/1553872260560.png" style="zoom:30%"/>
+  <img src="http://ww3.sinaimg.cn/large/006tNc79ly1g4bcv7usrzj30l704ygml.jpg" style="zoom:30%"/>
 
 * 摩尔定律：当价格不变时，集成电路上可容纳的元器件的数目，约每隔18-24个月便会增加一倍，性能也将提升一倍
 
@@ -78,7 +78,7 @@
 
   名词：Server racks 服务器机架, A/C systems 空调系统, Power Distribution Units 配电单元, UPS(Uninterruptible Power System) 不间断电源, Energy Storage Cabinets 储能柜, Switch Gears 开关齿轮
 
-  <img src="Pictures/Computer_Architecture/1553872982341.png" style="zoom:25%"/>
+  <img src="http://ww4.sinaimg.cn/large/006tNc79ly1g4b9gu70fwj30vg0k4wlx.jpg" style="zoom:25%"/>
 
 * 数据中心的三大支柱：
 
@@ -152,11 +152,11 @@
 
 * 计算机架构的发展史
 
-  <img src="Pictures/Computer_Architecture/1554005252580.png" style="zoom:30%"/>
+  <img src="http://ww2.sinaimg.cn/large/006tNc79ly1g4b9hn9vo6j30qk0iqju7.jpg" style="zoom:30%"/>
 
 * **四种传统的架构：stack，accumulator（直接操作内存），register-memory（CISC），register-oriented（RISC）**
 
-  <img src="Pictures/Computer_Architecture/1554004987623.png" style="zoom:30%"/>
+  <img src="http://ww1.sinaimg.cn/large/006tNc79ly1g4bd06ifbhj30sr0hlq57.jpg" style="zoom:30%"/>
 
 * 复杂指令集 CISC, Complex Instruction Set Computer
 
@@ -173,7 +173,7 @@
 
   * IA-32：Intel Architecture， 32 bit
     
-    <img src="Pictures/Computer_Architecture/1560734852731.png" style="zoom:40%"/>
+    <img src="http://ww1.sinaimg.cn/large/006tNc79ly1g4b9gxw4ejj30ff04z3yz.jpg" style="zoom:40%"/>
     
     * GPR，general-purpose register，可以用作操作数，如整数和FP
     * SPR，special-purpose register，特定的定义函数，如条件码、处理器状态、PC等
@@ -203,9 +203,9 @@
 
   * 指令类型：R类型，I类型，J类型
 
-    <img src="Pictures/Computer_Architecture/1554006637756.png" style="zoom:30%"/>
+    <img src="http://ww4.sinaimg.cn/large/006tNc79ly1g4babpr5vfj30sq0hy0x0.jpg" style="zoom:30%"/>
 
-    <img src="Pictures/Computer_Architecture/1554009565424.png" style="zoom:30%"/>
+    <img src="http://ww1.sinaimg.cn/large/006tNc79ly1g4bat68viij30rq0ga41s.jpg" style="zoom:30%"/>
 
 ##### ISA：Programmer‘s View
 
@@ -219,9 +219,9 @@
 
   * 高级程序语言 high level language - 汇编程序 low level language 指令集 ISA - 数据通路 register level transfer - 逻辑门电路 - CMOS 晶体管
 
-    <img src="Pictures/Computer_Architecture/1554006772160.png" style="zoom:40%"/>
+    <img src="http://ww1.sinaimg.cn/large/006tNc79ly1g4bczq4dtej30rp0f1ac2.jpg" style="zoom:40%"/>
 
-    <img src="Pictures/Computer_Architecture/1554007542882.png" style="zoom:35%"/>
+    <img src="http://ww1.sinaimg.cn/large/006tNc79ly1g4batjnyn9j30si0fpacf.jpg" style="zoom:35%"/>
 
 * User ISA 和 System ISA
 
@@ -233,7 +233,7 @@
 
     * User ISA是操作GPR的(general purpose register)
 
-      <img src="Pictures/Computer_Architecture/1554007424976.png" style="zoom:30%"/>
+      <img src="http://ww4.sinaimg.cn/large/006tNc79ly1g4b9h5ceo9j30q907m75n.jpg" style="zoom:30%"/>
 
   * **System ISA：管理/共享资源**
 
@@ -273,7 +273,7 @@
 
   * 将指令和数据的存储和信号通路物理层面地分开
 
-    <img src="Pictures/Computer_Architecture/1554008207952.png" style="zoom:30%"/>
+    <img src="http://ww1.sinaimg.cn/large/006tNc79ly1g4b9ho2l3fj30oy0cc3zj.jpg" style="zoom:30%"/>
 
 * 五级流水线：指令级并行
 
@@ -283,7 +283,7 @@
 
   * **为什么太多pipeline stage会降低吞吐量：太多的latch(状态寄存器)会带来overhead**
 
-    <img src="Pictures/Computer_Architecture/1554008258099.png" style="zoom:30%"/>
+    <img src="http://ww2.sinaimg.cn/large/006tNc79ly1g4b9hnlhxsj30tl0bcgnf.jpg" style="zoom:30%"/>
 
 * Pipeline speedup
 
@@ -306,7 +306,7 @@
 
   * 将一些子过程拆分：子过程的更细粒度
 
-    <img src="Pictures/Computer_Architecture/1554009162952.png" style="zoom:30%"/>
+    <img src="http://ww4.sinaimg.cn/large/006tNc79ly1g4bd07gvgkj30sx0gyjv4.jpg" style="zoom:30%"/>
 
 * **pipeline slots 流水线部件 **
 
@@ -314,7 +314,7 @@
 
   * **分类：front-end, back-end, retiring, bad speculation**
 
-    <img src="Pictures/Computer_Architecture/1560735956358.png" style="zoom:40%"/>
+    <img src="http://ww2.sinaimg.cn/large/006tNc79ly1g4bd1duys4j30hh05q74v.jpg" style="zoom:40%"/>
 
   * 前端表示处理器核心的第一部分，后端负责获取后面执行的操作
     * 分支预测：预测下一条执行指令的地址
@@ -386,7 +386,7 @@
 
   * 可能的数据冒险类型：RAW, WAR, WAW
 
-    <img src="Pictures/Computer_Architecture/1554102383105.png" style="zoom:35%"/>
+    <img src="http://ww1.sinaimg.cn/large/006tNc79ly1g4batngfp3j30qi0gzadv.jpg" style="zoom:35%"/>
 
 * 三种流水线冒险 Pipeline Hazard：
 
@@ -396,7 +396,7 @@
 
   * pipeline interlock：检测数据冒险、暂停pipeline的硬件机制称为pipeline interlock，即使是数据转发，也不能违背时间顺序
 
-    <img src="Pictures/Computer_Architecture/1554107402981.png" style="zoom:30%"/>
+    <img src="http://ww3.sinaimg.cn/large/006tNc79ly1g4bd09djvlj30sk0brdho.jpg" style="zoom:30%"/>
 
 ##### Dynamic Scheduling：Scoreboarding
 
@@ -417,7 +417,7 @@
 
   * **不同类型的FUs**
 
-    <img src="Pictures/Computer_Architecture/1554104613004.png" style="zoom:40%"/>
+    <img src="http://ww1.sinaimg.cn/large/006tNc79ly1g4baakz8bmj30lc062q4l.jpg" style="zoom:40%"/>
 
 * Scoreboarding的四个阶段
 
@@ -435,7 +435,7 @@
     
   * 出现问题的原因就是这是基于寄存器号的，而不是tag的
 
-    <img src="Pictures/Computer_Architecture/1554104945676.png" style="zoom:30%"/>
+    <img src="http://ww2.sinaimg.cn/large/006tNc79ly1g4bczp5zc5j30r90ajt9s.jpg" style="zoom:30%"/>
 
 * Scoreboarding的九个field
 
@@ -450,9 +450,9 @@
 
   * **执行时间是指在RO处停留的时间**，贴图是中途的执行截图
 
-    <img src="Pictures/Computer_Architecture/1554105118965.png" style="zoom:35%"/>
+    <img src="http://ww2.sinaimg.cn/large/006tNc79ly1g4bd08f5gcj30tt0ho77v.jpg" style="zoom:35%"/>
 
-    <img src="Pictures/Computer_Architecture/1554106193184.png" style="zoom:35%"/>
+    <img src="http://ww4.sinaimg.cn/large/006tNc79ly1g4b9h23n3bj30t20hrjvn.jpg" style="zoom:35%"/>
 
 ##### Dynamic Scheduling : Tomasulo's Algorithm
 
@@ -469,7 +469,7 @@
     * structural hazard：多个RS可以竞争一个共享的FU
     * RS比register多：提供编译器无法提供的优化
   
-    <img src="Pictures/Computer_Architecture/1554106061159.png" style="zoom:50%"/>
+    <img src="http://ww3.sinaimg.cn/large/006tNc79ly1g4b9h69n1ij30tf0hwq59.jpg" style="zoom:50%"/>
 
 * Tomasulo's Algorithm的三个阶段
 
@@ -491,9 +491,9 @@
   
 * 值在算出来存进register result status的同时更新保留站的内容
   
-  <img src="Pictures/Computer_Architecture/1554106576255.png" style="zoom:35%"/>
+  <img src="http://ww3.sinaimg.cn/large/006tNc79ly1g4bbnnsjn8j30ti0hkjuo.jpg" style="zoom:35%"/>
   
-    <img src="Pictures/Computer_Architecture/1554106942583.png" style="zoom:35%"/>
+    <img src="http://ww3.sinaimg.cn/large/006tNc79ly1g4bcwfdknnj30t50g9why.jpg" style="zoom:35%"/>
   
 * Scoreboard 和 Tomasulo的对比
 
@@ -576,7 +576,7 @@
     
     * Completion Buffer：控制执行结束后的指令in order
     
-      <img src="Pictures/Computer_Architecture/1554429586752.png" style="zoom:45%"/>
+      <img src="http://ww3.sinaimg.cn/large/006tNc79ly1g4bcyyyho5j30d80daab1.jpg" style="zoom:45%"/>
 
 * 评价Pipeline的三个参数
 
@@ -594,13 +594,13 @@
 
   - **VLIW machine ：为了填满流水线，每个cycle需要的指令个数 : n/cycle ; IPC : n instr/cycle (1 VLIW/cycle) ; latency : 1**
 
-    <img src="Pictures/Computer_Architecture/1554430339007.png" style="zoom:35%"/>
+    <img src="http://ww3.sinaimg.cn/large/006tNc79ly1g4bczs0oozj30nc08bdgl.jpg" style="zoom:35%"/>
 
-    <img src="Pictures/Computer_Architecture/1554430358415.png" style="zoom:35%"/>
+    <img src="http://ww4.sinaimg.cn/large/006tNc79ly1g4bcwfof73j30n40863z7.jpg" style="zoom:35%"/>
 
-    <img src="Pictures/Computer_Architecture/1554430370692.png" style="zoom:35%"/>
+    <img src="http://ww2.sinaimg.cn/large/006tNc79ly1g4bd09uk34j30mv08aaau.jpg" style="zoom:35%"/>
 
-    <img src="Pictures/Computer_Architecture/1554430382468.png" style="zoom:35%"/>
+    <img src="http://ww2.sinaimg.cn/large/006tNc79ly1g4bcyd6pi8j30mo084q3n.jpg" style="zoom:35%"/>
 
 ##### Speculation
 
@@ -619,14 +619,14 @@
 
   * 效果：4K-entry的BHT，2bits一个entry，80-90%的预测正确率
 
-    <img src="Pictures/Computer_Architecture/1560739329817.png" style="zoom:35%"/>
+    <img src="http://ww3.sinaimg.cn/large/006tNc79ly1g4batqmqvuj30oo0dcwfo.jpg" style="zoom:35%"/>
 
   * 2-bits Branch Prediction
 
     * 只有在两次预测错误的情况下才改变预测
     * n位分支预测其实并不比2位版本(n>2)准确多少
 
-  <img src="Pictures/Computer_Architecture/1554431083386.png" style="zoom:35%"/>
+  <img src="http://ww1.sinaimg.cn/large/006tNc79ly1g4ba95z6w8j30jn0b3my0.jpg" style="zoom:35%"/>
 
 * Branch Target Buffer
 
@@ -634,7 +634,7 @@
 
   * BTB包括两个部分：Branch instruction address: BIA，Branch target address: BTA
 
-    <img src="Pictures/Computer_Architecture/1554431188222.png" style="zoom:35%"/>
+    <img src="http://ww1.sinaimg.cn/large/006tNc79ly1g4bczql4e6j30mw0b60tl.jpg" style="zoom:35%"/>
 
 * Mis-prediction Recovery 分支预测错误恢复
 
@@ -671,9 +671,9 @@
   
   * ALU处理不含操作数的指令；Instr Q是指令队列；Reorder Buffer保证顺序commit，head是oldest；FP registers是commit，之前多了一个ROB，src表示即将写入的tag；IS/EX/WR的框实际应该还是有的
   
-      <img src="Pictures/Computer_Architecture/1554431843820.png" style="zoom:40%"/>
+      <img src="http://ww2.sinaimg.cn/large/006tNc79ly1g4babq7utzj30q00i2tbt.jpg" style="zoom:40%"/>
   
-      <img src="Pictures/Computer_Architecture/1554431905056.png" style="zoom:40%"/>
+      <img src="http://ww1.sinaimg.cn/large/006tNc79ly1g4ba950bk0j30mg0dmmz7.jpg" style="zoom:40%"/>
   
 * 实际执行表格（IS/EX/WR)
     * tag值全都填充后，下一周期开始执行
@@ -709,7 +709,7 @@
     * 简单的指令调度 Simpler instruction dispatch
     * 省去结构冒险的检查逻辑 No structural hazard checking logic
 
-    <img src="Pictures/Computer_Architecture/1554433810050.png" style="zoom:45%"/>
+    <img src="http://ww4.sinaimg.cn/large/006tNc79ly1g4babnfj9sj30oq0dpdiw.jpg" style="zoom:45%"/>
 
 * Compiler Support for VLIW Processor
   
@@ -774,11 +774,11 @@
 
 * Typical PC Organization 典型的PC架构
 
-  <img src="Pictures/Computer_Architecture/1554457426999.png" style="zoom:45%"/>
+  <img src="http://ww3.sinaimg.cn/large/006tNc79ly1g4b9hwlq08j30ne0f9409.jpg" style="zoom:45%"/>
 
 * Memory Hierarchy 存储层次
 
-  <img src="Pictures/Computer_Architecture/1554457456075.png" style="zoom:30%"/>
+  <img src="http://ww2.sinaimg.cn/large/006tNc79ly1g4bczr2zj6j30p80erq4s.jpg" style="zoom:30%"/>
 
 ##### Cache Basics ：concepts
 
@@ -788,7 +788,7 @@
     
     * on-chip : 片上存储器；off-chip：片外存储器，记忆体，片外内存
     
-      <img src="Pictures/Computer_Architecture/1554457652721.png" style="zoom:35%"/>
+      <img src="http://ww4.sinaimg.cn/large/006tNc79ly1g4bampgjwbj30o008iwf8.jpg" style="zoom:35%"/>
 
   * Cache Format
 
@@ -796,7 +796,7 @@
 
     * 32位地址的机器，cache block大小16 B (4 words)
 
-      <img src="Pictures/Computer_Architecture/1554457889510.png" style="zoom:35%"/>
+      <img src="http://ww3.sinaimg.cn/large/006tNc79ly1g4babnysftj30m302hglu.jpg" style="zoom:35%"/>
       
     * cache存储来自备份存储backing store的数据块(称为缓存块或缓存行)
 
@@ -819,9 +819,9 @@
 
   * 与其他内存字一样，PTE也可以缓存在L1 cache中(或者TLB)：可以被其他数据引用驱逐，PTE命中仍然需要1个周期的延迟
 
-    <img src="Pictures/Computer_Architecture/1554458324307.png" style="zoom:35%"/>
+    <img src="http://ww1.sinaimg.cn/large/006tNc79ly1g4baab6jyfj30jn09h3zc.jpg" style="zoom:35%"/>
 
-    <img src="Pictures/Computer_Architecture/1554458469403.png" style="zoom:70%"/>
+    <img src="http://ww4.sinaimg.cn/large/006tNc79ly1g4baayimxbj30dd0a50ts.jpg" style="zoom:70%"/>
 
 ##### Cache Basics : Optimizations
 
@@ -845,14 +845,14 @@
     
     * 当L1 cache miss时，检查miss cache中有否有，如果有就把cache line加到L1 cache；否则就从L2 cache中获取，在L1 cache和miss cache中都存一份；L1 cache  移除某cache line时，miss cache中不移除
     
-      <img src="Pictures/Computer_Architecture/1560750354301.png" style="zoom:40%"/>
+      <img src="http://ww1.sinaimg.cn/large/006tNc79ly1g4bczpn7n5j30jc09sgmy.jpg" style="zoom:40%"/>
   * **Victim Caching**
     
     * 定义：在L1和L2 cache中的一个全相联cache，修改replacement策略；比miss cache更好的地方：更小，更好的性能；即使是一两个single line也可能effective
     
     * 当L1 cache miss时，检查victim cache，如果有，就与L1 cache中的被移除cache line交换；否则就从L2 cache中获取
     
-      <img src="Pictures/Computer_Architecture/1560750379775.png" style="zoom:40%"/>
+      <img src="http://ww3.sinaimg.cn/large/006tNc79ly1g4bamqqrqhj30ju09z0tv.jpg" style="zoom:40%"/>
 
 * Cache Optimization #2 Prefetch
 
@@ -908,15 +908,15 @@
     
   * 可以参考这篇博客 <https://blog.csdn.net/qq_39759656/article/details/81672895?tdsourcetag=s_pcqq_aiomsg>
 
-    <img src="Pictures/Computer_Architecture/1554460977057.png" style="zoom:55%"/>
+    <img src="http://ww1.sinaimg.cn/large/006tNc79ly1g4baavcsavj30fs09k75f.jpg" style="zoom:55%"/>
 
-    <img src="Pictures/Computer_Architecture/1554461001305.png" style="zoom:50%"/>
+    <img src="http://ww4.sinaimg.cn/large/006tNc79ly1g4bcznb0l0j30l70agtar.jpg" style="zoom:50%"/>
 
 * Revisit the definition of memory system
 
   * Channel：MC和DRAM module之间的path
   
-    <img src="Pictures/Computer_Architecture/1560778072155.png" style="zoom:50%"/>
+    <img src="http://ww2.sinaimg.cn/large/006tNc79ly1g4bbno2gocj30md0andho.jpg" style="zoom:50%"/>
   
 * **Parallelism in DRAM**
 
@@ -933,7 +933,7 @@
 
   * 连续的cache line存在不同的rank，可以提高并行性
 
-    <img src="Pictures/Computer_Architecture/1554461316701.png" style="zoom:50%"/>
+    <img src="http://ww1.sinaimg.cn/large/006tNc79ly1g4b9h5tyogj30ml0e9taz.jpg" style="zoom:50%"/>
 
 * **1T1C DRAM Cell**
 
@@ -952,7 +952,7 @@
 
   * sense Amps的作用：读之前pre-charge，写之前refresh重新restore电荷，缓存之前的数据减少miss rate
 
-    <img src="Pictures/Computer_Architecture/1560751077740.png" style="zoom:50%"/>
+    <img src="http://ww3.sinaimg.cn/large/006tNc79ly1g4bab1tljnj30n40dawgn.jpg" style="zoom:50%"/>
 
 * SRAM 和 DRAM 的对比
 
@@ -969,7 +969,7 @@
 
   * Banks can be accessed simultaneously.
 
-    <img src="Pictures/Computer_Architecture/1560776866460.png" style="zoom:50%"/>
+    <img src="http://ww3.sinaimg.cn/large/006tNc79ly1g4ba95i4l0j30l508cabj.jpg" style="zoom:50%"/>
 
 * Refresh Mechanism
 
@@ -983,7 +983,7 @@
 
     * In per-rank refresh, all banks are locked and inaccessible during refresh cycle.
     
-    <img src="Pictures/Computer_Architecture/1554461894893.png" style="zoom:50%"/>
+    <img src="http://ww3.sinaimg.cn/large/006tNc79ly1g4ba96el8hj30kb06r75w.jpg" style="zoom:50%"/>
 
 * Cost of Accessing DRAM 访问DRAM的开销
 
@@ -999,7 +999,7 @@
 
   * **Double Data Rate (DDR) SDRAM：数据在时钟的两端传输**
 
-    <img src="Pictures/Computer_Architecture/1554462086642.png" style="zoom:45%"/>
+    <img src="http://ww1.sinaimg.cn/large/006tNc79ly1g4baaleq59j30mg08pq3y.jpg" style="zoom:45%"/>
 
 * Memory Wall and Memory Bandwidth Wall
 
@@ -1022,7 +1022,7 @@
   
   * MC：memory controller
   
-    <img src="Pictures/Computer_Architecture/1560776909408.png" style="zoom:45%"/>
+    <img src="http://ww1.sinaimg.cn/large/006tNc79ly1g4bczrjpkej30mr0efq4v.jpg" style="zoom:45%"/>
   
 * Quiz Addition
 
@@ -1063,7 +1063,7 @@
 
   * 名词解释：spindle 主轴，motor 电机，Actuator Arm，Actuator 传动装置，Flex cable 排线，Disk platter 磁盘盘片，Read/Write Head 读写磁头
 
-    <img src="Pictures/Computer_Architecture/1557724413716.png" style="zoom:35%"/>
+    <img src="http://ww1.sinaimg.cn/large/006tNc79ly1g4b9hu7qxoj30om0e2ac9.jpg" style="zoom:35%"/>
 
 * Disk Parameters
 
@@ -1071,7 +1071,7 @@
 
   * 一些典型参数：转速72000 RPM, 4096 bytes per sector, 63 sectors per track, 75 nanometers track width, 3 platters, 6 heads, 1 cylinder
 
-    <img src="Pictures/Computer_Architecture/1557724843903.png" style="zoom:45%"/>
+    <img src="http://ww1.sinaimg.cn/large/006tNc79ly1g4bcztvlvyj30ct0bswg3.jpg" style="zoom:45%"/>
 
 * Access Cost 磁盘访问时间
 
@@ -1095,7 +1095,7 @@
     * overlapping commands，支持多连接磁盘驱动的高利用率
     * command queueing，提高disk的吞吐量
     
-    <img src="Pictures/Computer_Architecture/1560753319484.png" style="zoom:40%"/>
+    <img src="http://ww4.sinaimg.cn/large/006tNc79ly1g4b9hxylh6j30k1091wf2.jpg" style="zoom:40%"/>
 
 * ATA，Advanced Technology Attachment 高级技术附件
 
@@ -1105,7 +1105,7 @@
     * SATA是一对一Point-to-point的接口，在新系统中占主导地位，电缆长度可以到1米，是向后兼容的
     * PATA是并行化的接口，是老式PC的典型接口，电缆长度最多18英寸 (0.457米)，支持不同的数据传输模式
     
-    <img src="Pictures/Computer_Architecture/1557725906704.png" style="zoom:45%"/>
+    <img src="http://ww3.sinaimg.cn/large/006tNc79ly1g4b9gsdcjvj30of08nq43.jpg" style="zoom:45%"/>
 
 * SCSI，Small Computer System Interface，小型计算机系统接口
 
@@ -1115,7 +1115,7 @@
     
     * SAS读写数据速率快，可靠性高，电缆长，稍微贵一点，适用于企业级的服务器系统
     
-      <img src="Pictures/Computer_Architecture/1557726519630.png" style="zoom:50%"/>
+      <img src="http://ww2.sinaimg.cn/large/006tNc79ly1g4baaw69unj30bs05jaa7.jpg" style="zoom:50%"/>
 
 * FC，Fibre Channel，光纤信道
 
@@ -1138,13 +1138,13 @@
 
   * strip mining，翻译是露天开采？
 
-    <img src="Pictures/Computer_Architecture/1557727054717.png" style="zoom:45%"/>
+    <img src="http://ww3.sinaimg.cn/large/006tNc79ly1g4bab1csc0j30hk06wt9h.jpg" style="zoom:45%"/>
 
 * Date Mirroring，数据镜像，单纯的复制一份
 
   * 分为Basic mirroring 和 Chain cluster mirroring，后者是错开来镜像的
 
-    <img src="Pictures/Computer_Architecture/1560753734917.png" style="zoom:40%"/>
+    <img src="http://ww3.sinaimg.cn/large/006tNc79ly1g4bab8hmt8j30ki0aiq4f.jpg" style="zoom:40%"/>
 
 * RAID，Redundant Array of Inexpensive Drives，廉价驱动器的冗余阵列
 
@@ -1158,9 +1158,9 @@
 
     * RAID 10更稳定
 
-    <img src="Pictures/Computer_Architecture/1557727589200.png" style="zoom:35%"/>
+    <img src="http://ww3.sinaimg.cn/large/006tNc79ly1g4bcyzg1o0j30m90cqacs.jpg" style="zoom:35%"/>
 
-    <img src="Pictures/Computer_Architecture/1557728397479.png" style="zoom:35%"/>
+    <img src="http://ww4.sinaimg.cn/large/006tNc79ly1g4bczsif3oj30v40jijuz.jpg" style="zoom:35%"/>
 
 * Fault Tolerance 
   
@@ -1178,7 +1178,7 @@
   
     * byte级条带，带parity
   
-    <img src="Pictures/Computer_Architecture/1557729171675.png" style="zoom:45%"/>
+    <img src="http://ww1.sinaimg.cn/large/006tNc79ly1g4b9gyrva2j30nd04vdgm.jpg" style="zoom:45%"/>
   
   * RAID 4，具有专用奇偶校验的块级条带(不常用)
     
@@ -1196,7 +1196,7 @@
 
   * 定义：数据存储的管理是分布式的；**服务器通过LAN/WAN发送数据**；通过网络进行额外的服务器访问
 
-    <img src="Pictures/Computer_Architecture/1557729502758.png" style="zoom:50%"/>
+    <img src="http://ww4.sinaimg.cn/large/006tNc79ly1g4bczmye0gj30ca09njs2.jpg" style="zoom:50%"/>
 
   * DAS 的优点：初始规模低
   * DAS 的局限性
@@ -1208,7 +1208,7 @@
 
   * 定义：NAS是一种专门的设备，由存储器、处理器和操作系统组成，**专门用作文件服务器**
 
-    <img src="Pictures/Computer_Architecture/1557729928513.png" style="zoom:45%"/>
+    <img src="http://ww1.sinaimg.cn/large/006tNc79ly1g4bcznrzuvj30g609mmxv.jpg" style="zoom:45%"/>
 
   * NAS的优点
     
@@ -1221,7 +1221,7 @@
 
     * 存储设为组成单独的网络，服务器和存储任意链接，IO直接发到存储，高层仍然用SCSI
 
-    <img src="Pictures/Computer_Architecture/1557730323567.png" style="zoom:50%"/>
+    <img src="http://ww2.sinaimg.cn/large/006tNc79ly1g4bczuc0xwj30db0b4q3j.jpg" style="zoom:50%"/>
 
   * SAN 的优点
 
@@ -1242,7 +1242,7 @@
 
   * 存储分类
 
-    <img src="Pictures/Computer_Architecture/1557730625568.png" style="zoom:60%"/>
+    <img src="http://ww2.sinaimg.cn/large/006tNc79ly1g4bauc6mjrj30hg053jrr.jpg" style="zoom:60%"/>
 
   * DAS 直连存储：
 
@@ -1259,15 +1259,15 @@
 
     * 通过光纤通道交换机连接存储阵列和服务器主机，最后成为一个专用存储网络。SAN提供了一种与现有LAN连接的简易方法，并且通过同一物理通道支持广泛使用的SCSI和IP协议。SAN允许企业独立地增加它们的存储容量。SAN的结构允许任何服务器连接到任何存储阵列，这样不管数据放在哪里，服务器都可以直接存取所需的数据。因为采用了光纤接口，SAN还具有更高的带宽。
     
-    <img src="Pictures/Computer_Architecture/1557730870149.png" style="zoom:60%"/>
+    <img src="http://ww1.sinaimg.cn/large/006tNc79ly1g4bczo9l5gj30f70cnjtd.jpg" style="zoom:60%"/>
     
-    <img src="Pictures/Computer_Architecture/1557730879436.png" style="zoom:60%"/>
+    <img src="http://ww2.sinaimg.cn/large/006tNc79ly1g4b9hvmdkfj30go077my7.jpg" style="zoom:60%"/>
 
 ##### Flash Storage Device
 
 * SSD的架构
 
-  <img src="Pictures/Computer_Architecture/1557730928356.png" style="zoom:40%"/>
+  <img src="http://ww1.sinaimg.cn/large/006tNc79ly1g4bcwg6g6oj30mx09wq46.jpg" style="zoom:40%"/>
 
 * NAND Flash Cell
 
@@ -1332,15 +1332,15 @@
 * Amdahl's Law
   * f 是课并行化部分的代码，1-f 是完全串行的
   
-  <img src="Pictures/Computer_Architecture/1557733645463.png" style="zoom:45%"/>
+  <img src="http://ww3.sinaimg.cn/large/006tNc79ly1g4bat47qg2j30gl025mx8.jpg" style="zoom:45%"/>
   
 * CPI，Clock cycle Per Instruction，指令的平均时钟周期数
 
-  <img src="Pictures/Computer_Architecture/1560755146840.png" style="zoom:45%"/>
+  <img src="http://ww4.sinaimg.cn/large/006tNc79ly1g4bcz0dp14j30iq0dfgnd.jpg" style="zoom:45%"/>
 
 * Memory performance analysis
 
-  <img src="Pictures/Computer_Architecture/1560755166044.png" style="zoom:45%"/>
+  <img src="http://ww2.sinaimg.cn/large/006tNc79ly1g4batp9e03j30jx0cnmz1.jpg" style="zoom:45%"/>
 
 ##### Analytical Modeling / Analytical Evaluation
 
@@ -1358,7 +1358,7 @@
 
   * 影响BW的因素：cache miss 和 data prefetch
 
-    <img src="Pictures/Computer_Architecture/1560755776835.png" style="zoom:45%"/>
+    <img src="http://ww1.sinaimg.cn/large/006tNc79ly1g4baabk9vxj30my054dgt.jpg" style="zoom:45%"/>
 
 * Little’s Law 在生产实践中的作用
 
@@ -1368,7 +1368,7 @@
   
   * 即时评估系统反应：间接估计方法；队列长度可以即时测量；利用Little定律估计响应时间
   
-    <img src="Pictures/Computer_Architecture/1557734329142.png" style="zoom:45%"/>
+    <img src="http://ww1.sinaimg.cn/large/006tNc79ly1g4bd1ek676j30gn071754.jpg" style="zoom:45%"/>
 
 * Dynamic Power 动态功率估计，On The Evaluation of Energy and Power
 
@@ -1385,7 +1385,7 @@
     * 由于电压/频率水平有限
     * 不适用于服务器中的许多组件
 
-  ​	<img src="Pictures/Computer_Architecture/1560756325495.png" style="zoom:45%"/>
+  ​	<img src="http://ww4.sinaimg.cn/large/006tNc79ly1g4bcv91mzcj30kn0bfq4u.jpg" style="zoom:45%"/>
 
 * Computer Power 计算机功率估计
 
@@ -1435,7 +1435,7 @@
 
   * Full system simulation：Trace-driven simulation and execution-driven simulation
 
-    <img src="Pictures/Computer_Architecture/1557737652854.png" style="zoom:45%"/>
+    <img src="http://ww3.sinaimg.cn/large/006tNc79ly1g4bbn9kwswj30n206575l.jpg" style="zoom:45%"/>
 
 * **Simulation Acceleration**
   
@@ -1453,7 +1453,7 @@
   
     * 感觉也是采样模拟的优化，采样后就checkpoint一下
     
-    <img src="Pictures/Computer_Architecture/1560757102448.png" style="zoom:55%"/>
+    <img src="http://ww3.sinaimg.cn/large/006tNc79ly1g4bczsyfmaj30jz06fgmd.jpg" style="zoom:55%"/>
 
 ##### Workload Design
 
@@ -1485,7 +1485,7 @@
 
   * Workload reduction
 
-    <img src="Pictures/Computer_Architecture/1560787417472.png" style="zoom:60%"/>
+    <img src="http://ww4.sinaimg.cn/large/006tNc79ly1g4bd1e2kk2j30mt08jmy9.jpg" style="zoom:60%"/>
 
   * **确定一个reduced (较少)但有代表性的workload**
     
@@ -1519,7 +1519,7 @@
 
   * 调和平均值：又称倒数平均数，是总体各统计变量倒数的算术平均数的倒数
 
-    <img src="Pictures/Computer_Architecture/1557825523789.png" style="zoom:60%"/>
+    <img src="http://ww3.sinaimg.cn/large/006tNc79ly1g4babpbhf4j30lx02gweo.jpg" style="zoom:60%"/>
 
 * Example: System Throughput
 
@@ -1591,7 +1591,7 @@
 
   * Shared Cache；Bus-based Shared Memory；Dance-hall；Distributed Memory
 
-    <img src="Pictures/Computer_Architecture/1557829720177.png" style="zoom:40%"/>
+    <img src="http://ww3.sinaimg.cn/large/006tNc79ly1g4b9gvjzqqj30k00eowg3.jpg" style="zoom:40%"/>
 
 * multiprocessor的两种分类：根据内存的组织形式分类
 
@@ -1646,7 +1646,7 @@
     
     * 但最新这个概念也很难定义，如果两个cpu同时写呢？如果时间很接近呢？
     
-    <img src="Pictures/Computer_Architecture/1560765269794.png" style="zoom:40%"/>
+    <img src="http://ww3.sinaimg.cn/large/006tNc79ly1g4bamqaez9j30kn08475y.jpg" style="zoom:40%"/>
   
 * Cache Coherency 的精确定义
   * **定义1：program order**，单处理器的 “read after write”，如果之前写了新值n，之后的读就要读到这个新值
@@ -1687,7 +1687,7 @@
 
 * Cache Coherence Through Bus Snooping
 
-  <img src="Pictures/Computer_Architecture/1557887533547.png" style="zoom:40%"/>
+  <img src="http://ww3.sinaimg.cn/large/006tNc79ly1g4b9gwimybj30lz07iwf8.jpg" style="zoom:40%"/>
 
   * 具有local cache的多个processor被放置在shared bus上
   * 所有写操作都将在总线上以事务的形式显示到内存中
@@ -1706,7 +1706,7 @@
     
     * invalidation-based：写操作时是其他缓存副本失效
     
-      <img src="Pictures/Computer_Architecture/1557888082952.png" style="zoom:55%"/>
+      <img src="http://ww1.sinaimg.cn/large/006tNc79ly1g4bd0tj1vij30i0058myd.jpg" style="zoom:55%"/>
 
 * A simple Example: Write-through Invalidation
 
@@ -1716,7 +1716,7 @@
 
   * 处理器写入后，广播invalidation；下一次读取其他处理器将触发缓存未命中
   
-    <img src="Pictures/Computer_Architecture/1560766044742.png" style="zoom:45%"/>
+    <img src="http://ww3.sinaimg.cn/large/006tNc79ly1g4bat4mrzxj30ag0bjaan.jpg" style="zoom:45%"/>
   
 * Problem with write-through cache
 
@@ -1725,9 +1725,9 @@
 
 * **A 3-state (MSI) Write-Back Invalidation Protocol**
 
-  <img src="Pictures/Computer_Architecture/1557888707774.png" style="zoom:50%"/>
+  <img src="http://ww1.sinaimg.cn/large/006tNc79ly1g4bcv85cxpj30oa0dyjsm.jpg" style="zoom:50%"/>
 
-  <img src="Pictures/Computer_Architecture/1557888743234.png" style="zoom:50%"/>
+  <img src="http://ww2.sinaimg.cn/large/006tNc79ly1g4batlhlshj30nr0dxtaz.jpg" style="zoom:50%"/>
 
   * Features 3 states: modified (M), Shared (S), Invalid (I)
   * 2 possible processor requests: PrRd and PrWr
@@ -1787,7 +1787,7 @@
     * 多分processor resource，比如register和PC
     * 往pipeline中添加了 thread swtich的逻辑
   
-    ​	<img src="Pictures/Computer_Architecture/1557897089555.png" style="zoom:55%"/>
+    ​	<img src="http://ww1.sinaimg.cn/large/006tNc79ly1g4bd08wkucj30ml023q39.jpg" style="zoom:55%"/>
 
 * multithreading 的类型
 
@@ -1807,7 +1807,7 @@
     
     * 较大地提升了资源的利用率
     
-      <img src="Pictures/Computer_Architecture/1557897719027.png" style="zoom:45%"/>
+      <img src="http://ww1.sinaimg.cn/large/006tNc79ly1g4b9hw2qz6j30ny096q4m.jpg" style="zoom:45%"/>
     
     * HT，hyper threading，超线程技术，Intel 的SMT技术实现
     
@@ -1838,19 +1838,19 @@
 
   * 纵坐标granularity是粒度
   
-    <img src="Pictures/Computer_Architecture/1557899084413.png" style="zoom:45%"/>
+    <img src="http://ww2.sinaimg.cn/large/006tNc79ly1g4b9gsr1zqj30hz0d4t9r.jpg" style="zoom:45%"/>
 
 ##### Introduction to Multicore
 
 * Multicore 出现的理由：单个superscalar处理器无法充分利用线程级并行，而multi core可以
 
-  <img src="Pictures/Computer_Architecture/1557899245212.png" style="zoom:35%"/>
+  <img src="http://ww2.sinaimg.cn/large/006tNc79ly1g4bcv8mvdoj30nm0b3ju6.jpg" style="zoom:35%"/>
 
-  <img src="Pictures/Computer_Architecture/1557899260518.png" style="zoom:35%"/>
+  <img src="http://ww2.sinaimg.cn/large/006tNc79ly1g4bd06ztbcj30n60bon0d.jpg" style="zoom:35%"/>
 
 * 回顾，指令级并行，superscalar
 
-  <img src="Pictures/Computer_Architecture/1557899875538.png" style="zoom:35%"/>
+  <img src="http://ww4.sinaimg.cn/large/006tNc79ly1g4baucmn56j30m1086wf6.jpg" style="zoom:35%"/>
 
 * **Single core SMT 和 Multicore solution 对比**
 
@@ -1868,19 +1868,19 @@
 
   * Private L1 and L2，例子：AMD Athlon，Intel Pentium D
 
-    <img src="Pictures/Computer_Architecture/1560767443054.png" style="zoom:55%"/>
+    <img src="http://ww1.sinaimg.cn/large/006tNc79ly1g4b9humr65j3087070jrr.jpg" style="zoom:55%"/>
 
 * 一些多核设计的案例
 
   * 图中显示，**multicore在 server/mobile/embedded (嵌入式) 都挺合适的**
 
-  <img src="Pictures/Computer_Architecture/1557901667782.png" style="zoom:35%"/>
+  <img src="http://ww1.sinaimg.cn/large/006tNc79ly1g4batos4fcj30jd0ejwg7.jpg" style="zoom:35%"/>
 
-  <img src="Pictures/Computer_Architecture/1557901680819.png" style="zoom:35%"/>
+  <img src="http://ww2.sinaimg.cn/large/006tNc79ly1g4bczlzd02j30jb0egwfy.jpg" style="zoom:35%"/>
 
-  <img src="Pictures/Computer_Architecture/1557901721445.png" style="zoom:35%"/>
+  <img src="http://ww1.sinaimg.cn/large/006tNc79ly1g4bd0uhqecj30oo0bw40y.jpg" style="zoom:35%"/>
 
-  <img src="Pictures/Computer_Architecture/1557901736010.png" style="zoom:35%"/>
+  <img src="http://ww2.sinaimg.cn/large/006tNc79ly1g4b9hyvnnjj30or0a8tb1.jpg" style="zoom:35%"/>
 
 * **多核 Multicore 架构设计的挑战**
   
@@ -1918,7 +1918,7 @@
     * EV6：支持乱序执行 OoO
     * EV8：包含 SMT 同步多线程
     
-    <img src="Pictures/Computer_Architecture/1557903080808.png" style="zoom:40%"/>
+    <img src="http://ww4.sinaimg.cn/large/006tNc79ly1g4b9gtqvnzj30mr08z75p.jpg" style="zoom:40%"/>
 
 * Heterogeneous chip multiprocessors 异构多处理器芯片
 
@@ -1938,7 +1938,7 @@
   
   * 常见的迁移过程包括：process scheduling，page table manipulation，binary translation，state transformation 进程调度,页表操作,二进制翻译,状态转换
   
-    <img src="Pictures/Computer_Architecture/1557904037900.png" style="zoom:45%"/>
+    <img src="http://ww4.sinaimg.cn/large/006tNc79ly1g4bamr7ck8j30jt0cpdgy.jpg" style="zoom:45%"/>
   
 
 ##### From Multicore to Manycore
@@ -2013,7 +2013,7 @@
 
   * SIMD，Single Instruction Multiple Data 单指令流多数据流
   
-    <img src="Pictures/Computer_Architecture/1557921047758.png" style="zoom:40%"/>
+    <img src="http://ww4.sinaimg.cn/large/006tNc79ly1g4bczlgtcyj30hs094aao.jpg" style="zoom:40%"/>
   
 
 ##### Vector Processor
@@ -2044,7 +2044,7 @@
 
   * Vector Register file，是指8-32 个vector register
 
-    <img src="Pictures/Computer_Architecture/1557922449353.png" style="zoom:50%"/>
+    <img src="http://ww2.sinaimg.cn/large/006tNc79ly1g4bd1fh8ryj30nd04zgmd.jpg" style="zoom:50%"/>
 
 * VMIPS的参数：
 
@@ -2058,7 +2058,7 @@
 
   * 比如`ADDV C,A,B`，vector register A的元素和vector register B的元素是 硬连接的，hardwired
 
-    <img src="Pictures/Computer_Architecture/1557922629277.png" style="zoom:50%"/>
+    <img src="http://ww4.sinaimg.cn/large/006tNc79ly1g4bd1ez19rj30g408eq3v.jpg" style="zoom:50%"/>
 
 * Vector Instruction Execution
 
@@ -2106,7 +2106,7 @@
 
   * 名词解释：vertices 顶点，primitives (triangle，points，lines) 原始结构，fragments 碎片，pixels 像素
 
-    <img src="Pictures/Computer_Architecture/1557926187745.png" style="zoom:45%"/>
+    <img src="http://ww1.sinaimg.cn/large/006tNc79ly1g4b9i33zddj30e60cgmxu.jpg" style="zoom:45%"/>
 
 * Graphics Workload，通常是一些 相同的，独立的，基于像素流的计算
 
@@ -2124,11 +2124,11 @@
 
   * SIMT Approach，multiple threads + scalar ops (single PC, multiple register file)
 
-    <img src="Pictures/Computer_Architecture/1560770180190.png" style="zoom:40%"/>
+    <img src="http://ww1.sinaimg.cn/large/006tNc79ly1g4b9gt5n09j30if0brdh3.jpg" style="zoom:40%"/>
 
-    <img src="Pictures/Computer_Architecture/1560770120331.png" style="zoom:40%"/>
+    <img src="http://ww3.sinaimg.cn/large/006tNc79ly1g4bampt81bj30kn0bs75x.jpg" style="zoom:40%"/>
 
-    <img src="Pictures/Computer_Architecture/1560770126441.png" style="zoom:40%"/>
+    <img src="http://ww3.sinaimg.cn/large/006tNc79ly1g4bczoqmicj30js0c1mym.jpg" style="zoom:40%"/>
 
 * SIMT 和 SIMD 的区别
 
@@ -2177,7 +2177,7 @@
 
   * GPC，Graphics Processor Cluster
 
-    <img src="Pictures/Computer_Architecture/1560770305457.png" style="zoom:40%"/>
+    <img src="http://ww1.sinaimg.cn/large/006tNc79ly1g4bd0u0jl4j30l00dfmzz.jpg" style="zoom:40%"/>
 
 * Warps
 
@@ -2215,7 +2215,7 @@
 
   * **Dynamic warp formation可能会导致warp乱序执行**
 
-    <img src="Pictures/Computer_Architecture/1560781058132.png" style="zoom:45%"/>
+    <img src="http://ww1.sinaimg.cn/large/006tNc79ly1g4bczmfse6j30lf09rdhe.jpg" style="zoom:45%"/>
 
 * Resource Limit
 
@@ -2228,7 +2228,7 @@
 
 * GPU Register File：通常大于L2/L1，而且还在不断扩大
 
-  <img src="Pictures/Computer_Architecture/1560770806123.png" style="zoom:40%"/>
+  <img src="http://ww4.sinaimg.cn/large/006tNc79ly1g4ba9x2as4j30kb07o0th.jpg" style="zoom:40%"/>
 
 * Design Considerations
 
@@ -2312,7 +2312,7 @@
     
     * total time of flight of the packet，包的飞行时间？
     
-      <img src="Pictures/Computer_Architecture/1560568098024.png" style="zoom:55%"/>
+      <img src="http://ww1.sinaimg.cn/large/006tNc79ly1g4b9h2m8b7j30jo02t0sw.jpg" style="zoom:55%"/>
 
 ##### Interconnection Topologies 互联拓扑
 
@@ -2336,7 +2336,7 @@
 
   * frequency受限于物理条件
 
-    <img src="Pictures/Computer_Architecture/1560568504056.png" style="zoom:50%"/>
+    <img src="http://ww1.sinaimg.cn/large/006tNc79ly1g4bcyzx4h5j308902aa9y.jpg" style="zoom:50%"/>
 
 * crossbar结构
 
@@ -2348,7 +2348,7 @@
 
   * 如果结点数量不是很多，全连是挺好的选择；但随着结点数量增加，复杂度增加比较爆炸，如果合理采用多级连接multistage interconnection可以有效降低复杂度
 
-    <img src="Pictures/Computer_Architecture/1560568629061.png" style="zoom:50%"/>
+    <img src="http://ww3.sinaimg.cn/large/006tNc79ly1g4bd07zad3j307v07fdgj.jpg" style="zoom:50%"/>
 
 * linear arrays and rings
 
@@ -2358,7 +2358,7 @@
 
   * diameter = N-1，平均距离是1/2 N，bisection width = 1（ring）
 
-    <img src="Pictures/Computer_Architecture/1560568945210.png" style="zoom:50%"/>
+    <img src="http://ww1.sinaimg.cn/large/006tNc79ly1g4batpplsqj308o01n3ye.jpg" style="zoom:50%"/>
 
 * multidimensional topology，2D mesh
 
@@ -2366,11 +2366,11 @@
 
   * 结点之间的latency是non-uniform的（不均匀的），开销是O(n)
 
-    <img src="Pictures/Computer_Architecture/1560569194570.png" style="zoom:50%"/>
+    <img src="http://ww3.sinaimg.cn/large/006tNc79ly1g4baap5brjj305w058t8o.jpg" style="zoom:50%"/>
 
   * 高维度的ring，更短的latency，更高的cost
 
-    <img src="Pictures/Computer_Architecture/1560569472967.png" style="zoom:50%"/>
+    <img src="http://ww4.sinaimg.cn/large/006tNc79ly1g4baay2u1pj30gt05zwfb.jpg" style="zoom:50%"/>
 
 * Tree结构
 
@@ -2380,7 +2380,7 @@
 
   * routing距离按照log增长
 
-    <img src="Pictures/Computer_Architecture/1560569627745.png" style="zoom:40%"/>
+    <img src="http://ww2.sinaimg.cn/large/006tNc79ly1g4baa42ovkj30av07iq36.jpg" style="zoom:40%"/>
 
 * Multistage interconnection network，层级网络
 
@@ -2388,7 +2388,7 @@
 
   * mega 网络，log(N)个层级，N/2个switching unit
 
-    <img src="Pictures/Computer_Architecture/1560569707112.png" style="zoom:40%"/>
+    <img src="http://ww2.sinaimg.cn/large/006tNc79ly1g4bat8i02nj30hs09f0tt.jpg" style="zoom:40%"/>
 
 * Butterfly Topology
 
@@ -2397,7 +2397,7 @@
     
     * 连接 N=2的d次方的node，d是switch的层级数
     
-      <img src="Pictures/Computer_Architecture/1560569879951.png" style="zoom:50%"/>
+      <img src="http://ww2.sinaimg.cn/large/006tNc79ly1g4baac5lx1j30jp07yt9y.jpg" style="zoom:50%"/>
 
 * hypercube 超立方体
 
@@ -2405,7 +2405,7 @@
 
   * 具有良好的 bisection bandwidth
 
-    <img src="Pictures/Computer_Architecture/1560569977958.png" style="zoom:50%"/>
+    <img src="http://ww1.sinaimg.cn/large/006tNc79ly1g4batod007j30gd04m0sz.jpg" style="zoom:50%"/>
 
 
 ##### Summary
@@ -2457,9 +2457,9 @@
 
   * CUE： carbon usage effectiveness
 
-    <img src="Pictures/Computer_Architecture/1560575684365.png" style="zoom:70%"/>
+    <img src="http://ww4.sinaimg.cn/large/006tNc79ly1g4bbn94so9j307h01fglk.jpg" style="zoom:70%"/>
 
-    <img src="Pictures/Computer_Architecture/1560575693118.png" style="zoom:70%"/>
+    <img src="http://ww3.sinaimg.cn/large/006tNc79ly1g4baugfkv9j30jg01q74h.jpg" style="zoom:70%"/>
 
 * data center tier standard，数据中心层级划分
 
@@ -2469,7 +2469,7 @@
 
   * 指标有 availability，downtime per year，power backup等
 
-    <img src="Pictures/Computer_Architecture/1560575759304.png" style="zoom:45%"/>
+    <img src="http://ww2.sinaimg.cn/large/006tNc79ly1g4baaqm82hj30m607t0us.jpg" style="zoom:45%"/>
 
 * datacenter infrastructure - power system
 
@@ -2491,9 +2491,9 @@
 
   * PSU：power supply unit，电力供应单元
 
-    <img src="Pictures/Computer_Architecture/1560575828497.png" style="zoom:60%"/>
+    <img src="http://ww3.sinaimg.cn/large/006tNc79ly1g4b9hyefwaj30kh07qjt4.jpg" style="zoom:60%"/>
 
-    <img src="Pictures/Computer_Architecture/1560575919161.png" style="zoom:50%"/>
+    <img src="http://ww4.sinaimg.cn/large/006tNc79ly1g4b9i5y7foj30j70d2abb.jpg" style="zoom:50%"/>
 
 * datacenter infrastructure - cooling system
 
@@ -2514,7 +2514,7 @@
     
     * EDA，equipment distribution area 设备分布区
     
-      <img src="Pictures/Computer_Architecture/1560576086055.png" style="zoom:40%"/>
+      <img src="http://ww4.sinaimg.cn/large/006tNc79ly1g4baubpu7uj30lg0bhacn.jpg" style="zoom:40%"/>
   
 
 ##### Key Design Consideration
@@ -2580,7 +2580,7 @@
 
   - 这个接口在OS之下，driver之上
 
-    <img src="Pictures/Computer_Architecture/1560579789260.png" style="zoom:40%"/>
+    <img src="http://ww3.sinaimg.cn/large/006tNc79ly1g4bbndpisvj30hd05mjry.jpg" style="zoom:40%"/>
 
   - processor state记录了什么？处理器状态，记录了寄存器状态，又称为architecture state
   - processor state和power state是有区别的
@@ -2636,7 +2636,7 @@
 
 * MPP，maximal power point，提供最大电力的特殊工作点
 
-  <img src="Pictures/Computer_Architecture/1560581023462.png" style="zoom:40%"/>
+  <img src="http://ww3.sinaimg.cn/large/006tNc79ly1g4bat3r1fqj30mf07z3ze.jpg" style="zoom:40%"/>
 
 * PTP，performance-time-product
 
@@ -2684,7 +2684,7 @@
 
   - 可用性好但可靠性差：坏的非常频繁但是修的时间非常短
 
-    <img src="Pictures/Computer_Architecture/1560581404855.png" style="zoom:50%"/>
+    <img src="http://ww4.sinaimg.cn/large/006tNc79ly1g4b9i3kyj1j30do01sglo.jpg" style="zoom:50%"/>
 
 - Discussion：ACE and AVF
 
@@ -2699,7 +2699,7 @@
     
   - 硬件结构H在N个周期内包含B位的AVF可以表示为
     
-      <img src="Pictures/Computer_Architecture/1560581532029.png" style="zoom:50%"/>
+      <img src="http://ww2.sinaimg.cn/large/006tNc79ly1g4bd060i44j30g102p0su.jpg" style="zoom:50%"/>
   
 - Discussion：SMT for fault tolerance
 
@@ -2709,7 +2709,7 @@
     
     - 输出的差异表示故障
     
-      <img src="Pictures/Computer_Architecture/1560581780093.png" style="zoom:45%"/>
+      <img src="http://ww1.sinaimg.cn/large/006tNc79ly1g4b9h31ynzj30h40793yu.jpg" style="zoom:45%"/>
 
 - Redundancy ：power delivery
 

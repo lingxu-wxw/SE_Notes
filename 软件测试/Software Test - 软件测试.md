@@ -89,7 +89,7 @@
 
 * 测试覆盖指标
 
-  ![1555290934643](Pictures/Software_Test/1555290934643.png)
+  ![1555290934643](http://ww1.sinaimg.cn/large/006tNc79ly1g4babr5t2mj30j30b8tb8.jpg)
 
 * 测试覆盖指标
 
@@ -116,7 +116,7 @@
 
 * 基于路径的测试讨论
 
-  ![1555290898703](Pictures/Software_Test/1555290898703.png)
+  ![1555290898703](http://ww2.sinaimg.cn/large/006tNc79ly1g4b9hi0ftaj30r40cl77q.jpg)
 
 ##### 数据流测试
 
@@ -151,11 +151,11 @@
 
 * 测试覆盖项的趋势
 
-  ![1555294416799](Pictures/Software_Test/1555294416799.png)
+  ![1555294416799](http://ww2.sinaimg.cn/large/006tNc79ly1g4b9h0paf6j30b908daa6.jpg)
 
 * 测试方法作用的趋势
 
-  ![1555294425189](Pictures/Software_Test/1555294425189.png)
+  ![1555294425189](http://ww3.sinaimg.cn/large/006tNc79ly1g4b9hii2rkj30di07mmxd.jpg)
 
 * 
 
@@ -171,7 +171,7 @@
 
 * 瀑布模型的优缺点
 
-  ![1558310999625](Pictures/Software_Test/1558310999625.png)
+  ![1558310999625](http://ww1.sinaimg.cn/large/006tNc79ly1g4ba9jmxyej30hq0acjtm.jpg)
 
 * 瀑布模型的变体：增量开发模型 (将产品分成若干次产品进行提交)，演化开发模型 (需求分析前提供一个最终产品的原型)，螺旋模型 (每个阶段增加了风险分析和验证)
 * 回归测试 (regression test)：对已经完成测试的软件进行修改和增加之后，重新测试软件
@@ -209,7 +209,7 @@
 
 * 基于调用图的集成
 
-  ![1558311886435](Pictures/Software_Test/1558311886435.png)
+  ![1558311886435](http://ww4.sinaimg.cn/large/006tNc79ly1g4b9hhk4b0j30ev0btjst.jpg)
 
   * 成对集成：免除桩程序和驱动器的开发
   * 相邻集成：减少测试的数量，以相邻结点为集合，进行测试
@@ -226,11 +226,11 @@
 
   * MM-路径，穿插出现模块执行路径和消息的序列
 
-    ![1558312602366](Pictures/Software_Test/1558312602366.png)
+    ![1558312602366](http://ww1.sinaimg.cn/large/006tNc79ly1g4b9hh3g1yj30j50c4q47.jpg)
 
   * MM路径，给定一组单元，MM路径是一种有向图，节点表示模块执行路径，边表示消息和单元之间的返回；实线表示消息，虚线表示返回
 
-    ![1558312700985](Pictures/Software_Test/1558312700985.png)
+    ![1558312700985](http://ww3.sinaimg.cn/large/006tNc79ly1g4b9hixtnjj30d707474l.jpg)
 
   * DD路径：模块内的程序执行路径；MM路径：模块间的模块执行路径序列
 
@@ -238,7 +238,7 @@
 
 * 集成测试策略比较
 
-  ![1558312761119](Pictures/Software_Test/1558312761119.png)
+  ![1558312761119](http://ww3.sinaimg.cn/large/006tNc79ly1g4ba9urmr3j30jh05jgmo.jpg)
 
 ##### 系统测试
 
@@ -254,7 +254,7 @@
 
   * FSM：节点=ASF，边=事件和行动
 
-  ![1558314146545](Pictures/Software_Test/1558314146545.png)
+  ![1558314146545](http://ww3.sinaimg.cn/large/006tNc79ly1g4b9heer1kj30kn0e1dhi.jpg)
 
 * 基于用例的线索
   

@@ -46,7 +46,7 @@
     * 防御Meltdown的方法：原本user和kernel是共享页表的，现在分成两个页表提高隔离性，mapped in GPT & EPT
     * KPTI (Kernel Page Table Isolation)，内核页表隔离来预防meltdown攻击
 
-    <img src="Pictures/Operating_System/1560664180721.png" style="zoom:35%"  />
+    <img src="http://ww1.sinaimg.cn/large/006tNc79ly1g4baauapwdj30qo0fajt8.jpg" style="zoom:35%"  />
 
   * Formal verification 形式化验证 (seL4)，针对Trustworthy问题
 
@@ -56,7 +56,7 @@
 
   * 典型服务器各组件的耗电情况
 
-    <img src="Pictures/Operating_System/1554557487878.png" style="zoom:45%"  />
+    <img src="http://ww3.sinaimg.cn/large/006tNc79ly1g4babl2utwj30he08dab5.jpg" style="zoom:45%"  />
 
   * 关于Power，OS可以做的事
 
@@ -71,7 +71,7 @@
 
   * Android操作系统的架构
 
-    <img src="Pictures/Operating_System/1554557978966.png" style="zoom:60%"  />
+    <img src="http://ww4.sinaimg.cn/large/006tNc79ly1g4bb4rh99vj30g50blmyi.jpg" style="zoom:60%"  />
 
   * 移动端OS的特殊性，跟PC中不一样的可能出现的问题
 
@@ -112,7 +112,7 @@
 
   * 新式的存储
 
-    <img src="Pictures/Operating_System/1554607824587.png" style="zoom:35%"  />
+    <img src="http://ww2.sinaimg.cn/large/006tNc79ly1g4ba94in2aj30p70cnjtk.jpg" style="zoom:35%"  />
 
   * 关于存储，OS可以做的事
 
@@ -129,7 +129,7 @@
 
   * 虚拟化架构
 
-    <img src="Pictures/Operating_System/1554608063907.png" style="zoom:50%"  />
+    <img src="http://ww3.sinaimg.cn/large/006tNc79ly1g4bavomlvij30hq08jjs3.jpg" style="zoom:50%"  />
 
   * 虚拟化的优势
 
@@ -140,7 +140,7 @@
 
   * 虚拟化的方法：process & OS 使用的硬件资源也要虚拟化
 
-    <img src="Pictures/Operating_System/1554608224031.png" style="zoom:35%"  />
+    <img src="http://ww4.sinaimg.cn/large/006tNc79ly1g4bavnlrl4j30nw0au750.jpg" style="zoom:35%"  />
     
   * ISA是硬件软件的接口，例如MIPS指令集，理解为system级别的所有指令集 & syscall
 
@@ -192,17 +192,17 @@
 
   * Hybrid kernel 复合内核：Windows ，NT kernel
 
-    <img src="Pictures/Operating_System/1554882220939.png" style="zoom:50%"   />
+    <img src="http://ww3.sinaimg.cn/large/006tNc79ly1g4bat7g5qfj30ux07wdhi.jpg" style="zoom:50%"   />
 
   * DOS：没有模块的划分，接口和实现没有很好的分离。DOS以后开始有一些Layered Approach，将OS分为若干level来实现
 
-    <img src="Pictures/Operating_System/1554882284901.png" style="zoom:40%"   />
+    <img src="http://ww2.sinaimg.cn/large/006tNc79ly1g4ban3efyaj30cl0cdjs7.jpg" style="zoom:40%"   />
 
   * UNIX：UNIX OS包括System program和kernel部分
 
     * UNIX system structure的结构如图所示
     
-    <img src="Pictures/Operating_System/1554882436070.png" style="zoom:40%"   />
+    <img src="http://ww4.sinaimg.cn/large/006tNc79ly1g4b9i29dbpj30jh0budht.jpg" style="zoom:40%"   />
     
     * UNIX的kernel定义：由系统调用接口之下和物理硬件之上的所有内容组成，提供文件系统、CPU调度、内存管理等操作系统功能；一个级别的大量函数
 
@@ -216,7 +216,7 @@
 
   * 缺点：kernel和user之间频繁通信的overhead，会降低性能
 
-    <img src="Pictures/Operating_System/1554883036112.png" style="zoom:40%"   />
+    <img src="http://ww3.sinaimg.cn/large/006tNc79ly1g4b9ibgrt7j30cq0b8jsl.jpg" style="zoom:40%"   />
 
 ##### Microkernel
 
@@ -281,7 +281,7 @@
   * Exokernel中kernel的作用：确认resource是否free，确认app是否有访问权限
   * 三种技术：Secure binding，Visible revocation，Abort protocol
 
-  <img src="Pictures/Operating_System/1560666375758.png" style="zoom:55%"   />
+  <img src="http://ww2.sinaimg.cn/large/006tNc79ly1g4bab4m56aj30gu0blwg3.jpg" style="zoom:55%"   />
 
 * 这张图引申出的question
 
@@ -324,7 +324,7 @@
 
 * System Management Mode有独立于OS的地址空间，用来执行电源管理或系统安全方面的指令。
 
-  <img src="Pictures/Operating_System/1555892328783.png" style="zoom:55%"   />
+  <img src="http://ww3.sinaimg.cn/large/006tNc79ly1g4bb1e19r9j30f50abmy1.jpg" style="zoom:55%"   />
 
  }
 
@@ -358,7 +358,7 @@ DF：控制串指令，1表示串指令递增，0表示串指令递减
 IOPL：用于控制操作系统执行操作，不允许被应用程序修改
 ```
 
-<img src="Pictures/Operating_System/1555892720464.png" style="zoom:55%"   />
+<img src="http://ww2.sinaimg.cn/large/006tNc79ly1g4ban66cpyj30jd09q0u2.jpg" style="zoom:55%"   />
 
  }
 
@@ -378,7 +378,7 @@ IOPL：用于控制操作系统执行操作，不允许被应用程序修改
 
 * 可以参考这一片博客 <https://blog.csdn.net/qq_37414405/article/details/84487591>
 
-  <img src="Pictures/Operating_System/1555893043340.png" style="zoom:60%"   />
+  <img src="http://ww2.sinaimg.cn/large/006tNc79ly1g4b9hv3g5jj30l30byq47.jpg" style="zoom:60%"   />
 
  } 
 
@@ -414,7 +414,7 @@ IOPL：用于控制操作系统执行操作，不允许被应用程序修改
   
   * 1MB以上被称为extended memory；640KB-1MB是一个内存空洞
   
-    <img src="Pictures/Operating_System/1555893901227.png" style="zoom:45%"/>
+    <img src="http://ww1.sinaimg.cn/large/006tNc79ly1g4baw9y98oj30ef0dsq45.jpg" style="zoom:45%"/>
 
  }
 
@@ -465,11 +465,11 @@ ljmp    $(SEG_KCODE<<3), $start32
 
   * 切换模式的代码
 
-    <img src="Pictures/Operating_System/1560668397051.png"/>
+    <img src="http://ww3.sinaimg.cn/large/006tNc79ly1g4baw79vcmj30ca0510td.jpg"/>
 
 * 从分段模式到分页模式：
 
-  <img src="Pictures/Operating_System/1560668381207.png"/>
+  <img src="http://ww4.sinaimg.cn/large/006tNc79ly1g4bb4vykiaj30db03cjrn.jpg"/>
 
 * Booting: enabling segment and paging
   * Segment: set GDT & use long jmp (ljmp)
@@ -514,7 +514,7 @@ ljmp    $(SEG_KCODE<<3), $start32
     * GDT：全局描述符，包含所有app都可使用的基本描述符
     * LDT：存放的是局部的，不需要全局共享的描述符
 
-    <img src="Pictures/Operating_System/1560670082783.png" style="zoom:65%" />
+    <img src="http://ww2.sinaimg.cn/large/006tNc79ly1g4b9hxj5zdj30ip0b8dh0.jpg" style="zoom:65%" />
 
 *  
 
@@ -532,7 +532,7 @@ ljmp    $(SEG_KCODE<<3), $start32
 
 * 页表项结构 PTE：高20位是页索引号，低12位是PTE属性
 
-  <img src="Pictures/Operating_System/1555921993835.png" style="zoom:45%"   />
+  <img src="http://ww1.sinaimg.cn/large/006tNc79ly1g4bat108f9j30mp053wfc.jpg" style="zoom:45%"   />
 
 ```
 P: present
@@ -548,7 +548,7 @@ G: global page (no TLB updating on the address if CR3 is reset) - 一直放在TL
 
 * 页目录项结构 PDE
 
-  <img src="Pictures/Operating_System/1555922102326.png" style="zoom:45%"   />
+  <img src="http://ww4.sinaimg.cn/large/006tNc79ly1g4b9htcdmrj30ml0780u9.jpg" style="zoom:45%"   />
 
 ```
 PS: page size (0=4KB, 1=4MB) - 4MB: super page
@@ -568,7 +568,7 @@ PS: page size (0=4KB, 1=4MB) - 4MB: super page
 
 * 内存层次结构
   
-  <img src="Pictures/Operating_System/1560671230455.png" style="zoom:65%"   />
+  <img src="http://ww2.sinaimg.cn/large/006tNc79ly1g4b9i6wcfdj30ef0frtal.jpg" style="zoom:65%"   />
   
 * big picture of xv6 virtual addressing scheme
   
@@ -636,9 +636,9 @@ Fork：copyuvm
   * 线性地址就是虚拟地址
   * TODO：逻辑地址和线性地址有什么区别？
 
-  <img src="Pictures/Operating_System/1556339216237.png" style="zoom:45%"   />
+  <img src="http://ww4.sinaimg.cn/large/006tNc79ly1g4baus3wjtj30mp05fdgh.jpg" style="zoom:45%"   />
 
-  <img src="Pictures/Operating_System/1556339247367.png" style="zoom:45%"   />
+  <img src="http://ww3.sinaimg.cn/large/006tNc79ly1g4baafuc27j30nq0eeabl.jpg" style="zoom:45%"   />
 
 * Boot阶段的主要工作：
 
@@ -664,7 +664,7 @@ Fork：copyuvm
 
     * ENBRYO可以理解为到RUNNABLE之前的一个过渡。allocproc会在进程表中找到一个标记为UNUSED的位置。当它找到这样一个没有被使用的位置后，allocproc将其状态设置为EMBRYO，使其标记为被使用并给这个进程一个独有的pid。接下来，它尝试为进程的内核线程分配内核栈。如果分配失败了，allocproc会把这个位置的状态恢复为UNUSED并返回0来标记失败。
 
-      <img src="Pictures/Operating_System/1556342655313.png" style="zoom:45%"   />
+      <img src="http://ww4.sinaimg.cn/large/006tNc79ly1g4baurrzhnj30kb08e0ti.jpg" style="zoom:45%"   />
     
 
 * **Process Control Block，PCB**
@@ -677,11 +677,11 @@ Fork：copyuvm
 
   * 主要功能是在中断的时候保存数据，以便调度回来之后还能继续使用
 
-    <img src="Pictures/Operating_System/1560673322762.png" style="zoom:45%"   />
+    <img src="http://ww4.sinaimg.cn/large/006tNc79ly1g4bab60ysmj30770bmjs7.jpg" style="zoom:45%"   />
 
   * xv6 中的进程数据结构
 
-    <img src="Pictures/Operating_System/1556343005224.png" style="zoom:45%"   />
+    <img src="http://ww1.sinaimg.cn/large/006tNc79ly1g4bb3knrcwj30mr0anwgk.jpg" style="zoom:45%"   />
 
 * Context Switch 上下文切换
 
@@ -691,7 +691,7 @@ Fork：copyuvm
 
   * 上下文切换换栈的瞬间
 
-    <img src="Pictures/Operating_System/1556343241697.png" style="zoom:50%"   />
+    <img src="http://ww3.sinaimg.cn/large/006tNc79ly1g4bawd71rsj309t08ijrt.jpg" style="zoom:50%"   />
 
 * Process Scheduling Queue 进程调度队列
 
@@ -710,7 +710,7 @@ Fork：copyuvm
   * Middle-term scheduler，将一些process从内存中暂时移出
   * scheduler对process的分类：IO-bound process和CPU-bound process
   
-  <img src="Pictures/Operating_System/1560674491510.png" style="zoom:55%"   />
+  <img src="http://ww3.sinaimg.cn/large/006tNc79ly1g4bb1ctlg0j30hw06p3zh.jpg" style="zoom:55%"   />
   
 * Process creation
 
@@ -718,7 +718,7 @@ Fork：copyuvm
   * Resource sharing policies：分享所有的资源，共享父资源的子集，共享任何资源
   * Execution：父进程和子进程并行执行，父进程等待子进程终止
 
-  <img src="Pictures/Operating_System/1556344453826.png" style="zoom:50%"/>
+  <img src="http://ww3.sinaimg.cn/large/006tNc79ly1g4bawdpdkgj30it057mxd.jpg" style="zoom:50%"/>
 
 * Process Termination
 
@@ -747,7 +747,7 @@ Fork：copyuvm
   
   * thread的定义是可以被scheduler看到的
   
-    <img src="Pictures/Operating_System/1560675794747.png" style="zoom:70%"/>
+    <img src="http://ww4.sinaimg.cn/large/006tNc79ly1g4ban2wbofj3093055aaf.jpg" style="zoom:70%"/>
   
 * Review Questions
   
@@ -755,7 +755,7 @@ Fork：copyuvm
   
   * A：thread比context更大一些，context只有`edi/esi/ebx/ebp/eip`五个寄存器，thread还有thread info这个结构
   
-    <img src="Pictures/Operating_System/1560675248061.png" style="zoom:40%"/>
+    <img src="http://ww3.sinaimg.cn/large/006tNc79ly1g4b9hzszd3j30he0bjabi.jpg" style="zoom:40%"/>
   
   * Q: What is the difference between a kernel thread and a user thread?
   
@@ -765,7 +765,7 @@ Fork：copyuvm
   
     * m对n是内核有一段代码可以动态作线程匹配
   
-      <img src="Pictures/Operating_System/1560675494774.png" style="zoom:50%"/>
+      <img src="http://ww2.sinaimg.cn/large/006tNc79ly1g4bb4s6ke6j30kh05p3z1.jpg" style="zoom:50%"/>
   
   * Q: Does every user-level thread has a kernel-level thread?
   
@@ -805,7 +805,7 @@ Fork：copyuvm
 
 * Threading Model
 
-  <img src="Pictures/Operating_System/1557209601573.png" style="zoom:35%"   />
+  <img src="http://ww3.sinaimg.cn/large/006tNc79ly1g4bb4z6l9vj30jd07wjs9.jpg" style="zoom:35%"   />
 
 ##### IPC
 
@@ -819,7 +819,7 @@ Fork：copyuvm
 
 * **IPC的两种模型：如下图，message passing 和 shared memory**
 
-  <img src="Pictures/Operating_System/1557209792779.png" style="zoom:40%"   />
+  <img src="http://ww3.sinaimg.cn/large/006tNc79ly1g4bab0w680j30ft0apmxo.jpg" style="zoom:40%"   />
 
 * 生产者消费者问题：
 
@@ -850,7 +850,7 @@ Fork：copyuvm
 
 * xv6中实现IPC的数据结构：struct pipe
 
-  <img src="Pictures/Operating_System/1557209952876.png" style="zoom:45%"   />
+  <img src="http://ww1.sinaimg.cn/large/006tNc79ly1g4ba93ay2lj30gw067wf8.jpg" style="zoom:45%"   />
 
 * IPC - Message Passing
 
@@ -919,7 +919,7 @@ Fork：copyuvm
   
 * RPC，Remote Procedure Call
 
-  <img src="Pictures/Operating_System/1560680824896.png" style="zoom:45%"/>
+  <img src="http://ww3.sinaimg.cn/large/006tNc79ly1g4bavsp69jj30h709xta4.jpg" style="zoom:45%"/>
 
 * Lightweight RPC Basic concepts
   * 简单的控制传输：client线程在server domain执行
@@ -932,7 +932,7 @@ Fork：copyuvm
   
   * **统计性结果：大多数message都比较短，几百byte的占到90%+**
   
-    <img src="Pictures/Operating_System/1560680571817.png" style="zoom:45%"/>
+    <img src="http://ww4.sinaimg.cn/large/006tNc79ly1g4ban81ueqj30iz08ota2.jpg" style="zoom:45%"/>
   
 * IPC之前设计高开销的地方
   * stub会复制大量数据
@@ -951,7 +951,7 @@ Fork：copyuvm
 
 * client thread上的调用顺序
 
-  <img src="Pictures/Operating_System/1557212448931.png" style="zoom:45%"   />
+  <img src="http://ww3.sinaimg.cn/large/006tNc79ly1g4ban3utcxj30jc09wtaq.jpg" style="zoom:45%"   />
 
 *   
 
@@ -977,11 +977,11 @@ Fork：copyuvm
 
 * Exception table
 
-  <img src="Pictures/Operating_System/1560681063033.png" style="zoom:45%"   />
+  <img src="http://ww1.sinaimg.cn/large/006tNc79ly1g4batr3vy3j30ix09l0uo.jpg" style="zoom:45%"   />
 
 * Intel CPU上的Exception簇
 
-  <img src="Pictures/Operating_System/1557213531390.png" style="zoom:45%"   />
+  <img src="http://ww3.sinaimg.cn/large/006tNc79ly1g4baajmy7wj30iz08aab8.jpg" style="zoom:45%"   />
 
 * IDT / Trap Vector in xv6
 
@@ -1001,7 +1001,7 @@ Fork：copyuvm
 
   * 要往kernel stack中push的内容
 
-    <img src="Pictures/Operating_System/1558168046512.png" style="zoom:45%"   />
+    <img src="http://ww2.sinaimg.cn/large/006tNc79ly1g4baba8warj30gv09mdg7.jpg" style="zoom:45%"   />
 
   * 为什么一定要push到kernel stack？
 
@@ -1038,7 +1038,7 @@ Fork：copyuvm
 
   * t通过iret指令：需要恢复上下文，从kernel切回user mode，继续执行用户程序
   
-    <img src="Pictures/Operating_System/1558168902842.png" style="zoom:35%"   />
+    <img src="http://ww1.sinaimg.cn/large/006tNc79ly1g4bb1dpc2vj30js09j0ta.jpg" style="zoom:35%"   />
   
 *  
 
@@ -1102,7 +1102,7 @@ Fork：copyuvm
 
   * 获取interrupt vector的内容，置上IP和CS，开始执行ISP
 
-    <img src="Pictures/Operating_System/1560682559037.png" style="zoom:45%"/>
+    <img src="http://ww2.sinaimg.cn/large/006tNc79ly1g4bab53jjlj30iu06hdh0.jpg" style="zoom:45%"/>
 
 * Interrupt hardware
 
@@ -1112,7 +1112,7 @@ Fork：copyuvm
 
   * IO 设备有唯一的/共享的 IRQ，IRQ由特殊的硬件映射到interrupt vector，然后传递给CPU，这种硬件叫做PIC programmable interrupt controller
 
-    <img src="Pictures/Operating_System/1558170109870.png" style="zoom:45%"/>
+    <img src="http://ww4.sinaimg.cn/large/006tNc79ly1g4bawafkidj30jo07bdgs.jpg" style="zoom:45%"/>
 
 * **APIC，IO-APIC 和 LAPIC**
 
@@ -1126,7 +1126,7 @@ Fork：copyuvm
     
     * 有一点像网络的实现，允许广播或者选择性的route 中断，能够分配中断处理负载，路由到最低优先级的进程，如果同等优先级就仲裁或round robin
     
-      <img src="Pictures/Operating_System/1558170439701.png" style="zoom:45%"   />
+      <img src="http://ww4.sinaimg.cn/large/006tNc79ly1g4bawe5e7aj30h1078mxh.jpg" style="zoom:45%"   />
 
 * 为设备分配IRQ, Assigning IRQs to Devices
 
@@ -1145,7 +1145,7 @@ Fork：copyuvm
 
 * **整个中断所有模块的组合** 
 
-  <img src="Pictures/Operating_System/1560683177025.png" style="zoom:40%"   />
+  <img src="http://ww1.sinaimg.cn/large/006tNc79ly1g4b9htpvfij30ke0ccq4t.jpg" style="zoom:40%"   />
 
 * Interrupt Priority 中断优先级
 
@@ -1153,7 +1153,7 @@ Fork：copyuvm
 
   * NMI：Non Maskable Interrupt 不可屏蔽中断
 
-    <img src="Pictures/Operating_System/1558176908532.png" style="zoom:50%"   />
+    <img src="http://ww2.sinaimg.cn/large/006tNc79ly1g4bancqsm8j30fs05waah.jpg" style="zoom:50%"   />
 
 * 中断处理分为四个阶段：
 
@@ -1223,13 +1223,13 @@ Fork：copyuvm
 
   * 非特权指令:用于读取寄存器值的SGDT和SIDT
 
-    <img src="Pictures/Operating_System/1558179202556.png" style="zoom:40%"   />
+    <img src="http://ww2.sinaimg.cn/large/006tNc79ly1g4b9i0rkgyj30hs036jrg.jpg" style="zoom:40%"   />
 
 * CPU 如何找到 TSS 存在哪里
 
   * 专用系统段寄存器TR将描述符的偏移量保存到GDT中
 
-    <img src="Pictures/Operating_System/1558179309176.png" style="zoom:45%"   />
+    <img src="http://ww3.sinaimg.cn/large/006tNc79ly1g4bamukn1dj30j908egmj.jpg" style="zoom:45%"   />
   
 
 ##### Bottom Half
@@ -1243,7 +1243,7 @@ Fork：copyuvm
   kernel threads，软中断，微线程，工作队列，内核线程)
       
     
-    <img src="Pictures/Operating_System/1558179662316.png" style="zoom:40%"   />
+    <img src="http://ww4.sinaimg.cn/large/006tNc79ly1g4baag9plmj30k904ewer.jpg" style="zoom:40%"   />
   
 * Top Half 中做的事 ：Do it Now !
   * 只执行最小的公共函数：保存寄存器，unmask其他中断，最后撤销此次操作：恢复寄存器，返回到以前的上下文
@@ -1315,11 +1315,11 @@ Fork：copyuvm
   
   * 总是在kernel mode运行，也没有user context
   
-    <img src="Pictures/Operating_System/1558247236987.png" style="zoom:70%"   />
+    <img src="http://ww3.sinaimg.cn/large/006tNc79ly1g4bb4u5t0sj30ji0c1ac3.jpg" style="zoom:70%"   />
 
 * 为什么interrupt handler不能sleep：防止死锁出现
 
-  <img src="Pictures/Operating_System/1558247436538.png" style="zoom:70%"   />
+  <img src="http://ww2.sinaimg.cn/large/006tNc79ly1g4baa28inhj30cv042dg5.jpg" style="zoom:70%"   />
   
 *  
 
@@ -1335,7 +1335,7 @@ Fork：copyuvm
 
 * 部分system call 列表
 
-  <img src="Pictures/Operating_System/1558247787338.png" style="zoom:65%"   />
+  <img src="http://ww2.sinaimg.cn/large/006tNc79ly1g4bb4rpiyhj30j706owfs.jpg" style="zoom:65%"   />
 
 * 跟踪system call的执行
 
@@ -1347,7 +1347,7 @@ Fork：copyuvm
 
   * 可以使用“ltrace”命令跟踪库调用
 
-    <img src="Pictures/Operating_System/1558248471000.png" style="zoom:45%"   />
+    <img src="http://ww1.sinaimg.cn/large/006tNc79ly1g4b9i08fg4j30hc0brgn1.jpg" style="zoom:45%"   />
 
 ##### Make a sytem call
 
@@ -1380,7 +1380,7 @@ Fork：copyuvm
 
   * 这些paranoid的核心理念是：不直接访问用户的内存，用户都是危险的
 
-    <img src="Pictures/Operating_System/1558250163187.png" style="zoom:50%"   />
+    <img src="http://ww4.sinaimg.cn/large/006tNc79ly1g4bb1f3r0ej30i309owg2.jpg" style="zoom:50%"   />
 
 * 新的指令 SYSENTER/SYSEXIT 和 SYSCALL/SYSRET
 
@@ -1435,7 +1435,7 @@ Fork：copyuvm
 
   * 通过将调用和执行解耦来消除同步
 
-    <img src="Pictures/Operating_System/1558253754026.png" style="zoom:40%"   />
+    <img src="http://ww4.sinaimg.cn/large/006tNc79ly1g4b9i7a5olj30hm099758.jpg" style="zoom:40%"   />
 
 
 ##### Summary
@@ -1460,8 +1460,6 @@ Fork：copyuvm
   * mode switch的开销可能会很高!
 
   * 还可以尝试一下 nested virtualization
-
-    <img src="C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1560837967085.png" style="zoom:50%"   />
 
 * 针对 cross-mode call的优化
 
@@ -1503,7 +1501,7 @@ Fork：copyuvm
 
   * Network devices
 
-    <img src="Pictures/Operating_System/1558272791435.png" style="zoom:40%"   />
+    <img src="http://ww1.sinaimg.cn/large/006tNc79ly1g4ba98ui07j30lt0c8jsq.jpg" style="zoom:40%"   />
 
 * Character Device 字符设备
 
@@ -1539,11 +1537,11 @@ Fork：copyuvm
 
 * 同步和异步IO，Synchronous and Asynchronous I/O
 
-  <img src="Pictures/Operating_System/1558273730595.png" style="zoom:40%"   />
+  <img src="http://ww1.sinaimg.cn/large/006tNc79ly1g4bb4vh34nj30jy08qgmo.jpg" style="zoom:40%"   />
   
 * DMA transfer的步骤
 
-  <img src="C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1560838449074.png" style="zoom:50%"   />
+  
 
 * DMA响应、DMA传输、DMA结束4个步骤
 
@@ -1570,8 +1568,6 @@ Fork：copyuvm
 
 * A kernel I/O structure
 
-  <img src="C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1560838555547.png" style="zoom:50%"   />
-
 * Device Driver
   * 定义：内核中与device直接交互的device-specific的代码
     * 支持标准的内部接口
@@ -1579,8 +1575,6 @@ Fork：copyuvm
     * 使用 ioctl() syscall，支持特定于device的特殊配置
 
 * Life cycle of an I/O request
-
-  <img src="C:\Users\wxw\AppData\Roaming\Typora\typora-user-images\1560838610824.png" style="zoom:70%"   />
 
 * Xv6 disk driver design & Implementation
 
@@ -1633,7 +1627,7 @@ Fork：copyuvm
 
   * block 0是不用的，block 1是superblock，block 2之后分别是inode，bitmap，data block和log block
 
-    <img src="Pictures/Operating_System/1560002634798.png" style="zoom:50%"   />
+    <img src="http://ww4.sinaimg.cn/large/006tNc79ly1g4b9hx06r2j30kf05omxx.jpg" style="zoom:50%"   />
 
 * 概述：Free-space list bit vector
 
@@ -1686,7 +1680,7 @@ Fork：copyuvm
     
   * 在ext2中，每个block group都包含自己的关键数据结构
 
-    <img src="Pictures/Operating_System/1560003578547.png" style="zoom:45%"   />
+    <img src="http://ww2.sinaimg.cn/large/006tNc79ly1g4baa2reetj30kx07adh9.jpg" style="zoom:45%"   />
 
 * **ext2的分配策略：ext2尝试将相关文件和目录保存在同一个block group中**
 
@@ -1696,7 +1690,7 @@ Fork：copyuvm
 
 * 数据块寻址的文件大小上限
 
-  <img src="Pictures/Operating_System/1560003810728.png" style="zoom:40%"   />
+  <img src="http://ww4.sinaimg.cn/large/006tNc79ly1g4bb4un6knj30if0anmys.jpg" style="zoom:40%"   />
 
 ##### Ext 4 file system
 
@@ -1710,7 +1704,7 @@ Fork：copyuvm
     
   * 现代文件系统尽量减少碎片，因为它导致了很多的seek，性能低下；entent更适合于连续文件
 
-    <img src="Pictures/Operating_System/1560004008079.png" style="zoom:45%"   />
+    <img src="http://ww2.sinaimg.cn/large/006tNc79ly1g4bb4xt0bcj30jr07jjsw.jpg" style="zoom:45%"   />
 
 * 实现extent特性
   * ext4和NTFS都用了extent
@@ -1976,11 +1970,11 @@ Fork：copyuvm
 
   * cluster是可以用来保存文件的最小磁盘空间：**data cluster位于分区的元数据后面，不同的cluster大小取决于volume大小**
 
-    <img src="Pictures/Operating_System/1560078775928.png" style="zoom:45%"   />
+    <img src="http://ww3.sinaimg.cn/large/006tNc79ly1g4bb4yb1jmj30ct06fmy0.jpg" style="zoom:45%"   />
 
 * FAT的结构
 
-  <img src="Pictures/Operating_System/1560077093726.png" style="zoom:45%"   />
+  <img src="http://ww4.sinaimg.cn/large/006tNc79ly1g4baugvn7ej30ks01vjry.jpg" style="zoom:45%"   />
 
   * boot sector：卷volume的layout，fs structure，boot code
   * reserve sector：描述分区根目录中的文件和文件夹
@@ -2009,7 +2003,7 @@ Fork：copyuvm
 
   * FAT是一种链式结构，这样一个个块块就是cluster
 
-    <img src="Pictures/Operating_System/1560077885407.png" style="zoom:45%"   />
+    <img src="http://ww2.sinaimg.cn/large/006tNc79ly1g4ba93ld0sj30hp04rwf6.jpg" style="zoom:45%"   />
 
 * 结构：FAT root folder
 
@@ -2017,7 +2011,7 @@ Fork：copyuvm
 
   * file naming：支持长文件名，main folder entry存8.3 short file name，secondary folder entry存long file name
 
-    <img src="Pictures/Operating_System/1560078444246.png" style="zoom:40%"   />
+    <img src="http://ww3.sinaimg.cn/large/006tNc79ly1g4b9i4hzmuj30if0av0v9.jpg" style="zoom:40%"   />
 
   * 短文件名要保证长度最多就那么长，THEQUI~1FOX，如果重了就THEQUI~2FOX，最后可以搞到T~999999FOX，再conflict就error
 
@@ -2049,11 +2043,11 @@ Fork：copyuvm
   
   * 不同的集群大小取决于卷大小
   
-    <img src="Pictures/Operating_System/1560079372934.png" style="zoom:55%"   />
+    <img src="http://ww4.sinaimg.cn/large/006tNc79ly1g4baw84ncqj30ca04bwez.jpg" style="zoom:55%"   />
   
 * NTFS的结构
 
-  <img src="Pictures/Operating_System/1560079412908.png" style="zoom:45%"   />
+  <img src="http://ww4.sinaimg.cn/large/006tNc79ly1g4bauwd61qj30hx02274o.jpg" style="zoom:45%"   />
 
   * NTFS boot sector：卷volume的layout，fs structure，boot code
   * Master File Table，这个是最重要的，包含file和folder的attribute
@@ -2097,7 +2091,7 @@ Fork：copyuvm
 * Master Boot Record：MBR
   * 我印象中是一个磁盘分区的时候要用到的东西
   
-  <img src="Pictures/Operating_System/1560081984823.png" style="zoom:40%"   />
+  <img src="http://ww3.sinaimg.cn/large/006tNc79ly1g4baw8lxh8j30k20d6q5u.jpg" style="zoom:40%"   />
   
 * 磁盘分区最多可以分四个，第四可以弄成extended partitions，就可以继续加
 
@@ -2135,7 +2129,7 @@ Fork：copyuvm
   
 * CPU拥有cache flush 到 memory的指令
   
-    <img src="Pictures/Operating_System/1560125796756.png" style="zoom:35%"   />
+    <img src="http://ww4.sinaimg.cn/large/006tNc79ly1g4bab9rr3hj30jz07v75o.jpg" style="zoom:35%"   />
 
 
 ##### Intro to flash file system
@@ -2147,7 +2141,7 @@ Fork：copyuvm
 * 闪存盘和普通磁盘的区别
   * flash disk organization：A chip (e.g. 1GB) => blocks (e.g. 512KB) =>    pages (e.g. 4KB) => cells（有点像体系结构那个）
 
-    <img src="Pictures/Operating_System/1560125994143.png" style="zoom:45%"   />
+    <img src="http://ww2.sinaimg.cn/large/006tNc79ly1g4baao78a4j30ks06hmyf.jpg" style="zoom:45%"   />
 
   * flash cell：是一个浮动栅晶体管，分为SLC和MLC
   
@@ -2179,7 +2173,7 @@ Fork：copyuvm
 
 * flexFS的架构分析
 
-  <img src="Pictures/Operating_System/1560126923254.png" style="zoom:45%"   />
+  <img src="http://ww3.sinaimg.cn/large/006tNc79ly1g4bablmdjij30a50bt0ts.jpg" style="zoom:45%"   />
 
   * flash manager：管理不同的cell
   * performance manager：利用I/O特性，实现高性能、高容量
@@ -2189,7 +2183,7 @@ Fork：copyuvm
 
   * 有三种类型的block：SLC, MLC, free
 
-    <img src="Pictures/Operating_System/1560127426694.png" style="zoom:75%"   />
+    <img src="http://ww2.sinaimg.cn/large/006tNc79ly1g4bauz8lxij30ep028wep.jpg" style="zoom:75%"   />
 
 * 架构：performance manager
 
@@ -2197,16 +2191,16 @@ Fork：copyuvm
 
     * dynamic allocation, background migration, locality-aware data management
 
-      <img src="Pictures/Operating_System/1560128158554.png" style="zoom:45%"   />
+      <img src="http://ww2.sinaimg.cn/large/006tNc79ly1g4baw6fgpuj30ct0algm3.jpg" style="zoom:45%"   />
 
   * migration 的过程通常是放在background执行的，为了防止一整块出现IO request的response time delay，做一个切片
 
-    <img src="Pictures/Operating_System/1560128370190.png" style="zoom:45%"   />
+    <img src="http://ww1.sinaimg.cn/large/006tNc79ly1g4baut0y52j30gz0c2tar.jpg" style="zoom:45%"   />
 
   * dynamic allocation的算法
     * 有一个参数 α
     
-      <img src="Pictures/Operating_System/1560128480827.png" style="zoom:65%"   />
+      <img src="http://ww4.sinaimg.cn/large/006tNc79ly1g4bb4t9ojqj30bj01mjrd.jpg" style="zoom:65%"   />
     
     * α 越大表示性能越好，迁移时间越短，SLC的页数少，写时间长，可以往SLC多放一点内容
     
@@ -2225,7 +2219,7 @@ Fork：copyuvm
 
 * 另一个可以的架构：SLC/MLC hybrid storage
 
-  <img src="Pictures/Operating_System/1560128889479.png" style="zoom:45%"   />
+  <img src="http://ww3.sinaimg.cn/large/006tNc79ly1g4baacj5vkj30ex05t0tk.jpg" style="zoom:45%"   />
 
   * 由单片SLC芯片和多片MLC芯片组成
   * 使用SLC芯片作为MLC芯片的写缓冲区
@@ -2248,7 +2242,7 @@ Fork：copyuvm
 
   * 问题：如何在这种设计中管理元数据和维护结构?
 
-    <img src="Pictures/Operating_System/1560129246728.png" style="zoom:45%"   />
+    <img src="http://ww1.sinaimg.cn/large/006tNc79ly1g4bb1ej7cxj30le04i750.jpg" style="zoom:45%"   />
 
 * LFS 具体一些问题的解决
 
@@ -2355,7 +2349,7 @@ Fork：copyuvm
 
   - **组件：GFS client，GFS master，GFS chunkserver**
 
-    <img src="Pictures/Operating_System/1560143214322.png" style="zoom:70%"   />
+    <img src="http://ww3.sinaimg.cn/large/006tNc79ly1g4bawaxmn5j30ja0ac76f.jpg" style="zoom:70%"   />
 
   - GFS client, GFS master（一个，元数据）, GFS chunkserver（多个，数据）
   - chunkserver的size是fix的（对比于file），每个chunkserver都有一个64-bit的handle/类似于id
@@ -2505,7 +2499,7 @@ Fork：copyuvm
     
     * 如果操作正确，有助于提供访问透明性；例如在VFS层下实现FS
     
-      <img src="Pictures/Operating_System/1560148495444.png" style="zoom:40%"   />
+      <img src="http://ww1.sinaimg.cn/large/006tNc79ly1g4baanc68jj30j70adwgl.jpg" style="zoom:40%"   />
 
 * Server，stateful和stateless，有状态和无状态
   * stateful，server需要维护client-specific的状态
@@ -2582,7 +2576,7 @@ Fork：copyuvm
 
   - LLC，最末级缓存
 
-    <img src="Pictures/Operating_System/1560151830992.png" style="zoom:35%"   /><img src="Pictures/Operating_System/1560151846751.png" style="zoom:40%"   />
+    <img src="http://ww3.sinaimg.cn/large/006tNc79ly1g4baw7oqq7j30hu05u0u0.jpg" style="zoom:35%"   /><img src="http://ww1.sinaimg.cn/large/006tNc79ly1g4bauwx10uj30cg06ggmn.jpg" style="zoom:40%"   />
 
   
 
@@ -2590,7 +2584,7 @@ Fork：copyuvm
 
 - 三种内存模型：共享cache，共享mem，私有mem
 
-  <img src="Pictures/Operating_System/1560151791370.png" style="zoom:40%"   />
+  <img src="http://ww1.sinaimg.cn/large/006tNc79ly1g4bb4spjvaj30jt0d9mzw.jpg" style="zoom:40%"   />
 
 - fd是有POSIX语义的，第一个打开的fd一定是3
 
@@ -2607,7 +2601,7 @@ Fork：copyuvm
 
 - Directory-based cache coherence
 
-  <img src="Pictures/Operating_System/1560152046256.png" style="zoom:45%"   />
+  <img src="http://ww1.sinaimg.cn/large/006tNc79ly1g4ban6s5swj30hp0a5myu.jpg" style="zoom:45%"   />
 
 - cache coherence维持的方法
 
@@ -2889,9 +2883,9 @@ readerFinish
 
   - 记录哪些lock保护着哪些变量，这东西出自eraser那篇论文
 
-    <img src="Pictures/Operating_System/1558580468315.png" style="zoom:50%"   />
+    <img src="http://ww2.sinaimg.cn/large/006tNc79ly1g4b9i6de6zj30s807x0uv.jpg" style="zoom:50%"   />
   
-    <img src="Pictures/Operating_System/1558580911188.png" style="zoom:35%"   /><img src="Pictures/Operating_System/1560253273041.png" style="zoom:35%"   />
+    <img src="http://ww1.sinaimg.cn/large/006tNc79ly1g4b9i4xcq6j30gd0do3ze.jpg" style="zoom:35%"   /><img src="http://ww3.sinaimg.cn/large/006tNc79ly1g4bb4yricuj30k30e5774.jpg" style="zoom:35%"   />
     
     
   
@@ -3000,7 +2994,7 @@ readerFinish
 
   - API：application programming interface，关键元素是标准库(或多个库)，通常在高级语言的源代码级定义
 
-    <img src="Pictures/Operating_System/1560258208422.png" style="zoom:70%"   />
+    <img src="http://ww1.sinaimg.cn/large/006tNc79ly1g4baw91llej30dj09vt9z.jpg" style="zoom:70%"   />
 
   - WINE的作用是虚拟化ABI，windows emulation，linux里跑windows?? 代码实现的是win32的API，就是windows给application提供的接口
   - VM的作用是虚拟化ISA
@@ -3032,7 +3026,7 @@ readerFinish
     
     - Android Studio内嵌了QEMU
     
-      <img src="Pictures/Operating_System/1560259711632.png" style="zoom:70%"   />
+      <img src="http://ww4.sinaimg.cn/large/006tNc79ly1g4bb4xdaruj30h70aj75x.jpg" style="zoom:70%"   />
 
 * system VM，same ISA
 
@@ -3040,7 +3034,7 @@ readerFinish
 
   - **type 2：Hosted Virtual Machines**，hardware上有host OS，再是VMM和guest OS，虽然多了一层抽象，但是更常用，效率更高，用起来更简单，eg. VM workstation
 
-    <img src="Pictures/Operating_System/1560259931312.png" style="zoom:65%"   /><img src="Pictures/Operating_System/1560259941178.png" style="zoom:60%"   />
+    <img src="http://ww2.sinaimg.cn/large/006tNc79ly1g4bb4wg1wuj309u04ndg7.jpg" style="zoom:65%"   /><img src="http://ww1.sinaimg.cn/large/006tNc79ly1g4bab6hdq6j309v05gt95.jpg" style="zoom:60%"   />
   
     
   
@@ -3056,7 +3050,7 @@ readerFinish
     
   - 一个虚拟机就是一个进程，这个进程有多少线程，是分配这个虚拟机的CPU的个数
 
-    <img src="Pictures/Operating_System/1560260161986.png" style="zoom:50%"   />
+    <img src="http://ww3.sinaimg.cn/large/006tNc79ly1g4b9i7qrm2j30k408utad.jpg" style="zoom:50%"   />
 
 * Host Monitor Architecture
 
@@ -3068,7 +3062,7 @@ readerFinish
   	Interrupts：因为VMM不处理设备，所以它只是将所有中断转发到主机。注意，VMM必须处理CPU生成的异常，比如页面错误和非法指令错误。
   ```
 
-  <img src="Pictures/Operating_System/1560260445249.png" style="zoom:55%"   />
+  <img src="http://ww2.sinaimg.cn/large/006tNc79ly1g4bb4uyqqjj30h20blmz1.jpg" style="zoom:55%"   />
 
 * Host Monitor Scheduling
 
@@ -3084,7 +3078,7 @@ readerFinish
   8. The green guest gets CPU Time
   ```
 
-  <img src="Pictures/Operating_System/1560260612718.png" style="zoom:55%"   />
+  <img src="http://ww4.sinaimg.cn/large/006tNc79ly1g4bauuj6fvj30hb0bozm6.jpg" style="zoom:55%"   />
 
 * Hosted Architecture Tradeoffs
   * 优点：
@@ -3100,7 +3094,7 @@ readerFinish
 
   * 用途：安全，系统管理，容错
 
-    <img src="Pictures/Operating_System/1560261182465.png" style="zoom:55%"   />
+    <img src="http://ww3.sinaimg.cn/large/006tNc79ly1g4ba99al6nj30ap0bzq43.jpg" style="zoom:55%"   />
 
 *  
 
@@ -3116,7 +3110,7 @@ readerFinish
 
 * OS的不同架构
 
-  <img src="Pictures/Operating_System/1560584050320.png" style="zoom:35%"   />
+  <img src="http://ww3.sinaimg.cn/large/006tNc79ly1g4b9iabveuj30i90csac7.jpg" style="zoom:35%"   />
 
 * VMM的不同架构
 
@@ -3127,7 +3121,7 @@ readerFinish
   
 * QEMU是一个用户态的应用程序，对于host OS来说，QEMU就是一个普通的应用程序就是进程，QEMU负责读取vm镜像，按照每条指令的顺序执行；QEMU就像是个解释执行器，python解释我们自己写的脚本，QEMU解释的是二进制解释器
 
-  <img src="Pictures/Operating_System/1560584078191.png" style="zoom:40%"   />
+  <img src="http://ww2.sinaimg.cn/large/006tNc79ly1g4b9i2kxlnj30ju08iabl.jpg" style="zoom:40%"   />
 
 * 虚拟化的三个层次，API，ABI，ISA
 
@@ -3181,7 +3175,7 @@ readerFinish
 
   * CPU virtualization with VT-x，就是关于这个root mode和non-root mode
 
-    <img src="Pictures/Operating_System/1560585795942.png" style="zoom:45%"   />
+    <img src="http://ww2.sinaimg.cn/large/006tNc79ly1g4ba9411aoj30970a2t9q.jpg" style="zoom:45%"   />
 
 - VM entry and VM exit
 
@@ -3189,7 +3183,7 @@ readerFinish
   
 - VM exit：从guest到VMM，进入VMX root mode，将guest state保存到VMCS，从VMCS中加载VMM state
   
-    <img src="Pictures/Operating_System/1560585886256.png" style="zoom:80%"   />
+    <img src="http://ww4.sinaimg.cn/large/006tNc79ly1g4batrnhfgj307k03a74c.jpg" style="zoom:80%"   />
 
 
 * VMCS (Virtual Machine Control Structure)
@@ -3254,9 +3248,9 @@ readerFinish
       * 生成两个影子页表，一个用于U，一个用于K
       * 当guest os切换到U模式时，VMM必须调用set_ptp(current, 0)
     
-    <img src="Pictures/Operating_System/1560586931967.png" style="zoom:50%"   />
+    <img src="http://ww4.sinaimg.cn/large/006tNc79ly1g4bauezkx8j30io0ap40c.jpg" style="zoom:50%"   />
     
-    <img src="Pictures/Operating_System/1560588595664.png" style="zoom:40%"   />
+    <img src="http://ww3.sinaimg.cn/large/006tNc79ly1g4bab7fevzj30j608qabc.jpg" style="zoom:40%"   />
 
 * 方法二：Direct Paging (Para-virtualization)
   * 修改guest OS的实现
@@ -3272,7 +3266,7 @@ readerFinish
 
   * 英特尔EPT(扩展页表)，AMD的NPT(嵌套页表)
 
-    <img src="Pictures/Operating_System/1560588888843.png" style="zoom:45%"   />
+    <img src="http://ww3.sinaimg.cn/large/006tNc79ly1g4bb4tk8qpj30m50ccn01.jpg" style="zoom:45%"   />
   
 
 ##### Case Study：VMware
@@ -3327,7 +3321,7 @@ readerFinish
 
   - QEMU可以分配内存，占用的内存空间是GPA，对QEMU来说它认为是连续的；GPA guest physical address
 
-    <img src="Pictures/Operating_System/1560598983899.png" style="zoom:50%"   />
+    <img src="http://ww1.sinaimg.cn/large/006tNc79ly1g4bb4wvsjuj30a207mwf1.jpg" style="zoom:50%"   />
 
 - KVM的基本控制流
 
@@ -3345,7 +3339,7 @@ readerFinish
 
   - 一个专用的iothread运行一个select()事件循环来处理I/O，比如网络包和磁盘I/O完成
 
-    <img src="Pictures/Operating_System/1560599119945.png" style="zoom:55%"   />
+    <img src="http://ww4.sinaimg.cn/large/006tNc79ly1g4bb3k7hfkj306608lwew.jpg" style="zoom:55%"   />
 
 - 当运行`ioctl(KVM_RUN)`之后发生了什么
 
@@ -3357,7 +3351,7 @@ readerFinish
   
   - IP被更改为VMCS->IP，开始运行guest VM的代码
   
-    <img src="Pictures/Operating_System/1560599376455.png" style="zoom:60%"   />
+    <img src="http://ww2.sinaimg.cn/large/006tNc79ly1g4babaod2dj307m06h74l.jpg" style="zoom:60%"   />
   
 
 * KVM model的架构优势
@@ -3389,7 +3383,7 @@ readerFinish
 
     如果我还有时间再看到这里，我记得去年的CSE里有一段讲过这个问题
 
-    <img src="Pictures/Operating_System/1560603378124.png" style="zoom:50%"/>
+    <img src="http://ww1.sinaimg.cn/large/006tNc79ly1g4b9i3zklvj30g208mt9q.jpg" style="zoom:50%"/>
 
   * Emulated device 的具体操作
     * 在类中模拟设备，包括模拟寄存器、MMIO/programmed IO两种方法
@@ -3421,7 +3415,7 @@ readerFinish
 
     * VirtIO：能够为半虚拟化设备提供统一的I/O模式，已经被KVM和lguest采用
 
-      <img src="Pictures/Operating_System/1560603846011.png" style="zoom:50%"/>
+      <img src="http://ww4.sinaimg.cn/large/006tNc79ly1g4bauvwe52j30j007qgmq.jpg" style="zoom:50%"/>
 
   * KVM 中的virtio：Virtio由一个框架和一组驱动程序组成
 
@@ -3432,7 +3426,7 @@ readerFinish
 
   * storage stack
 
-    <img src="Pictures/Operating_System/1560604018769.png" style="zoom:35%"/>
+    <img src="http://ww3.sinaimg.cn/large/006tNc79ly1g4bausn79wj30ht0ar0ux.jpg" style="zoom:35%"/>
 
   * Walkthrough，virtio-blk disk read request
 
@@ -3496,13 +3490,13 @@ readerFinish
 
     * SR-IOV允许将PCI函数划分为许多虚拟接口，以便在虚拟环境中共享PCI Express (PCIe)设备的资源
 
-      <img src="Pictures/Operating_System/1560604859862.png" style="zoom:40%"/>
+      <img src="http://ww2.sinaimg.cn/large/006tNc79ly1g4bat1fzxvj30jo0e4n07.jpg" style="zoom:40%"/>
 
 ##### Summary
 
 * virtualization techs
 
-  <img src="Pictures/Operating_System/1560604915168.png" style="zoom:70%"/>
+  <img src="http://ww1.sinaimg.cn/large/006tNc79ly1g4bance3s7j30jy0aa76l.jpg" style="zoom:70%"/>
 
 *  
 
@@ -3525,11 +3519,11 @@ readerFinish
 
 * Serveless computing 对比 microservices
 
-  <img src="Pictures/Operating_System/1560605203596.png" style="zoom:40%"/>
+  <img src="http://ww3.sinaimg.cn/large/006tNc79ly1g4b9ib1xnjj30jy06nt9u.jpg" style="zoom:40%"/>
 
 * Service Providers
 
-  <img src="Pictures/Operating_System/1560605224128.png" style="zoom:50%"/>
+  <img src="http://ww3.sinaimg.cn/large/006tNc79ly1g4bavt3fk4j30lm0cqdj8.jpg" style="zoom:50%"/>
 
 * A real-life example ：dragon quest
   * 减少处理时间：几个小时-> 10秒
@@ -3556,7 +3550,7 @@ readerFinish
 
   * 岗哨和岗哨通过9P协议进行通信
 
-    <img src="Pictures/Operating_System/1560605482129.png" style="zoom:55%"/>
+    <img src="http://ww4.sinaimg.cn/large/006tNc79ly1g4baw9jloqj30bc06jdgg.jpg" style="zoom:55%"/>
 
 * Sandbox Technologies – Kata Container
 
@@ -3569,7 +3563,7 @@ readerFinish
 
 * 启动速度和隔离的tradeoff
 
-  <img src="Pictures/Operating_System/1560605660333.png" style="zoom:65%"/>
+  <img src="http://ww3.sinaimg.cn/large/006tNc79ly1g4b9i174nkj3092072t95.jpg" style="zoom:65%"/>
 
 * Challenge : latency
 

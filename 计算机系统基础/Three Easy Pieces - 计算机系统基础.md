@@ -99,15 +99,15 @@
 
   * 省读的时间：一起读进来，read request per 384 loop
 
-    ![1554463288134](Pictures/Introduction_of_Computer_System/1554463288134.png)                                         
+    ![1554463288134](http://ww3.sinaimg.cn/large/006tNc79ly1g4b9ghhkkaj30fh02l0st.jpg)                                         
 
   * 写的时间延迟。不立即写磁盘，多存一些一次性写到磁盘上去 Improve by dallying & batching write requests
 
-    ![1554463318559](Pictures/Introduction_of_Computer_System/1554463318559.png)
+    ![1554463318559](http://ww3.sinaimg.cn/large/006tNc79ly1g4b9ggo7tcj30fy01o0sr.jpg)
 
   * 并行
 
-    ![1554463357821](Pictures/Introduction_of_Computer_System/1554463357821.png)
+    ![1554463357821](http://ww4.sinaimg.cn/large/006tNc79ly1g4b9gh0i05j30c406odgf.jpg)
 
   * Tradeoff：可靠性reliability和性能performance
 
