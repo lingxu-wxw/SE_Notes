@@ -16,7 +16,7 @@
 
 * Select one that is not hardware-based technique
 
-  * A. SMT		B. MSI		C. vector chaining	D. strip mining	D. speculation
+  * A. SMT		B. MSI		C. vector chaining	D. strip mining	E. speculation
 
 * The concept of SIMT is related to:
 
